@@ -8,44 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Models/ServiceInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Utils/RoslynExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/DangFugBixs.Generators.Sample.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/DangFugBixs.Generators.Sample.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/DangFugBixs.Generators.Sample.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/DangFugBixs.Generators.Sample.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/Debug/net9.0/DangFugBixs.Generators.Sample.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/Debug/net9.0/DangFugBixs.Generators.Sample.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/Debug/net9.0/DangFugBixs.Generators.Sample.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/Debug/net9.0/DangFugBixs.Generators.Sample.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/DangFugBixs.Generators.Tests.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/DangFugBixs.Generators.Tests.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/DangFugBixs.Generators.Tests.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/DangFugBixs.Generators.Tests.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NhemDangFugBixs.Tooling.sln" beforeDir="false" afterPath="$PROJECT_DIR$/NhemDangFugBixs.Tooling.sln" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,8 +139,17 @@
       <workItem from="1770435116832" duration="189000" />
       <workItem from="1770436395271" duration="1773000" />
       <workItem from="1770438285480" duration="414000" />
-      <workItem from="1770443496175" duration="16604000" />
+      <workItem from="1770443496175" duration="16992000" />
     </task>
+    <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
+      <option name="closed" value="true" />
+      <created>1770510850187</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1770510850188</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -184,6 +159,8 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="add initial project files and implement VContainer auto-registration generator" />
+    <option name="LAST_COMMIT_MESSAGE" value="add initial project files and implement VContainer auto-registration generator" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
