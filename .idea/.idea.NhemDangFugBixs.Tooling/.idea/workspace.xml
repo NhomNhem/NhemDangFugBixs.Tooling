@@ -10,8 +10,7 @@
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Models/ServiceInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Models/ServiceInfo.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +138,7 @@
       <workItem from="1770435116832" duration="189000" />
       <workItem from="1770436395271" duration="1773000" />
       <workItem from="1770438285480" duration="414000" />
-      <workItem from="1770443496175" duration="16992000" />
+      <workItem from="1770443496175" duration="19812000" />
     </task>
     <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
       <option name="closed" value="true" />
@@ -149,7 +148,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770510850188</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fix variable name typos and update assembly informational version">
+      <option name="closed" value="true" />
+      <created>1770511240700</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1770511240700</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,7 +167,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="add initial project files and implement VContainer auto-registration generator" />
-    <option name="LAST_COMMIT_MESSAGE" value="add initial project files and implement VContainer auto-registration generator" />
+    <MESSAGE value="fix variable name typos and update assembly informational version" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix variable name typos and update assembly informational version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

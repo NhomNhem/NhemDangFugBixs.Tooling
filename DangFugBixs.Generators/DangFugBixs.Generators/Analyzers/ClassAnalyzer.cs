@@ -20,11 +20,14 @@ public class ClassAnalyzer {
         string lifetime = "Singleton";
 
         if (attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
-            var arg = attr.ArgumentList.Arguments[0].ToString();
-            if (arg.Contains("Transient")) lifetime = "Transient";
-            if (arg.Contains("Scoped")) lifetime = "Scoped";
+            var arg0 = attr.ArgumentList.Arguments[0].ToString();
+            if (arg0.Contains("Transient")) lifetime = "Transient";
+            if (arg0.Contains("Scoped")) lifetime = "Scoped";
         }
+
+        string scopeName = "Global";
+        if (attr.ArgumentList?.Arguments.Count > 1) scopeName = attr.ArgumentList.Arguments[1].ToString().Trim('"');
         
-        return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime);
+        return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scopeName);
     }
 }

@@ -16,20 +16,29 @@ public static class RegistrationEmitter {
         writer.WriteLine("using VContainer;");
         writer.WriteLine("using VContainer.Unity;");
         writer.WriteLine();
-
+        
         using (writer.Block("namespace NhemDangFugBixs.Generated")) {
             using (writer.Block("public static class VContainerRegistration")) {
-                using (writer.Block("public static void RegisterAll(IContainerBuilder builder)")) {
-                    foreach (var svc in services) {
-                        string fullName = string.IsNullOrEmpty(svc.Namespace) 
-                            ? svc.ClassName 
-                            : $"{svc.Namespace}.{svc.ClassName}";
-                        
-                        writer.WriteLine($"builder.Register<{fullName}>(Lifetime.{svc.Lifetime});");                    }
+                
+                var groups = services.GroupBy(s => s.ScopeName);
+
+                foreach (var group in groups) {
+                    // Tên hàm sẽ động: RegisterGlobal, RegisterGameplay...
+                    string methodName = $"Register{group.Key}"; 
+                    
+                    using (writer.Block($"public static void {methodName}(IContainerBuilder builder)")) {
+                        foreach (var svc in group) {
+                            string fullName = string.IsNullOrEmpty(svc.Namespace) 
+                                ? svc.ClassName 
+                                : $"{svc.Namespace}.{svc.ClassName}";
+                            
+                            writer.WriteLine($"builder.Register<{fullName}>(Lifetime.{svc.Lifetime});");
+                        }
+                    }
+                    writer.WriteLine(); // Xuống dòng giữa các hàm cho đẹp
                 }
             }
         }
-        
         return stringWriter.ToString();
     }
 }
