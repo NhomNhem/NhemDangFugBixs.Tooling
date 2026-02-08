@@ -17,14 +17,14 @@ public class ClassAnalyzer {
         
         var ns = classDecl.GetNamespace();
 
-        string liftime = "Singleton";
+        string lifetime = "Singleton";
 
         if (attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
             var arg = attr.ArgumentList.Arguments[0].ToString();
-            if (arg.Contains("Transient")) liftime = "Transient";
-            if (arg.Contains("Scoped")) liftime = "Scoped";
+            if (arg.Contains("Transient")) lifetime = "Transient";
+            if (arg.Contains("Scoped")) lifetime = "Scoped";
         }
         
-        return new ServiceInfo(ns, classDecl.Identifier.Text, liftime);
+        return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime);
     }
 }
