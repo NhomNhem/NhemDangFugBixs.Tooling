@@ -7,7 +7,46 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="" />
+    <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Models/ServiceInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Utils/RoslynExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/DangFugBixs.Generators.Sample.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/DangFugBixs.Generators.Sample.csproj.nuget.dgspec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/DangFugBixs.Generators.Sample.csproj.nuget.g.props" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/DangFugBixs.Generators.Sample.csproj.nuget.g.targets" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/Debug/net9.0/DangFugBixs.Generators.Sample.AssemblyInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/Debug/net9.0/DangFugBixs.Generators.Sample.AssemblyInfoInputs.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/Debug/net9.0/DangFugBixs.Generators.Sample.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/Debug/net9.0/DangFugBixs.Generators.Sample.assets.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/project.assets.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/project.nuget.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/project.packagespec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Sample/obj/rider.project.restore.info" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/DangFugBixs.Generators.Tests.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/DangFugBixs.Generators.Tests.csproj.nuget.dgspec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/DangFugBixs.Generators.Tests.csproj.nuget.g.props" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/DangFugBixs.Generators.Tests.csproj.nuget.g.targets" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.AssemblyInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.AssemblyInfoInputs.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.assets.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/Debug/net9.0/DangFugBixs.Generators.Tests.csproj.AssemblyReference.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/project.assets.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/project.nuget.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/project.packagespec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators.Tests/obj/rider.project.restore.info" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NhemDangFugBixs.Tooling.sln" beforeDir="false" afterPath="$PROJECT_DIR$/NhemDangFugBixs.Tooling.sln" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +55,7 @@
   <component name="CopilotPersistence">
     <persistenceIdMap>
       <entry key="_I:/unityVers/ArchSurvivor" value="39KBveeIDvA52onLE2bNnIFnVeu" />
+      <entry key="_I:/unityVers/NhemDangFugBixs/NhemDangFugBixs.Tooling" value="39KIMjTTPgFDHyb7KDbeEZTCftn" />
     </persistenceIdMap>
   </component>
   <component name="CopilotUserSelectedModel">
@@ -26,7 +66,7 @@
     </selectedModels>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="43725" />
+    <option name="cachedIndexableFilesCount" value="3" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -35,7 +75,7 @@
         <entry key="$PROJECT_DIR$/../../../.." value="main" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -45,14 +85,23 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/NhomNhem/ArchSurvivor.git&quot;,
+    &quot;url&quot;: &quot;git@github.com:NhomNhem/NhemDangFugBixs.Tooling.git&quot;,
     &quot;accountId&quot;: &quot;c636bf2c-907c-4afa-b57d-13585ec5e844&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Models/ServiceInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Utils/RoslynExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="Toolset" />
   </component>
@@ -60,6 +109,9 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="39KBveeIDvA52onLE2bNnIFnVeu" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -73,6 +125,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "node.js.detected.package.eslint": "true",
@@ -80,16 +133,17 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "SolutionBuilderGeneralOptionsPage",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1771275639296" />
+    <option name="spentUsd" value="0.030485" />
   </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="9" />
+    <option name="suspendCountdown" value="0" />
   </component>
   <component name="RunManager">
     <configuration name="DangFugBixs.Generators: DebugRoslynSourceGenerator" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
@@ -118,12 +172,15 @@
       <updated>1770435113999</updated>
       <workItem from="1770435116832" duration="189000" />
       <workItem from="1770436395271" duration="1773000" />
+      <workItem from="1770438285480" duration="414000" />
+      <workItem from="1770443496175" duration="16604000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
