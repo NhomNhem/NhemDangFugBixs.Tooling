@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DangFugBixs.Generators")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+97241253e9061bf144d5f38b6c637fad3dfb39ea")]
 [assembly: System.Reflection.AssemblyProductAttribute("DangFugBixs.Generators")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DangFugBixs.Generators")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

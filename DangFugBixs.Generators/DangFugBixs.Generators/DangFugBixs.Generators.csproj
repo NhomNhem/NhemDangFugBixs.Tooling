@@ -11,6 +11,7 @@
 
         <RootNamespace>DangFugBixs.Generators</RootNamespace>
         <PackageId>DangFugBixs.Generators</PackageId>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,9 +22,12 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Embedded\" />
+    </ItemGroup>
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" 
-              DestinationFolder="../../../Assets/Plugins/Analyzers" />
+        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="../../../Assets/Plugins/Analyzers" />
     </Target>
 
 </Project>
