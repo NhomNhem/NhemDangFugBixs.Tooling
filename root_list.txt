@@ -1,8 +1,0 @@
-I:\unityVers\ArchSurvivor\Tools~\NhemDangFugBixs.Tooling\.idea
-I:\unityVers\ArchSurvivor\Tools~\NhemDangFugBixs.Tooling\DangFugBixs.Generators
-I:\unityVers\ArchSurvivor\Tools~\NhemDangFugBixs.Tooling\.git
-I:\unityVers\ArchSurvivor\Tools~\NhemDangFugBixs.Tooling\build_log.txt
-I:\unityVers\ArchSurvivor\Tools~\NhemDangFugBixs.Tooling\NhemDangFugBixs.Tooling.sln
-I:\unityVers\ArchSurvivor\Tools~\NhemDangFugBixs.Tooling\NhemDangFugBixs.Tooling.sln.DotSettings.user
-I:\unityVers\ArchSurvivor\Tools~\NhemDangFugBixs.Tooling\README.md
-I:\unityVers\ArchSurvivor\Tools~\NhemDangFugBixs.Tooling\root_list.txt
