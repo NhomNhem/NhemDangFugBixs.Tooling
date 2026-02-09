@@ -1,4 +1,4 @@
-using VContainer;
+using System;
 
 namespace VContainer {
     public enum Lifetime {Singleton, Scoped, Transient}
@@ -8,21 +8,11 @@ namespace VContainer {
     }
 }
 
-namespace VContainer.Unity{
-    
-}
-
-namespace NhemDangFugBixs.Attributes {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class AutoRegisterAttribute : Attribute {
-        public AutoRegisterAttribute(object lifetime = null, string scope = "Global") {
-        }
-    }
-}
+namespace VContainer.Unity { }
 
 namespace MySandBox {
     public class MockBuilder : VContainer.IContainerBuilder {
-        public void Register<T>(Lifetime lifetime) {
+        public void Register<T>(VContainer.Lifetime lifetime) {
             Console.WriteLine($"[Mock-Check] ✅ Đã đăng ký: {typeof(T).Name} | Lifetime: {lifetime}");
         }
     }

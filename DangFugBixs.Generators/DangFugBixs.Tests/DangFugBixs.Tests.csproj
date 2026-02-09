@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj"/>
+        <ProjectReference Include="..\DangFugBixs.Generators\DangFugBixs.Generators.csproj"/>
     </ItemGroup>
 
 </Project>

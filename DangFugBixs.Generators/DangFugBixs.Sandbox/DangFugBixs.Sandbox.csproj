@@ -10,10 +10,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj">
+        <ProjectReference Include="..\DangFugBixs.Generators\DangFugBixs.Generators.csproj">
             <OutputItemType>Analyzer</OutputItemType>
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
         </ProjectReference>
+        <ProjectReference Include="..\..\DangFugBixs.Runtime\DangFugBixs.Runtime.csproj" />
     </ItemGroup>
 
 </Project>
