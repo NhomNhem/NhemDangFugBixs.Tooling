@@ -4,19 +4,19 @@ using NhemDangFugBixs.Generated;
 using VContainer;
 
 namespace MySanboxGame {
-    [AutoRegister(Lifetime.Singleton, "Global")]
+    [AutoRegister(NhemDangFugBixs.Attributes.Lifetime.Singleton, "Global")]
     public class AudioService { }
 
-    [AutoRegister(Lifetime.Singleton, "Global")]
+    [AutoRegister(NhemDangFugBixs.Attributes.Lifetime.Singleton, "Global")]
     public class NetworkService { }
 
-    [AutoRegister(Lifetime.Scoped, "Gameplay")]
+    [AutoRegister(NhemDangFugBixs.Attributes.Lifetime.Scoped, "Gameplay")]
     public class EnemySpawner { }
 
-    [AutoRegister(Lifetime.Transient, "Gameplay")]
+    [AutoRegister(NhemDangFugBixs.Attributes.Lifetime.Transient, "Gameplay")]
     public class BulletPool { }
 
-    [AutoRegister(Lifetime.Scoped, "Dungeon")]
+    [AutoRegister(NhemDangFugBixs.Attributes.Lifetime.Scoped, "Dungeon")]
     public class TrapManager { }
 }
 
