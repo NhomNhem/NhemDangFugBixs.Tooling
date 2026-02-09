@@ -234,6 +234,9 @@ _pkginfo.txt
 ClientBin/
 ~$*
 *~
+!Source~/
+!**/*.meta
+!package.json.meta
 *.dbmdl
 *.dbproj.schemaview
 *.jfm
