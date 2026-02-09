@@ -2,9 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Generators", "DangFugBixs.Generators\DangFugBixs.Generators\DangFugBixs.Generators.csproj", "{44270F87-7664-4DE1-9B6F-3D9D72265AC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Sandbox", "DangFugBixs.Sandbox\DangFugBixs.Sandbox.csproj", "{ACF51D47-1F78-462E-9B18-D232144A5A9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Sandbox", "DangFugBixs.Generators\DangFugBixs.Sandbox\DangFugBixs.Sandbox.csproj", "{ACF51D47-1F78-462E-9B18-D232144A5A9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Tests", "DangFugBixs.Tests\DangFugBixs.Tests.csproj", "{042AF63C-0700-4E94-8AB7-006962B5BD6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Tests", "DangFugBixs.Generators\DangFugBixs.Tests\DangFugBixs.Tests.csproj", "{042AF63C-0700-4E94-8AB7-006962B5BD6C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Runtime", "DangFugBixs.Runtime\DangFugBixs.Runtime.csproj", "{FDCE1A9E-91F0-403F-9E09-240C6149650C}"
 EndProject
