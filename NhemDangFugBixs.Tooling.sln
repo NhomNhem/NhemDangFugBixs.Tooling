@@ -1,20 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Generators", "DangFugBixs.Generators\DangFugBixs.Generators\DangFugBixs.Generators.csproj", "{44270F87-7664-4DE1-9B6F-3D9D72265AC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Generators", "DangFugBixs.Generators~\DangFugBixs.Generators\DangFugBixs.Generators.csproj", "{44270F87-7664-4DE1-9B6F-3D9D72265AC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Sandbox", "DangFugBixs.Generators\DangFugBixs.Sandbox\DangFugBixs.Sandbox.csproj", "{ACF51D47-1F78-462E-9B18-D232144A5A9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Sandbox", "DangFugBixs.Generators~\DangFugBixs.Sandbox\DangFugBixs.Sandbox.csproj", "{ACF51D47-1F78-462E-9B18-D232144A5A9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Tests", "DangFugBixs.Generators\DangFugBixs.Tests\DangFugBixs.Tests.csproj", "{042AF63C-0700-4E94-8AB7-006962B5BD6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Tests", "DangFugBixs.Generators~\DangFugBixs.Tests\DangFugBixs.Tests.csproj", "{042AF63C-0700-4E94-8AB7-006962B5BD6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Runtime", "DangFugBixs.Runtime\DangFugBixs.Runtime.csproj", "{FDCE1A9E-91F0-403F-9E09-240C6149650C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Runtime", "DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj", "{FDCE1A9E-91F0-403F-9E09-240C6149650C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Analyzers", "DangFugBixs.Analyzers\DangFugBixs.Analyzers\DangFugBixs.Analyzers.csproj", "{DD45B82F-10B7-4596-B6E2-60CFD2515D5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Analyzers", "DangFugBixs.Analyzers~\DangFugBixs.Analyzers\DangFugBixs.Analyzers.csproj", "{DD45B82F-10B7-4596-B6E2-60CFD2515D5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Analyzers.Sample", "DangFugBixs.Analyzers\DangFugBixs.Analyzers.Sample\DangFugBixs.Analyzers.Sample.csproj", "{88FEC2C0-B417-45DC-A169-380D783C1DFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Analyzers.Sample", "DangFugBixs.Analyzers~\DangFugBixs.Analyzers.Sample\DangFugBixs.Analyzers.Sample.csproj", "{88FEC2C0-B417-45DC-A169-380D783C1DFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Analyzers.Tests", "DangFugBixs.Analyzers\DangFugBixs.Analyzers.Tests\DangFugBixs.Analyzers.Tests.csproj", "{39FD967A-061F-4533-8874-A5ED0257B14D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Analyzers.Tests", "DangFugBixs.Analyzers~\DangFugBixs.Analyzers.Tests\DangFugBixs.Analyzers.Tests.csproj", "{39FD967A-061F-4533-8874-A5ED0257B14D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Common", "DangFugBixs.Common\DangFugBixs.Common.csproj", "{75D75F7C-5DB3-4253-BD92-509AE0DF26F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Common", "DangFugBixs.Common~\DangFugBixs.Common.csproj", "{75D75F7C-5DB3-4253-BD92-509AE0DF26F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
