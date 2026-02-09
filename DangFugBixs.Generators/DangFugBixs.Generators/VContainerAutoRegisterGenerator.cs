@@ -1,7 +1,7 @@
 using System.Text;
 using DangFugBixs.Generators.Analyzers;
 using DangFugBixs.Generators.Emitters;
-using DangFugBixs.Generators.Models;
+using DangFugBixs.Common.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;

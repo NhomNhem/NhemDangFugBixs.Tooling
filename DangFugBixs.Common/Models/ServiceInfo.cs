@@ -1,4 +1,4 @@
-namespace DangFugBixs.Generators.Models;
+namespace DangFugBixs.Common.Models;
 
 public readonly struct ServiceInfo {
     public string Namespace { get; }
@@ -9,4 +9,3 @@ public readonly struct ServiceInfo {
     public ServiceInfo(string ns, string className, string lifetime, string scopeName) 
         => (Namespace, ClassName, Lifetime, ScopeName) = (ns, className, lifetime, scopeName);
 }
-
