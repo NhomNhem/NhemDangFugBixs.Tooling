@@ -2,7 +2,7 @@
   <PropertyGroup>
     <!-- Default path: assumes Tooling is at UnityProject/Tools~/NhemDangFugBixs.Tooling -->
     <!-- From Project to Unity Root: ProjectDir(1) -> SubDir(2) -> ToolingRoot(3) -> Tools~(4) -> UnityRoot -->
-    <UnityProjectRoot Condition="'$(UnityProjectRoot)' == ''">../../../../</UnityProjectRoot>
+    <UnityProjectRoot Condition="'$(UnityProjectRoot)' == ''">../../../../../</UnityProjectRoot>
   </PropertyGroup>
 
   <!-- Import local overrides if they exist -->
