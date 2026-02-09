@@ -281,6 +281,16 @@
             "related": ".xml"
           }
         }
+      },
+      "DangFugBixs.Common/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/DangFugBixs.Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DangFugBixs.Common.dll": {}
+        }
       }
     }
   },
@@ -1364,10 +1374,16 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "DangFugBixs.Common/1.0.0": {
+      "type": "project",
+      "path": "../../DangFugBixs.Common/DangFugBixs.Common.csproj",
+      "msbuildProject": "../../DangFugBixs.Common/DangFugBixs.Common.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
+      "DangFugBixs.Common >= 1.0.0",
       "Microsoft.CodeAnalysis.Analyzers >= 3.3.4",
       "Microsoft.CodeAnalysis.CSharp >= 4.3.0",
       "NETStandard.Library >= 2.0.3"
@@ -1397,7 +1413,11 @@
       "frameworks": {
         "netstandard2.0": {
           "targetAlias": "netstandard2.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "I:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Common\\DangFugBixs.Common.csproj": {
+              "projectPath": "I:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Common\\DangFugBixs.Common.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -1444,7 +1464,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Users\\truon\\.dotnet\\sdk\\10.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
