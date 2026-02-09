@@ -1,0 +1,16 @@
+{
+  "name": "com.nhemdangfugbixs.tooling",
+  "version": "1.0.0",
+  "displayName": "Nhem Dang Fug Bixs Tooling",
+  "description": "VContainer Auto-Registration Source Generator and Roslyn Analyzers.",
+  "unity": "2021.3",
+  "author": {
+    "name": "NhomNhem"
+  },
+  "dependencies": {},
+  "keywords": [
+    "vcontainer",
+    "source-generator",
+    "analyzer"
+  ]
+}

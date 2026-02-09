@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "I:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj": {}
+    "i:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj": {}
   },
   "projects": {
-    "I:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj": {
+    "i:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "I:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj",
+        "projectUniqueName": "i:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj",
         "projectName": "DangFugBixs.Generators",
-        "projectPath": "I:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj",
+        "projectPath": "i:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj",
         "packagesPath": "C:\\Users\\truon\\.nuget\\packages\\",
-        "outputPath": "I:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\obj\\",
+        "outputPath": "i:\\unityVers\\NhemDangFugBixs\\NhemDangFugBixs.Tooling\\DangFugBixs.Generators\\DangFugBixs.Generators\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\truon\\AppData\\Roaming\\NuGet\\NuGet.Config"

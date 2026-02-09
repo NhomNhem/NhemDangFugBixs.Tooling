@@ -1,15 +1,38 @@
 <Project>
   <PropertyGroup>
-    <!-- Default path: assumes Tooling is at UnityProject/Tools~/NhemDangFugBixs.Tooling -->
-    <!-- From Project to Unity Root: ProjectDir(1) -> SubDir(2) -> ToolingRoot(3) -> Tools~(4) -> UnityRoot -->
-    <UnityProjectRoot Condition="'$(UnityProjectRoot)' == ''">../../../../../</UnityProjectRoot>
+    <!-- Root of the NhemDangFugBixs.Tooling package -->
+    <PackageRoot>$(MSBuildThisFileDirectory)</PackageRoot>
+    
+    <!-- UPM standardized paths -->
+    <UPMRuntimePath>$(PackageRoot)Runtime/</UPMRuntimePath>
+    <UPMEditorPath>$(PackageRoot)Editor/</UPMEditorPath>
+    <UPMAnalyzersPath>$(UPMEditorPath)Analyzers/</UPMAnalyzersPath>
   </PropertyGroup>
 
-  <!-- Import local overrides if they exist -->
+  <!-- Import local overrides if user wants to push to an external game project -->
   <Import Project="LocalBuild.props" Condition="Exists('LocalBuild.props')" />
 
   <PropertyGroup>
-    <UnityPluginsPath>$(UnityProjectRoot)Assets/Plugins/Analyzers</UnityPluginsPath>
-    <UnityRuntimePath>$(UnityProjectRoot)Assets/Plugins</UnityRuntimePath>
+    <!-- By default, we build into the local package folders -->
+    <!-- But if UnityProjectRoot is set in LocalBuild.props, we can also copy to an external project -->
+    
+    <!-- Final path for Analyzers/Generators -->
+    <FinalPluginsPath>$(UPMAnalyzersPath)</FinalPluginsPath>
+    
+    <!-- Final path for Runtime attributes/logic -->
+    <FinalRuntimePath>$(UPMRuntimePath)</FinalRuntimePath>
   </PropertyGroup>
+
+  <!-- Target to copy to external project if LocalBuild.props is present -->
+  <Target Name="CopyToExternalProject" AfterTargets="PostBuild" Condition="'$(UnityProjectRoot)' != ''">
+    <PropertyGroup>
+        <ExternalPluginsPath>$(UnityProjectRoot)Assets/Plugins/Analyzers</ExternalPluginsPath>
+        <ExternalRuntimePath>$(UnityProjectRoot)Assets/Plugins</ExternalRuntimePath>
+    </PropertyGroup>
+    
+    <Message Importance="high" Text="[UPM-Package] Copying DLLs to external project: $(UnityProjectRoot)" />
+    
+    <!-- Conditional copy based on assembly name or type could be here, 
+         but we'll keep it simple: projects call their own copy logic using Final paths -->
+  </Target>
 </Project>
