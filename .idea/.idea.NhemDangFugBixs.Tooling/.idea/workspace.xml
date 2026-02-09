@@ -10,20 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Analyzers/DangFugBixs.Analyzers/DangFugBixs.Analyzers.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Analyzers/DangFugBixs.Analyzers/DangFugBixs.Analyzers.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Common/DangFugBixs.Common.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Common/DangFugBixs.Common.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/DangFugBixs.Generators.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/DangFugBixs.Generators.csproj.nuget.dgspec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/Debug/netstandard2.0/DangFugBixs.Generators.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Sandbox/DangFugBixs.Sandbox.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Sandbox/DangFugBixs.Sandbox.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Sandbox/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Sandbox/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Tests/DangFugBixs.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Tests/DangFugBixs.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NhemDangFugBixs.Tooling.sln" beforeDir="false" afterPath="$PROJECT_DIR$/NhemDangFugBixs.Tooling.sln" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,10 +123,10 @@
 }</component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1771275639296" />
-    <option name="spentUsd" value="0.09176739" />
+    <option name="spentUsd" value="0.09818989" />
   </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="4" />
+    <option name="suspendCountdown" value="3" />
   </component>
   <component name="RunManager" selected=".NET Project.Sandbox">
     <configuration name="DangFugBixs.Sandbox" type="DotNetProject" factoryName=".NET Project">
@@ -226,7 +221,7 @@
       <workItem from="1770436395271" duration="1773000" />
       <workItem from="1770438285480" duration="414000" />
       <workItem from="1770443496175" duration="40101000" />
-      <workItem from="1770611510666" duration="7330000" />
+      <workItem from="1770611510666" duration="8403000" />
     </task>
     <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
       <option name="closed" value="true" />
@@ -260,7 +255,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770628628105</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fix: update project references and improve post-build actions for analyzers and generators">
+      <option name="closed" value="true" />
+      <created>1770629224001</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1770629224001</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -274,7 +277,8 @@
     <MESSAGE value="fix variable name typos and update assembly informational version" />
     <MESSAGE value="enhance service registration by adding scope name support and refactoring registration methods" />
     <MESSAGE value="feat: add initial project structure with analyzers, code fixes, and sample implementations" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add initial project structure with analyzers, code fixes, and sample implementations" />
+    <MESSAGE value="fix: update project references and improve post-build actions for analyzers and generators" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: update project references and improve post-build actions for analyzers and generators" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

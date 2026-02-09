@@ -403,3 +403,6 @@ FodyWeavers.xsd
 
 # GitHub configuration (Copilot rules, skills, workflows)
 .github/
+
+# Local build configuration
+LocalBuild.props
