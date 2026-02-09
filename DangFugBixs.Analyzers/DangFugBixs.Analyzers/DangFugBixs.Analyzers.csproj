@@ -42,7 +42,7 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="../../../Assets/Plugins/Analyzers" />
+        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(UnityPluginsPath)" />
     </Target>
 
 </Project>
