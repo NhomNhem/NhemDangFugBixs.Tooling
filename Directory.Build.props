@@ -10,5 +10,6 @@
 
   <PropertyGroup>
     <UnityPluginsPath>$(UnityProjectRoot)Assets/Plugins/Analyzers</UnityPluginsPath>
+    <UnityRuntimePath>$(UnityProjectRoot)Assets/Plugins</UnityRuntimePath>
   </PropertyGroup>
 </Project>
