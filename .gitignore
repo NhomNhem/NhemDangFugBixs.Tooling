@@ -235,6 +235,7 @@ ClientBin/
 ~$*
 *~
 !Source~/
+Source~/.agent/
 !**/*.meta
 !package.json.meta
 *.dbmdl
