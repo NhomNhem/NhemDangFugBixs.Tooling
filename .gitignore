@@ -406,8 +406,9 @@ FodyWeavers.xsd
 # Bỏ qua các file code tự sinh
 **/GeneratedFiles/
 
-# GitHub configuration (Copilot rules, skills, workflows)
-.github/
+# GitHub configuration
+.github/*
+!.github/ISSUE_TEMPLATE/
 
 # Local build configuration
 LocalBuild.props
