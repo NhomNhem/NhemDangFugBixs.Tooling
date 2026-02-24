@@ -1,6 +1,6 @@
 {
   "name": "com.nhemdangfugbixs.tooling",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "displayName": "Nhem Dang Fug Bixs Tooling",
   "description": "VContainer Auto-Registration Source Generator and Roslyn Analyzers.",
   "unity": "2021.3",
