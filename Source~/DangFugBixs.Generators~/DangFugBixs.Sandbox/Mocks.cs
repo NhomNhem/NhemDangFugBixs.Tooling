@@ -15,7 +15,16 @@ namespace VContainer {
         IRegistrationBuilder Register<T>(Lifetime lifetime);
         IRegistrationBuilder RegisterEntryPoint<T>(Lifetime lifetime = Lifetime.Singleton);
         void RegisterComponentInHierarchy<T>();
+        void RegisterComponent<T>(T component);
     }
+}
+
+namespace UnityEngine {
+    public class Object {
+        public static T FindFirstObjectByType<T>() where T : class => null;
+    }
+    public class MonoBehaviour : Object { }
+    public class Component : Object { }
 }
 
 namespace VContainer.Unity {
@@ -42,6 +51,9 @@ namespace MySandBox {
         }
         public void RegisterComponentInHierarchy<T>() {
             Console.WriteLine($"[Mock] Registering Component in Hierarchy: {typeof(T).Name}");
+        }
+        public void RegisterComponent<T>(T component) {
+            Console.WriteLine($"[Mock] Registering Component: {typeof(T).Name}");
         }
     }
 }

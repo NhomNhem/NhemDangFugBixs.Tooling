@@ -32,6 +32,7 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Message Importance="high" Text="[UPM-Package] Copying Generator DLL to Local: $(FinalPluginsPath)" />
         <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(FinalPluginsPath)" />
         <Copy SourceFiles="$(PackageRoot)Source~/MetaTemplates/$(AssemblyName).dll.meta" DestinationFolder="$(FinalPluginsPath)" ContinueOnError="true" />
     </Target>
