@@ -10,6 +10,7 @@ namespace NhemDangFugBixs.Generators.Analyzers;
 internal class ClassAnalyzer {
     private const string ExpectedAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterAttribute";
     private const string SceneAttributeName = "NhemDangFugBixs.Attributes.AutoInjectSceneAttribute";
+    private const string SceneRegAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterSceneAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
 
     public static ServiceInfo? ExtractInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
@@ -23,13 +24,17 @@ internal class ClassAnalyzer {
 
         if (attr == null) return null;
 
-        // Verify attribute type using semantic model
+        // Verify attribute type using semantic model (with fallback to name only)
         var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
         var fullTypeName = attrSymbol?.ToDisplayString();
         
         if (fullTypeName != ExpectedAttributeName) {
-            // Not the attribute we're looking for, or couldn't resolve
-            return null;
+            // Fallback: Check if the name matches exactly "AutoRegister" or "AutoRegisterAttribute" 
+            // if we can't resolve the full type (useful in complex Unity build environments)
+            string attrName = attr.Name.ToString();
+            if (attrName != "AutoRegister" && attrName != "AutoRegisterAttribute") {
+                return null;
+            }
         }
 
         var ns = classDecl.GetNamespace();
@@ -81,11 +86,38 @@ internal class ClassAnalyzer {
 
         var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
         if (attrSymbol?.ToDisplayString() != SceneAttributeName) {
-            return null;
+            // Fallback: Check if the name matches exactly "AutoInjectScene" or "AutoInjectSceneAttribute"
+            string attrName = attr.Name.ToString();
+            if (attrName != "AutoInjectScene" && attrName != "AutoInjectSceneAttribute") {
+                return null;
+            }
         }
 
         var ns = classDecl.GetNamespace();
         return new SceneInjectionInfo(ns, classDecl.Identifier.Text);
+    }
+
+    public static SceneRegistrationInfo? ExtractSceneRegistrationInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        var classDecl = (ClassDeclarationSyntax)context.Node;
+
+        var attr = classDecl.AttributeLists
+            .SelectMany(x => x.Attributes)
+            .FirstOrDefault(x => x.Name.ToString() == "AutoRegisterScene");
+
+        if (attr == null) return null;
+
+        var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
+        if (attrSymbol?.ToDisplayString() != SceneRegAttributeName) {
+            string attrName = attr.Name.ToString();
+            if (attrName != "AutoRegisterScene" && attrName != "AutoRegisterSceneAttribute") {
+                return null;
+            }
+        }
+
+        var ns = classDecl.GetNamespace();
+        return new SceneRegistrationInfo(ns, classDecl.Identifier.Text);
     }
 
     private static string ExtractLifetime(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken) {

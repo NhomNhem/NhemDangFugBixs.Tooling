@@ -7,7 +7,11 @@ using NhemDangFugBixs.Generators.Utils;
 namespace NhemDangFugBixs.Generators.Emitters;
 
 internal static class RegistrationEmitter {
-    public static string GenerateSource(IEnumerable<ServiceInfo> services, IEnumerable<SceneInjectionInfo> sceneServices) {
+    public static string GenerateSource(
+        IEnumerable<ServiceInfo> services, 
+        IEnumerable<SceneInjectionInfo> sceneServices,
+        IEnumerable<SceneRegistrationInfo> sceneRegistrations) {
+        
         using var stringWriter = new StringWriter();
         using var writer = new IndentedTextWriter(stringWriter, "    ");
         
@@ -18,11 +22,14 @@ internal static class RegistrationEmitter {
         writer.WriteLine("using System;");
         writer.WriteLine("using VContainer;");
         writer.WriteLine("using VContainer.Unity;");
+        writer.WriteLine("#if UNITY_5_3_OR_NEWER");
+        writer.WriteLine("using UnityEngine;");
+        writer.WriteLine("#endif");
         writer.WriteLine();
         
         using (writer.Block("namespace NhemDangFugBixs.Generated")) {
             
-            // 1. Blueprint for Editor Discovery (Professional Scene-to-DI mapping)
+            // 1. Blueprint for Editor Discovery (Scene Injection)
             using (writer.Block("public static class SceneInjectionBlueprint")) {
                 writer.WriteLine("public static readonly Type[] ComponentTypes = {");
                 writer.Indent++;
@@ -43,6 +50,21 @@ internal static class RegistrationEmitter {
                     string methodName = $"Register{group.Key}"; 
                     
                     using (writer.Block($"public static void {methodName}(IContainerBuilder builder)")) {
+                        // 2a. Scene MonoBehaviour registrations (FindFirstObjectByType + RegisterComponent)
+                        var sceneRegList = sceneRegistrations.ToList();
+                        if (sceneRegList.Count > 0) {
+                            writer.WriteLine("#if UNITY_2023_1_OR_NEWER || NHEM_FORCE_FIND_OBJECT");
+                            writer.WriteLine("// Scene MonoBehaviours [AutoRegisterScene]");
+                            foreach (var reg in sceneRegList) {
+                                string varName = $"_{char.ToLower(reg.ClassName[0])}{reg.ClassName.Substring(1)}";
+                                writer.WriteLine($"var {varName} = UnityEngine.Object.FindFirstObjectByType<{reg.FullName}>();");
+                                writer.WriteLine($"if ({varName} != null) builder.RegisterComponent({varName});");
+                            }
+                            writer.WriteLine("#endif");
+                            writer.WriteLine();
+                        }
+
+                        // 2b. Standard service registrations
                         foreach (var svc in group) {
                             var interfaces = svc.InterfaceNames;
                             bool isEntryPoint = interfaces.Any(i => i == "VContainer.Unity.IInitializable" || 
