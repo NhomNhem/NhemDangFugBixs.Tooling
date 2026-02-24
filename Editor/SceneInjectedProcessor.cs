@@ -46,7 +46,10 @@ namespace NhemDangFugBixs.Editor
             if (blueprintTypes == null || blueprintTypes.Length == 0) return;
 
             bool changed = false;
-            var autoInjectList = lifetimeScope.autoInjectGameObjects;
+            var autoInjectListField = typeof(LifetimeScope).GetField("autoInjectGameObjects", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+            var autoInjectList = autoInjectListField?.GetValue(lifetimeScope) as System.Collections.Generic.List<GameObject>;
+
+            if (autoInjectList == null) return;
 
             // 1. Remove missing or invalid references
             int removedCount = autoInjectList.RemoveAll(go => go == null);
@@ -75,6 +78,7 @@ namespace NhemDangFugBixs.Editor
             if (changed)
             {
                 EditorUtility.SetDirty(lifetimeScope);
+                Debug.Log($"[AutoInject] Successfully synced injection for {lifetimeScope.name} in scene {scene.name}.");
             }
         }
     }
