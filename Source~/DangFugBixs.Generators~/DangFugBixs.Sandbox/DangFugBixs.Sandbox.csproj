@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <Compile Remove="Generated\**" />
+        <Compile Remove="obj\Generated\**" />
     </ItemGroup>
 
     <ItemGroup>

@@ -9,12 +9,12 @@
   </PropertyGroup>
 
   <!-- Import local overrides if user wants to push to an external game project -->
-  <Import Project="LocalBuild.props" Condition="Exists('LocalBuild.props')" />
+  <Import Project="$(MSBuildThisFileDirectory)LocalBuild.props" Condition="Exists('$(MSBuildThisFileDirectory)LocalBuild.props')" />
 
   <PropertyGroup>
-    <!-- By default, we build into the local package folders -->
-    <!-- But if UnityProjectRoot is set in LocalBuild.props, we can also copy to an external project -->
-    
+    <!-- Priority 1: Environment variable override -->
+    <UnityProjectRoot Condition="'$(UnityProjectRoot)' == '' and '$(NHEM_UNITY_PROJECT_ROOT)' != ''">$(NHEM_UNITY_PROJECT_ROOT)</UnityProjectRoot>
+
     <!-- Final path for Analyzers/Generators -->
     <FinalPluginsPath>$(UPMAnalyzersPath)</FinalPluginsPath>
     
@@ -22,16 +22,44 @@
     <FinalRuntimePath>$(UPMRuntimePath)</FinalRuntimePath>
   </PropertyGroup>
 
-  <!-- Target to copy to external project if LocalBuild.props is present -->
-  <Target Name="CopyToExternalProject" AfterTargets="PostBuild" Condition="'$(UnityProjectRoot)' != ''">
-    <PropertyGroup>
-        <ExternalPluginsPath>$(UnityProjectRoot)Assets/Plugins/Analyzers</ExternalPluginsPath>
-        <ExternalRuntimePath>$(UnityProjectRoot)Assets/Plugins</ExternalRuntimePath>
+  <!-- Target to discover and copy to external Unity projects -->
+  <Target Name="CopyToExternalProject" AfterTargets="Build">
+    <!-- Priority 2: Discover sibling Unity projects with .nhem-deploy-target marker -->
+    <ItemGroup Condition="'$(UnityProjectRoot)' == ''">
+        <_SiblingDirs Include="$([System.IO.Directory]::GetDirectories('$(MSBuildThisFileDirectory)..\..'))" />
+        <_MarkerFiles Include="@(_SiblingDirs -> '%(Identity)\.nhem-deploy-target')" />
+        <_DiscoveredTargets Include="@(_MarkerFiles)" Condition="Exists('%(Identity)')" />
+    </ItemGroup>
+
+    <!-- Resolve discovered target to UnityProjectRoot property -->
+    <PropertyGroup Condition="'$(UnityProjectRoot)' == '' and @(_DiscoveredTargets->Count()) &gt; 0">
+        <UnityProjectRoot>$([System.IO.Path]::GetDirectoryName('%(_DiscoveredTargets.Identity)'))\</UnityProjectRoot>
     </PropertyGroup>
+
+    <!-- Skip copy if no target found -->
+    <Message Condition="'$(UnityProjectRoot)' == ''" Importance="high" 
+             Text="[UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project." />
+
+    <!-- NOTE: Analyzer/Generator DLLs are NOT copied here.
+         Unity picks them up directly from the package's Analyzers/ folder.
+         Copying them to Assets/Plugins/Analyzers would cause the generator to run twice. -->
     
-    <Message Importance="high" Text="[UPM-Package] Copying DLLs to external project: $(UnityProjectRoot)" />
+    <PropertyGroup Condition="'$(UnityProjectRoot)' != ''">
+        <ExternalRuntimePath>$(UnityProjectRoot)Assets\Plugins</ExternalRuntimePath>
+    </PropertyGroup>
+
+    <Message Condition="'$(UnityProjectRoot)' != ''" Importance="high" Text="[UPM-Package] Deploying Runtime to: $(ExternalRuntimePath)" />
     
-    <!-- Conditional copy based on assembly name or type could be here, 
-         but we'll keep it simple: projects call their own copy logic using Final paths -->
+    <ItemGroup Condition="'$(UnityProjectRoot)' != ''">
+        <RuntimeDlls Include="$(FinalRuntimePath)**\*.dll" />
+        <RuntimeMetas Include="$(FinalRuntimePath)**\*.meta" />
+    </ItemGroup>
+
+    <Message Condition="'$(UnityProjectRoot)' != ''" Importance="high" Text="[UPM-Package] Runtime files: @(RuntimeDlls->Count()) DLLs" />
+
+    <Copy Condition="'$(UnityProjectRoot)' != ''" SourceFiles="@(RuntimeDlls)" DestinationFolder="$(ExternalRuntimePath)" SkipUnchangedFiles="false" />
+    <Copy Condition="'$(UnityProjectRoot)' != ''" SourceFiles="@(RuntimeMetas)" DestinationFolder="$(ExternalRuntimePath)" SkipUnchangedFiles="false" />
+    
+    <Message Condition="'$(UnityProjectRoot)' != ''" Importance="high" Text="[UPM-Package] Done deploying to: $(ExternalRuntimePath)" />
   </Target>
 </Project>

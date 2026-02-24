@@ -4,12 +4,16 @@
 using System;
 using VContainer;
 using VContainer.Unity;
+#if UNITY_5_3_OR_NEWER
+using UnityEngine;
+#endif
 
 namespace NhemDangFugBixs.Generated
 {
     public static class SceneInjectionBlueprint
     {
         public static readonly Type[] ComponentTypes = {
+            typeof(MySanboxGame.GhostTrap),
         };
     }
     
@@ -17,6 +21,12 @@ namespace NhemDangFugBixs.Generated
     {
         public static void RegisterGlobal(IContainerBuilder builder)
         {
+            #if UNITY_2023_1_OR_NEWER || NHEM_FORCE_FIND_OBJECT
+            // Scene MonoBehaviours [AutoRegisterScene]
+            var _ghostManager = UnityEngine.Object.FindFirstObjectByType<MySanboxGame.GhostManager>();
+            if (_ghostManager != null) builder.RegisterComponent(_ghostManager);
+            #endif
+            
             builder.RegisterEntryPoint<MySanboxGame.AudioService>().As<VContainer.Unity.IInitializable>().WithLifetime(Lifetime.Singleton);
             builder.Register<MySanboxGame.MultiService>(Lifetime.Singleton).As<MySanboxGame.IInputService, MySanboxGame.ISyncService>();
             builder.Register<MySanboxGame.NetworkService>(Lifetime.Singleton);
@@ -24,12 +34,24 @@ namespace NhemDangFugBixs.Generated
         
         public static void RegisterGameplay(IContainerBuilder builder)
         {
+            #if UNITY_2023_1_OR_NEWER || NHEM_FORCE_FIND_OBJECT
+            // Scene MonoBehaviours [AutoRegisterScene]
+            var _ghostManager = UnityEngine.Object.FindFirstObjectByType<MySanboxGame.GhostManager>();
+            if (_ghostManager != null) builder.RegisterComponent(_ghostManager);
+            #endif
+            
             builder.Register<MySanboxGame.EnemySpawner>(Lifetime.Scoped);
             builder.Register<MySanboxGame.BulletPool>(Lifetime.Transient);
         }
         
         public static void RegisterDungeon(IContainerBuilder builder)
         {
+            #if UNITY_2023_1_OR_NEWER || NHEM_FORCE_FIND_OBJECT
+            // Scene MonoBehaviours [AutoRegisterScene]
+            var _ghostManager = UnityEngine.Object.FindFirstObjectByType<MySanboxGame.GhostManager>();
+            if (_ghostManager != null) builder.RegisterComponent(_ghostManager);
+            #endif
+            
             builder.Register<MySanboxGame.TrapManager>(Lifetime.Scoped);
         }
         

@@ -27,6 +27,9 @@ namespace MySanboxGame {
 
     [AutoRegister(NhemDangFugBixs.Attributes.Lifetime.Scoped, "Dungeon")]
     public class TrapManager { }
+
+    [AutoInjectScene]
+    public class GhostTrap { }
 }
 
 public class Program {
