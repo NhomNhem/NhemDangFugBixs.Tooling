@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <!-- 
+      KẾ HOẠCH BUILD CỤC BỘ (LOCAL BUILD CONFIG)
+      
+      File này cho phép bạn ghi đè đường dẫn project Unity nếu nó không nằm ở vị trí mặc định.
+      Vị trí mặc định là: $(PackageRoot)../GameFeelUnity/
+      
+      Copy file này thành "LocalBuild.props" và sửa đường dẫn dưới đây.
+    -->
+    <UnityProjectRoot>I:\unityVers\GameFeelUnity\</UnityProjectRoot>
+  </PropertyGroup>
+</Project>
