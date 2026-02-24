@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using VContainer.Unity;
-using NhemDangFugBixs.Generated;
 
 namespace NhemDangFugBixs.Editor
 {
@@ -34,7 +33,16 @@ namespace NhemDangFugBixs.Editor
 
             if (lifetimeScope == null) return;
 
-            var blueprintTypes = SceneInjectionBlueprint.ComponentTypes;
+            // Use reflection to find the generated blueprint (fixing CS0234)
+            var blueprintClass = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(a => a.GetType("NhemDangFugBixs.Generated.SceneInjectionBlueprint"))
+                .FirstOrDefault(t => t != null);
+
+            if (blueprintClass == null) return;
+
+            var componentTypesField = blueprintClass.GetField("ComponentTypes", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            var blueprintTypes = componentTypesField?.GetValue(null) as Type[];
+
             if (blueprintTypes == null || blueprintTypes.Length == 0) return;
 
             bool changed = false;
