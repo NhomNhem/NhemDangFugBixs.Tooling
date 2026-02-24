@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <IsPackable>false</IsPackable>
+
+        <RootNamespace>NhemDangFugBixs.Generators</RootNamespace>
+        <PackageId>NhemDangFugBixs.Generators</PackageId>
+        <AssemblyName>NhemDangFugBixs.Generators</AssemblyName>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\..\DangFugBixs.Common~\Models\**\*.cs" Link="Common\Models\%(RecursiveDir)%(FileName)%(Extension)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Embedded\" />
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(FinalPluginsPath)" />
+        <Copy SourceFiles="$(PackageRoot)Source~/MetaTemplates/$(AssemblyName).dll.meta" DestinationFolder="$(FinalPluginsPath)" ContinueOnError="true" />
+    </Target>
+
+</Project>

@@ -235,6 +235,7 @@ ClientBin/
 ~$*
 *~
 !Source~/
+!Source~/**/*~/
 Source~/.agent/
 /.agent/
 !**/*.meta
