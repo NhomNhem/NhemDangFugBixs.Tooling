@@ -15,7 +15,19 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
     // Only emit code for these assemblies (Unity main + Sandbox test)
     private static readonly HashSet<string> AllowedAssemblies = new(StringComparer.OrdinalIgnoreCase) {
         "Assembly-CSharp",
-        "DangFugBixs.Sandbox"
+        "DangFugBixs.Sandbox",
+        "Shared",
+        "Core",
+        "Services",
+        "Gameplay",
+        "Data",
+        "Runtime",
+        "GameFeel_Shared",
+        "GameFeel_Core",
+        "GameFeel_Services",
+        "GameFeel_Gameplay",
+        "GameFeel_Data",
+        "GameFeel_Runtime"
     };
 
     public void Initialize(IncrementalGeneratorInitializationContext context) {
@@ -74,7 +86,7 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
         
         if (validServices.Count == 0 && validSceneServices.Count == 0 && validSceneRegistrations.Count == 0) return;
         
-        var sourceCode = RegistrationEmitter.GenerateSource(validServices, validSceneServices, validSceneRegistrations);
+        var sourceCode = RegistrationEmitter.GenerateSource(validServices, validSceneServices, validSceneRegistrations, assemblyName);
         
         // phase 3: Encapsulation
         context.AddSource("VContainerRegistration.g.cs", SourceText.From(sourceCode, Encoding.UTF8));
