@@ -1,4 +1,5 @@
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using NhemDangFugBixs.Common.Models;
@@ -10,7 +11,10 @@ internal static class RegistrationEmitter {
     public static string GenerateSource(
         IEnumerable<ServiceInfo> services, 
         IEnumerable<SceneInjectionInfo> sceneServices,
-        IEnumerable<SceneRegistrationInfo> sceneRegistrations) {
+        IEnumerable<SceneRegistrationInfo> sceneRegistrations,
+        string assemblyName) {
+        
+        string sanitizedAssembly = assemblyName.Replace(".", "").Replace("-", "");
         
         using var stringWriter = new StringWriter();
         using var writer = new IndentedTextWriter(stringWriter, "    ");
@@ -27,7 +31,7 @@ internal static class RegistrationEmitter {
         writer.WriteLine("#endif");
         writer.WriteLine();
         
-        using (writer.Block("namespace NhemDangFugBixs.Generated")) {
+        using (writer.Block($"namespace NhemDangFugBixs.Generated.{sanitizedAssembly}")) {
             
             // 1. Blueprint for Editor Discovery (Scene Injection)
             using (writer.Block("public static class SceneInjectionBlueprint")) {
@@ -67,26 +71,30 @@ internal static class RegistrationEmitter {
                         // 2b. Standard service registrations
                         foreach (var svc in group) {
                             var interfaces = svc.InterfaceNames;
-                            bool isEntryPoint = interfaces.Any(i => i == "VContainer.Unity.IInitializable" || 
-                                                                   i == "VContainer.Unity.ITickable" || 
-                                                                   i == "VContainer.Unity.IFixedTickable" || 
-                                                                   i == "VContainer.Unity.ILateTickable" || 
-                                                                   i == "VContainer.Unity.IStartable" || 
-                                                                   i == "VContainer.Unity.IPostInitializable" || 
-                                                                   i == "VContainer.Unity.IPostTickable" || 
-                                                                   i == "VContainer.Unity.IPostFixedTickable" || 
-                                                                   i == "VContainer.Unity.IPostLateTickable" || 
-                                                                   i == "VContainer.Unity.IPostStartable");
+                            
+                            // VContainer entry point interfaces - handled automatically by AsImplementedInterfaces
+                            var entryPointInterfaces = new HashSet<string> {
+                                "VContainer.Unity.IInitializable",
+                                "VContainer.Unity.ITickable",
+                                "VContainer.Unity.IFixedTickable",
+                                "VContainer.Unity.ILateTickable",
+                                "VContainer.Unity.IStartable",
+                                "VContainer.Unity.IPostInitializable",
+                                "VContainer.Unity.IPostTickable",
+                                "VContainer.Unity.IPostFixedTickable",
+                                "VContainer.Unity.IPostLateTickable",
+                                "VContainer.Unity.IPostStartable"
+                            };
+                            
+                            bool isEntryPoint = interfaces.Any(i => entryPointInterfaces.Contains(i));
 
                             if (svc.IsComponent) {
                                 writer.WriteLine($"builder.RegisterComponentInHierarchy<{svc.FullName}>();");
                             } else if (isEntryPoint) {
-                                if (interfaces.Length > 0) {
-                                    string interfaceList = string.Join(", ", interfaces);
-                                    writer.WriteLine($"builder.RegisterEntryPoint<{svc.FullName}>().As<{interfaceList}>().WithLifetime(Lifetime.{svc.Lifetime});");
-                                } else {
-                                    writer.WriteLine($"builder.RegisterEntryPoint<{svc.FullName}>(Lifetime.{svc.Lifetime});");
-                                }
+                                // Use Register + AsImplementedInterfaces + AsSelf for entry points
+                                // AsImplementedInterfaces registers all interfaces (including ITickable, IInitializable, etc.)
+                                // AsSelf ensures the concrete type can still be resolved directly
+                                writer.WriteLine($"builder.Register<{svc.FullName}>(Lifetime.{svc.Lifetime}).AsImplementedInterfaces().AsSelf();");
                             } else {
                                 if (interfaces.Length > 0) {
                                     string interfaceList = string.Join(", ", interfaces);
