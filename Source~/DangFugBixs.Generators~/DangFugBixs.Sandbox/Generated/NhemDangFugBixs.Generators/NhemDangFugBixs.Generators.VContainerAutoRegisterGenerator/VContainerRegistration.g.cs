@@ -8,7 +8,7 @@ using VContainer.Unity;
 using UnityEngine;
 #endif
 
-namespace NhemDangFugBixs.Generated
+namespace NhemDangFugBixs.Generated.DangFugBixsSandbox
 {
     public static class SceneInjectionBlueprint
     {
@@ -21,7 +21,7 @@ namespace NhemDangFugBixs.Generated
     {
         public static void RegisterGlobal(IContainerBuilder builder)
         {
-            builder.RegisterEntryPoint<MySanboxGame.AudioService>().As<VContainer.Unity.IInitializable>().WithLifetime(Lifetime.Singleton);
+            builder.RegisterEntryPoint<MySanboxGame.AudioService>(Lifetime.Singleton).As<VContainer.Unity.IInitializable>();
             builder.Register<MySanboxGame.MultiService>(Lifetime.Singleton).As<MySanboxGame.IInputService, MySanboxGame.ISyncService>();
             builder.Register<MySanboxGame.NetworkService>(Lifetime.Singleton);
         }
