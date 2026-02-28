@@ -7,9 +7,11 @@ internal readonly struct ServiceInfo {
     public string ScopeName { get; }
     public string[] InterfaceNames { get; }
     public bool IsComponent { get; }
+    public bool AsImplementedInterfaces { get; }
+    public bool AsSelf { get; }
 
     public string FullName => string.IsNullOrEmpty(Namespace) ? ClassName : $"{Namespace}.{ClassName}";
 
-    public ServiceInfo(string ns, string className, string lifetime, string scopeName, string[] interfaceNames, bool isComponent) 
-        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent) = (ns, className, lifetime, scopeName, interfaceNames, isComponent);
+    public ServiceInfo(string ns, string className, string lifetime, string scopeName, string[] interfaceNames, bool isComponent, bool asImplementedInterfaces, bool asSelf) 
+        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf) = (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf);
 }

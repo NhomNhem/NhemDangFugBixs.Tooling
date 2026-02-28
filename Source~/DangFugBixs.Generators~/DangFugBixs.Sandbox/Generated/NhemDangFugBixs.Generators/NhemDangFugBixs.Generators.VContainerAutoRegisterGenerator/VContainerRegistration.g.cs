@@ -21,20 +21,23 @@ namespace NhemDangFugBixs.Generated.DangFugBixsSandbox
     {
         public static void RegisterGlobal(IContainerBuilder builder)
         {
-            builder.RegisterEntryPoint<MySanboxGame.AudioService>(Lifetime.Singleton).As<VContainer.Unity.IInitializable>();
-            builder.Register<MySanboxGame.MultiService>(Lifetime.Singleton).As<MySanboxGame.IInputService, MySanboxGame.ISyncService>();
-            builder.Register<MySanboxGame.NetworkService>(Lifetime.Singleton);
+            VContainer.Unity.EntryPointsBuilder.EnsureDispatcherRegistered(builder);
+            builder.RegisterEntryPoint<MySanboxGame.AudioService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            builder.Register<MySanboxGame.MultiService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            builder.Register<MySanboxGame.NetworkService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
         }
         
         public static void RegisterGameplay(IContainerBuilder builder)
         {
-            builder.Register<MySanboxGame.EnemySpawner>(Lifetime.Scoped);
-            builder.Register<MySanboxGame.BulletPool>(Lifetime.Transient);
+            VContainer.Unity.EntryPointsBuilder.EnsureDispatcherRegistered(builder);
+            builder.Register<MySanboxGame.EnemySpawner>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
+            builder.Register<MySanboxGame.BulletPool>(Lifetime.Transient).AsImplementedInterfaces().AsSelf();
         }
         
         public static void RegisterDungeon(IContainerBuilder builder)
         {
-            builder.Register<MySanboxGame.TrapManager>(Lifetime.Scoped);
+            VContainer.Unity.EntryPointsBuilder.EnsureDispatcherRegistered(builder);
+            builder.Register<MySanboxGame.TrapManager>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
         }
         
     }

@@ -16,108 +16,147 @@ internal class ClassAnalyzer {
     public static ServiceInfo? ExtractInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         
-        var classDecl = (ClassDeclarationSyntax)context.Node;
+        try {
+            var classDecl = (ClassDeclarationSyntax)context.Node;
 
-        var attr = classDecl.AttributeLists
-            .SelectMany(x => x.Attributes)
-            .FirstOrDefault(x => x.Name.ToString() == "AutoRegister");
+            var attr = classDecl.AttributeLists
+                .SelectMany(x => x.Attributes)
+                .FirstOrDefault(x => {
+                    string name = x.Name.ToString();
+                    return name == "AutoRegister" || name == "AutoRegisterAttribute" || 
+                           name.EndsWith(".AutoRegister") || name.EndsWith(".AutoRegisterAttribute");
+                });
 
-        if (attr == null) return null;
+            if (attr == null) return null;
 
-        // Verify attribute type using semantic model (with fallback to name only)
-        var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
-        var fullTypeName = attrSymbol?.ToDisplayString();
-        
-        if (fullTypeName != ExpectedAttributeName) {
-            // Fallback: Check if the name matches exactly "AutoRegister" or "AutoRegisterAttribute" 
-            // if we can't resolve the full type (useful in complex Unity build environments)
-            string attrName = attr.Name.ToString();
-            if (attrName != "AutoRegister" && attrName != "AutoRegisterAttribute") {
-                return null;
+            // Verify attribute type using semantic model (with fallback to name only)
+            var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
+            var fullTypeName = attrSymbol?.ToDisplayString();
+            
+            if (fullTypeName != ExpectedAttributeName) {
+                // Fallback: Check if the name matches exactly "AutoRegister" or "AutoRegisterAttribute" 
+                // if we can't resolve the full type (useful in complex Unity build environments)
+                string attrName = attr.Name.ToString();
+                if (attrName != "AutoRegister" && attrName != "AutoRegisterAttribute") {
+                    return null;
+                }
             }
-        }
 
-        var ns = classDecl.GetNamespace();
-        
-        // Extract lifetime using semantic model (handles named arguments)
-        string lifetime = ExtractLifetime(context, attr, cancellationToken);
-        
-        // Extract scope using semantic model (handles named arguments)
-        string scope = ExtractScope(context, attr, cancellationToken);
+            var ns = classDecl.GetNamespace();
+            
+            // Extract lifetime using semantic model (handles named arguments)
+            string lifetime = ExtractLifetime(context, attr, cancellationToken);
+            
+            // Extract scope using semantic model (handles named arguments)
+            string scope = ExtractScope(context, attr, cancellationToken);
 
-        // Extract ALL interfaces and check for MonoBehavior/Component
-        var interfaceNames = new List<string>();
-        bool isComponent = false;
+            // Extract boolean properties (named arguments like AsImplementedInterfaces = false)
+            bool asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
+            bool asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
 
-        if (classDecl.BaseList != null) {
-            foreach (var baseType in classDecl.BaseList.Types) {
-                var symbol = context.SemanticModel.GetTypeInfo(baseType.Type, cancellationToken).Type;
-                if (symbol == null) continue;
 
-                if (symbol.TypeKind == TypeKind.Interface) {
-                    interfaceNames.Add(symbol.ToDisplayString());
-                } else if (symbol.TypeKind == TypeKind.Class) {
-                    // Check if it's a Component (directly or indirectly)
-                    var current = symbol;
-                    while (current != null) {
-                        if (current.ToDisplayString() == "UnityEngine.Component" || current.ToDisplayString() == "UnityEngine.MonoBehaviour") {
-                            isComponent = true;
-                            break;
+            // Extract ALL interfaces and check for MonoBehavior/Component
+            var interfaceNames = new List<string>();
+            bool isComponent = false;
+
+            if (classDecl.BaseList != null) {
+                foreach (var baseType in classDecl.BaseList.Types) {
+                    var symbol = context.SemanticModel.GetTypeInfo(baseType.Type, cancellationToken).Type;
+                    if (symbol == null || symbol.TypeKind == TypeKind.Error) {
+                        // Fallback to syntactic text if SemanticModel fails (common in Unity for external assemblies)
+                        string rawName = baseType.Type.ToString();
+                        if (rawName.StartsWith("I") && char.IsUpper(rawName.Length > 1 ? rawName[1] : 'a')) {
+                             interfaceNames.Add(rawName);
                         }
-                        current = current.BaseType;
+                        else if (rawName == "MonoBehaviour" || rawName == "Component" || rawName == "SerializedMonoBehaviour" || rawName == "NetworkBehaviour") {
+                             isComponent = true;
+                        }
+                        continue;
+                    }
+
+                    if (symbol.TypeKind == TypeKind.Interface) {
+                        interfaceNames.Add(symbol.ToDisplayString());
+                    } else if (symbol.TypeKind == TypeKind.Class) {
+                        // Check if it's a Component (directly or indirectly)
+                        var current = symbol;
+                        while (current != null) {
+                            if (current.ToDisplayString() == "UnityEngine.Component" || current.ToDisplayString() == "UnityEngine.MonoBehaviour") {
+                                isComponent = true;
+                                break;
+                            }
+                            current = current.BaseType;
+                        }
                     }
                 }
             }
+            
+            return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf);
+        } catch {
+            return null;
         }
-        
-        return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent);
     }
 
     public static SceneInjectionInfo? ExtractSceneInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         
-        var classDecl = (ClassDeclarationSyntax)context.Node;
+        try {
+            var classDecl = (ClassDeclarationSyntax)context.Node;
 
-        var attr = classDecl.AttributeLists
-            .SelectMany(x => x.Attributes)
-            .FirstOrDefault(x => x.Name.ToString() == "AutoInjectScene");
+            var attr = classDecl.AttributeLists
+                .SelectMany(x => x.Attributes)
+                .FirstOrDefault(x => {
+                    string name = x.Name.ToString();
+                    return name == "AutoInjectScene" || name == "AutoInjectSceneAttribute" || 
+                           name.EndsWith(".AutoInjectScene") || name.EndsWith(".AutoInjectSceneAttribute");
+                });
 
-        if (attr == null) return null;
+            if (attr == null) return null;
 
-        var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
-        if (attrSymbol?.ToDisplayString() != SceneAttributeName) {
-            // Fallback: Check if the name matches exactly "AutoInjectScene" or "AutoInjectSceneAttribute"
-            string attrName = attr.Name.ToString();
-            if (attrName != "AutoInjectScene" && attrName != "AutoInjectSceneAttribute") {
-                return null;
+            var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
+            if (attrSymbol?.ToDisplayString() != SceneAttributeName) {
+                // Fallback: Check if the name matches exactly "AutoInjectScene" or "AutoInjectSceneAttribute"
+                string attrName = attr.Name.ToString();
+                if (attrName != "AutoInjectScene" && attrName != "AutoInjectSceneAttribute") {
+                    return null;
+                }
             }
-        }
 
-        var ns = classDecl.GetNamespace();
-        return new SceneInjectionInfo(ns, classDecl.Identifier.Text);
+            var ns = classDecl.GetNamespace();
+            return new SceneInjectionInfo(ns, classDecl.Identifier.Text);
+        } catch {
+            return null;
+        }
     }
 
     public static SceneRegistrationInfo? ExtractSceneRegistrationInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         
-        var classDecl = (ClassDeclarationSyntax)context.Node;
+        try {
+            var classDecl = (ClassDeclarationSyntax)context.Node;
 
-        var attr = classDecl.AttributeLists
-            .SelectMany(x => x.Attributes)
-            .FirstOrDefault(x => x.Name.ToString() == "AutoRegisterScene");
+            var attr = classDecl.AttributeLists
+                .SelectMany(x => x.Attributes)
+                .FirstOrDefault(x => {
+                    string name = x.Name.ToString();
+                    return name == "AutoRegisterScene" || name == "AutoRegisterSceneAttribute" || 
+                           name.EndsWith(".AutoRegisterScene") || name.EndsWith(".AutoRegisterSceneAttribute");
+                });
 
-        if (attr == null) return null;
+            if (attr == null) return null;
 
-        var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
-        if (attrSymbol?.ToDisplayString() != SceneRegAttributeName) {
-            string attrName = attr.Name.ToString();
-            if (attrName != "AutoRegisterScene" && attrName != "AutoRegisterSceneAttribute") {
-                return null;
+            var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
+            if (attrSymbol?.ToDisplayString() != SceneRegAttributeName) {
+                string attrName = attr.Name.ToString();
+                if (attrName != "AutoRegisterScene" && attrName != "AutoRegisterSceneAttribute") {
+                    return null;
+                }
             }
-        }
 
-        var ns = classDecl.GetNamespace();
-        return new SceneRegistrationInfo(ns, classDecl.Identifier.Text);
+            var ns = classDecl.GetNamespace();
+            return new SceneRegistrationInfo(ns, classDecl.Identifier.Text);
+        } catch {
+            return null;
+        }
     }
 
     private static string ExtractLifetime(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken) {
@@ -196,5 +235,28 @@ internal class ClassAnalyzer {
 
         // If not a constant, return default
         return "Global";
+    }
+
+    private static bool ExtractBooleanProperty(GeneratorSyntaxContext context, AttributeSyntax attr, string propertyName, bool defaultValue, CancellationToken cancellationToken) {
+        if (attr.ArgumentList == null) return defaultValue;
+
+        // Property assignments use NameEquals (e.g., AsSelf = false)
+        var arg = attr.ArgumentList.Arguments
+            .FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == propertyName);
+
+        if (arg == null) return defaultValue;
+
+        var constantValue = context.SemanticModel.GetConstantValue(arg.Expression, cancellationToken);
+        if (constantValue.HasValue && constantValue.Value is bool boolVal) {
+            return boolVal;
+        }
+
+        // Fallback syntactic check
+        if (arg.Expression is LiteralExpressionSyntax literal) {
+            if (literal.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.TrueLiteralExpression)) return true;
+            if (literal.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.FalseLiteralExpression)) return false;
+        }
+
+        return defaultValue;
     }
 }
