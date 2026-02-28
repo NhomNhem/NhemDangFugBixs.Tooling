@@ -48,59 +48,70 @@ internal static class RegistrationEmitter {
             // 2. Standard VContainer Registrations
             using (writer.Block("public static class VContainerRegistration")) {
                 
-                var groups = services.GroupBy(s => s.ScopeName);
+                var groups = services.GroupBy(s => s.ScopeName).ToDictionary(g => g.Key, g => g.ToList());
+                var sceneRegList = sceneRegistrations.ToList();
+
+                // 2a. Ensure Global group exists if we have scene registrations
+                if (sceneRegList.Count > 0 && !groups.ContainsKey("Global")) {
+                    groups["Global"] = new List<ServiceInfo>();
+                }
 
                 foreach (var group in groups) {
                     string methodName = $"Register{group.Key}"; 
                     
                     using (writer.Block($"public static void {methodName}(IContainerBuilder builder)")) {
-                        // 2a. Scene MonoBehaviour registrations (FindFirstObjectByType + RegisterComponent)
-                        var sceneRegList = sceneRegistrations.ToList();
-                        if (sceneRegList.Count > 0) {
-                            writer.WriteLine("#if UNITY_2023_1_OR_NEWER || NHEM_FORCE_FIND_OBJECT");
+                        writer.WriteLine("VContainer.Unity.EntryPointsBuilder.EnsureDispatcherRegistered(builder);");
+                        
+                        // 2b. Scene MonoBehaviour registrations (FindFirstObjectByType + RegisterComponent)
+                        if (group.Key == "Global" && sceneRegList.Count > 0) {
                             writer.WriteLine("// Scene MonoBehaviours [AutoRegisterScene]");
                             foreach (var reg in sceneRegList) {
                                 string varName = $"_{char.ToLower(reg.ClassName[0])}{reg.ClassName.Substring(1)}";
+                                writer.WriteLine($"#if UNITY_2023_1_OR_NEWER || UNITY_2022_3_OR_NEWER");
                                 writer.WriteLine($"var {varName} = UnityEngine.Object.FindFirstObjectByType<{reg.FullName}>();");
+                                writer.WriteLine($"#else");
+                                writer.WriteLine($"var {varName} = UnityEngine.Object.FindObjectOfType<{reg.FullName}>();");
+                                writer.WriteLine($"#endif");
                                 writer.WriteLine($"if ({varName} != null) builder.RegisterComponent({varName});");
                             }
-                            writer.WriteLine("#endif");
                             writer.WriteLine();
                         }
 
-                        // 2b. Standard service registrations
-                        foreach (var svc in group) {
+                        // 2c. Standard service registrations
+                        foreach (var svc in group.Value) {
                             var interfaces = svc.InterfaceNames;
                             
                             // VContainer entry point interfaces - handled automatically by AsImplementedInterfaces
                             var entryPointInterfaces = new HashSet<string> {
-                                "VContainer.Unity.IInitializable",
-                                "VContainer.Unity.ITickable",
-                                "VContainer.Unity.IFixedTickable",
-                                "VContainer.Unity.ILateTickable",
-                                "VContainer.Unity.IStartable",
-                                "VContainer.Unity.IPostInitializable",
-                                "VContainer.Unity.IPostTickable",
-                                "VContainer.Unity.IPostFixedTickable",
-                                "VContainer.Unity.IPostLateTickable",
-                                "VContainer.Unity.IPostStartable"
+                                "IInitializable", "ITickable", "IFixedTickable", "ILateTickable",
+                                "IStartable", "IPostInitializable", "IPostTickable",
+                                "IPostFixedTickable", "IPostLateTickable", "IPostStartable"
                             };
                             
-                            bool isEntryPoint = interfaces.Any(i => entryPointInterfaces.Contains(i));
-
+                            var suffix = "";
+                            if (svc.AsImplementedInterfaces) suffix += ".AsImplementedInterfaces()";
+                            if (svc.AsSelf) suffix += ".AsSelf()";
+                            
                             if (svc.IsComponent) {
-                                writer.WriteLine($"builder.RegisterComponentInHierarchy<{svc.FullName}>();");
-                            } else if (isEntryPoint) {
-                                // Use Register + AsImplementedInterfaces + AsSelf for entry points
-                                // AsImplementedInterfaces registers all interfaces (including ITickable, IInitializable, etc.)
-                                // AsSelf ensures the concrete type can still be resolved directly
-                                writer.WriteLine($"builder.Register<{svc.FullName}>(Lifetime.{svc.Lifetime}).AsImplementedInterfaces().AsSelf();");
+                                writer.WriteLine($"builder.RegisterComponentOnNewGameObject<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
                             } else {
-                                if (interfaces.Length > 0) {
-                                    string interfaceList = string.Join(", ", interfaces);
-                                    writer.WriteLine($"builder.Register<{svc.FullName}>(Lifetime.{svc.Lifetime}).As<{interfaceList}>();");
+                                bool isEntryPoint = false;
+                                foreach (var iface in interfaces) {
+                                    bool match = false;
+                                    foreach (var ep in entryPointInterfaces) {
+                                        if (iface.EndsWith(ep)) {
+                                            match = true;
+                                            isEntryPoint = true;
+                                            break;
+                                        }
+                                    }
+                                    if (match) break;
+                                }
+
+                                if (isEntryPoint && !svc.AsImplementedInterfaces) {
+                                    writer.WriteLine($"builder.RegisterEntryPoint<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
                                 } else {
-                                    writer.WriteLine($"builder.Register<{svc.FullName}>(Lifetime.{svc.Lifetime});");
+                                    writer.WriteLine($"builder.Register<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
                                 }
                             }
                         }
