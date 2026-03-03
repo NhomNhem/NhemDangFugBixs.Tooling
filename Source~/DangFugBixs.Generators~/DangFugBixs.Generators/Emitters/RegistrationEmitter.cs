@@ -62,7 +62,8 @@ internal static class RegistrationEmitter {
                             if (svc.AsTypes != null && svc.AsTypes.Length > 0) {
                                 suffix += $".As({string.Join(", ", svc.AsTypes.Select(t => $"typeof({t})"))})";
                             } else {
-                                if (svc.AsImplementedInterfaces) suffix += ".AsImplementedInterfaces()";
+                                // If it's an entry point, AsImplementedInterfaces is already handled by RegisterEntryPoint
+                                if (svc.AsImplementedInterfaces && !svc.IsEntryPoint) suffix += ".AsImplementedInterfaces()";
                                 if (svc.AsSelf) suffix += ".AsSelf()";
                             }
                             
