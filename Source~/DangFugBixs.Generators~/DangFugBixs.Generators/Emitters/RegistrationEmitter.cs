@@ -11,7 +11,6 @@ internal static class RegistrationEmitter {
     public static string GenerateSource(
         IEnumerable<ServiceInfo> services, 
         IEnumerable<SceneInjectionInfo> sceneServices,
-        IEnumerable<SceneRegistrationInfo> sceneRegistrations,
         string assemblyName) {
         
         string sanitizedAssembly = assemblyName.Replace(".", "").Replace("-", "");
@@ -49,12 +48,6 @@ internal static class RegistrationEmitter {
             using (writer.Block("public static class VContainerRegistration")) {
                 
                 var groups = services.GroupBy(s => s.ScopeName).ToDictionary(g => g.Key, g => g.ToList());
-                var sceneRegList = sceneRegistrations.ToList();
-
-                // 2a. Ensure Global group exists if we have scene registrations
-                if (sceneRegList.Count > 0 && !groups.ContainsKey("Global")) {
-                    groups["Global"] = new List<ServiceInfo>();
-                }
 
                 foreach (var group in groups) {
                     string methodName = $"Register{group.Key}"; 
@@ -62,57 +55,18 @@ internal static class RegistrationEmitter {
                     using (writer.Block($"public static void {methodName}(IContainerBuilder builder)")) {
                         writer.WriteLine("VContainer.Unity.EntryPointsBuilder.EnsureDispatcherRegistered(builder);");
                         
-                        // 2b. Scene MonoBehaviour registrations (FindFirstObjectByType + RegisterComponent)
-                        if (group.Key == "Global" && sceneRegList.Count > 0) {
-                            writer.WriteLine("// Scene MonoBehaviours [AutoRegisterScene]");
-                            foreach (var reg in sceneRegList) {
-                                string varName = $"_{char.ToLower(reg.ClassName[0])}{reg.ClassName.Substring(1)}";
-                                writer.WriteLine($"#if UNITY_2023_1_OR_NEWER || UNITY_2022_3_OR_NEWER");
-                                writer.WriteLine($"var {varName} = UnityEngine.Object.FindFirstObjectByType<{reg.FullName}>();");
-                                writer.WriteLine($"#else");
-                                writer.WriteLine($"var {varName} = UnityEngine.Object.FindObjectOfType<{reg.FullName}>();");
-                                writer.WriteLine($"#endif");
-                                writer.WriteLine($"if ({varName} != null) builder.RegisterComponent({varName});");
-                            }
-                            writer.WriteLine();
-                        }
-
-                        // 2c. Standard service registrations
+                        // 2c. Emit Standard service registrations and EntryPoints
                         foreach (var svc in group.Value) {
-                            var interfaces = svc.InterfaceNames;
-                            
-                            // VContainer entry point interfaces - handled automatically by AsImplementedInterfaces
-                            var entryPointInterfaces = new HashSet<string> {
-                                "IInitializable", "ITickable", "IFixedTickable", "ILateTickable",
-                                "IStartable", "IPostInitializable", "IPostTickable",
-                                "IPostFixedTickable", "IPostLateTickable", "IPostStartable"
-                            };
-                            
                             var suffix = "";
                             if (svc.AsImplementedInterfaces) suffix += ".AsImplementedInterfaces()";
                             if (svc.AsSelf) suffix += ".AsSelf()";
                             
-                            if (svc.IsComponent) {
+                            if (svc.RegisterInHierarchy) {
+                                writer.WriteLine($"builder.RegisterComponentInHierarchy<{svc.FullName}>(){suffix};");
+                            } else if (svc.IsComponent) {
                                 writer.WriteLine($"builder.RegisterComponentOnNewGameObject<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
                             } else {
-                                bool isEntryPoint = false;
-                                foreach (var iface in interfaces) {
-                                    bool match = false;
-                                    foreach (var ep in entryPointInterfaces) {
-                                        if (iface.EndsWith(ep)) {
-                                            match = true;
-                                            isEntryPoint = true;
-                                            break;
-                                        }
-                                    }
-                                    if (match) break;
-                                }
-
-                                if (isEntryPoint && !svc.AsImplementedInterfaces) {
-                                    writer.WriteLine($"builder.RegisterEntryPoint<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
-                                } else {
-                                    writer.WriteLine($"builder.Register<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
-                                }
+                                writer.WriteLine($"builder.Register<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
                             }
                         }
                     }
