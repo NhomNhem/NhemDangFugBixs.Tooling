@@ -58,13 +58,22 @@ internal static class RegistrationEmitter {
                         // 2c. Emit Standard service registrations and EntryPoints
                         foreach (var svc in group.Value) {
                             var suffix = "";
-                            if (svc.AsImplementedInterfaces) suffix += ".AsImplementedInterfaces()";
-                            if (svc.AsSelf) suffix += ".AsSelf()";
+                            
+                            if (svc.AsTypes != null && svc.AsTypes.Length > 0) {
+                                suffix += $".As({string.Join(", ", svc.AsTypes.Select(t => $"typeof({t})"))})";
+                            } else {
+                                if (svc.AsImplementedInterfaces) suffix += ".AsImplementedInterfaces()";
+                                if (svc.AsSelf) suffix += ".AsSelf()";
+                            }
                             
                             if (svc.RegisterInHierarchy) {
                                 writer.WriteLine($"builder.RegisterComponentInHierarchy<{svc.FullName}>(){suffix};");
                             } else if (svc.IsComponent) {
                                 writer.WriteLine($"builder.RegisterComponentOnNewGameObject<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
+                            } else if (svc.IsFactory) {
+                                writer.WriteLine($"builder.RegisterFactory<{svc.FullName}>(c => () => c.Resolve<{svc.FullName}>(), Lifetime.{svc.Lifetime}){suffix};");
+                            } else if (svc.IsEntryPoint) {
+                                writer.WriteLine($"builder.RegisterEntryPoint<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
                             } else {
                                 writer.WriteLine($"builder.Register<{svc.FullName}>(Lifetime.{svc.Lifetime}){suffix};");
                             }
