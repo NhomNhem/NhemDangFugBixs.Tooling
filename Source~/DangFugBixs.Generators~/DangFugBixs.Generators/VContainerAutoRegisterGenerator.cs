@@ -76,6 +76,7 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
         var sourceCode = RegistrationEmitter.GenerateSource(validServices, validSceneServices, assemblyName);
         
         // phase 3: Encapsulation
-        context.AddSource("VContainerRegistration.g.cs", SourceText.From(sourceCode, Encoding.UTF8));
+        var hintName = string.IsNullOrEmpty(assemblyName) ? "VContainerRegistration.g.cs" : $"{assemblyName}.VContainerRegistration.g.cs";
+        context.AddSource(hintName, SourceText.From(sourceCode, Encoding.UTF8));
     }
 }
