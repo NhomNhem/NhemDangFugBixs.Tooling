@@ -8,6 +8,7 @@ namespace NhemDangFugBixs.Attributes {
         
         public bool AsImplementedInterfaces { get; set; } = true;
         public bool AsSelf { get; set; } = true;
+        public bool RegisterInHierarchy { get; set; } = false;
 
         public AutoRegisterAttribute(Lifetime lifetime = Lifetime.Singleton, string scope = "Global") {
             this.Lifetime = lifetime;

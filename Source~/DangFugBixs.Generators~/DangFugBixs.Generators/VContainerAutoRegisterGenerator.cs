@@ -46,47 +46,34 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
                 )
             .Where(info => info != null);
 
-        var sceneRegistrations = context.SyntaxProvider
-            .CreateSyntaxProvider(
-                predicate: (node, _) => node is ClassDeclarationSyntax { AttributeLists.Count: > 0 },
-                transform: (ctx, token) => ClassAnalyzer.ExtractSceneRegistrationInfo(ctx, token)
-                )
-            .Where(info => info != null);
-
         // phase 2: Output Generation - combine with compilation to get assembly name
         var combined = services.Collect()
             .Combine(sceneServices.Collect())
-            .Combine(sceneRegistrations.Collect())
             .Combine(context.CompilationProvider);
         
         context.RegisterSourceOutput(combined, Execute);
     }
 
     private static void Execute(SourceProductionContext context,
-        (((System.Collections.Immutable.ImmutableArray<ServiceInfo?> Services, System.Collections.Immutable.ImmutableArray<SceneInjectionInfo?> SceneServices) Inner, System.Collections.Immutable.ImmutableArray<SceneRegistrationInfo?> SceneRegistrations) Data, Compilation Compilation) input) {
+        ((System.Collections.Immutable.ImmutableArray<ServiceInfo?> Services, System.Collections.Immutable.ImmutableArray<SceneInjectionInfo?> SceneServices) Data, Compilation Compilation) input) {
         
         // Guard: only emit for allowed assemblies
         var assemblyName = input.Compilation.AssemblyName ?? "";
         if (!AllowedAssemblies.Contains(assemblyName)) return;
         
-        var validServices = input.Data.Inner.Services
+        var validServices = input.Data.Services
             .Where(s => s.HasValue)
             .Select(s => s!.Value)
             .ToList();
             
-        var validSceneServices = input.Data.Inner.SceneServices
+        var validSceneServices = input.Data.SceneServices
             .Where(s => s.HasValue)
             .Select(s => s!.Value)
             .ToList();
 
-        var validSceneRegistrations = input.Data.SceneRegistrations
-            .Where(s => s.HasValue)
-            .Select(s => s!.Value)
-            .ToList();
+        if (validServices.Count == 0 && validSceneServices.Count == 0) return;
         
-        if (validServices.Count == 0 && validSceneServices.Count == 0 && validSceneRegistrations.Count == 0) return;
-        
-        var sourceCode = RegistrationEmitter.GenerateSource(validServices, validSceneServices, validSceneRegistrations, assemblyName);
+        var sourceCode = RegistrationEmitter.GenerateSource(validServices, validSceneServices, assemblyName);
         
         // phase 3: Encapsulation
         context.AddSource("VContainerRegistration.g.cs", SourceText.From(sourceCode, Encoding.UTF8));

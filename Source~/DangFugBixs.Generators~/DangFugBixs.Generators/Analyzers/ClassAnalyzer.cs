@@ -10,7 +10,6 @@ namespace NhemDangFugBixs.Generators.Analyzers;
 internal class ClassAnalyzer {
     private const string ExpectedAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterAttribute";
     private const string SceneAttributeName = "NhemDangFugBixs.Attributes.AutoInjectSceneAttribute";
-    private const string SceneRegAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterSceneAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
 
     public static ServiceInfo? ExtractInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
@@ -53,6 +52,7 @@ internal class ClassAnalyzer {
             // Extract boolean properties (named arguments like AsImplementedInterfaces = false)
             bool asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
             bool asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
+            bool registerInHierarchy = ExtractBooleanProperty(context, attr, "RegisterInHierarchy", false, cancellationToken);
 
 
             // Extract ALL interfaces and check for MonoBehavior/Component
@@ -90,7 +90,7 @@ internal class ClassAnalyzer {
                 }
             }
             
-            return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf);
+            return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf, registerInHierarchy);
         } catch {
             return null;
         }
@@ -128,36 +128,7 @@ internal class ClassAnalyzer {
         }
     }
 
-    public static SceneRegistrationInfo? ExtractSceneRegistrationInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
-        
-        try {
-            var classDecl = (ClassDeclarationSyntax)context.Node;
 
-            var attr = classDecl.AttributeLists
-                .SelectMany(x => x.Attributes)
-                .FirstOrDefault(x => {
-                    string name = x.Name.ToString();
-                    return name == "AutoRegisterScene" || name == "AutoRegisterSceneAttribute" || 
-                           name.EndsWith(".AutoRegisterScene") || name.EndsWith(".AutoRegisterSceneAttribute");
-                });
-
-            if (attr == null) return null;
-
-            var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
-            if (attrSymbol?.ToDisplayString() != SceneRegAttributeName) {
-                string attrName = attr.Name.ToString();
-                if (attrName != "AutoRegisterScene" && attrName != "AutoRegisterSceneAttribute") {
-                    return null;
-                }
-            }
-
-            var ns = classDecl.GetNamespace();
-            return new SceneRegistrationInfo(ns, classDecl.Identifier.Text);
-        } catch {
-            return null;
-        }
-    }
 
     private static string ExtractLifetime(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken) {
         if (attr.ArgumentList == null || attr.ArgumentList.Arguments.Count == 0) {

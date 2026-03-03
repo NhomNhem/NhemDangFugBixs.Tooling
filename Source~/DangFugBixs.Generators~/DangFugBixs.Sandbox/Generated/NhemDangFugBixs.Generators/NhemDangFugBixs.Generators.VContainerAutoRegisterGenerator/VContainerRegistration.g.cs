@@ -22,7 +22,9 @@ namespace NhemDangFugBixs.Generated.DangFugBixsSandbox
         public static void RegisterGlobal(IContainerBuilder builder)
         {
             VContainer.Unity.EntryPointsBuilder.EnsureDispatcherRegistered(builder);
-            builder.RegisterEntryPoint<MySanboxGame.AudioService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            #pragma warning disable CS0618
+            builder.RegisterEntryPoint<MySanboxGame.AudioService>(Lifetime.Singleton).AsSelf();
+            #pragma warning restore CS0618
             builder.Register<MySanboxGame.MultiService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
             builder.Register<MySanboxGame.NetworkService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
         }

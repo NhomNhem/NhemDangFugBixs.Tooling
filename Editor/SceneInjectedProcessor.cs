@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -10,20 +9,10 @@ namespace NhemDangFugBixs.Editor
     [InitializeOnLoad]
     public static class SceneInjectedProcessor
     {
-        static SceneInjectedProcessor()
-        {
-            EditorSceneManager.sceneSaving += OnSceneSaving;
-        }
-
-        private static void OnSceneSaving(UnityEngine.SceneManagement.Scene scene, string path)
-        {
-            ProcessScene(scene);
-        }
-
         [MenuItem("Tools/NhemDangFugBixs/Force Sync Scene Injection")]
         public static void ForceSync()
         {
-            ProcessScene(EditorSceneManager.GetActiveScene());
+            ProcessScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         }
 
         private static void ProcessScene(UnityEngine.SceneManagement.Scene scene)
