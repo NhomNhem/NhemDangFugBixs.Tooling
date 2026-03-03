@@ -23,4 +23,8 @@
         <ProjectReference Include="..\..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="VContainer" Version="1.0.2" />
+    </ItemGroup>
+
 </Project>
