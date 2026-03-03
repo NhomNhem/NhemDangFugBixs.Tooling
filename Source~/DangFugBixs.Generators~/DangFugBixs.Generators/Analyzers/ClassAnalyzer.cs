@@ -9,8 +9,23 @@ namespace NhemDangFugBixs.Generators.Analyzers;
 
 internal class ClassAnalyzer {
     private const string ExpectedAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterAttribute";
+    private const string FactoryAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterFactoryAttribute";
     private const string SceneAttributeName = "NhemDangFugBixs.Attributes.AutoInjectSceneAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
+    private static readonly HashSet<string> EntryPointInterfaces = new() {
+        "VContainer.Unity.IInitializable", "IInitializable",
+        "VContainer.Unity.IPostInitializable", "IPostInitializable",
+        "VContainer.Unity.IStartable", "IStartable",
+        "VContainer.Unity.IPostStartable", "IPostStartable",
+        "VContainer.Unity.IFixedTickable", "IFixedTickable",
+        "VContainer.Unity.IPostFixedTickable", "IPostFixedTickable",
+        "VContainer.Unity.ITickable", "ITickable",
+        "VContainer.Unity.IPostTickable", "IPostTickable",
+        "VContainer.Unity.ILateTickable", "ILateTickable",
+        "VContainer.Unity.IPostLateTickable", "IPostLateTickable",
+        "VContainer.Unity.IAsyncStartable", "IAsyncStartable",
+        "System.IDisposable", "IDisposable"
+    };
 
     public static ServiceInfo? ExtractInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
@@ -23,7 +38,9 @@ internal class ClassAnalyzer {
                 .FirstOrDefault(x => {
                     string name = x.Name.ToString();
                     return name == "AutoRegister" || name == "AutoRegisterAttribute" || 
-                           name.EndsWith(".AutoRegister") || name.EndsWith(".AutoRegisterAttribute");
+                           name.EndsWith(".AutoRegister") || name.EndsWith(".AutoRegisterAttribute") ||
+                           name == "AutoRegisterFactory" || name == "AutoRegisterFactoryAttribute" ||
+                           name.EndsWith(".AutoRegisterFactory") || name.EndsWith(".AutoRegisterFactoryAttribute");
                 });
 
             if (attr == null) return null;
@@ -32,11 +49,16 @@ internal class ClassAnalyzer {
             var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
             var fullTypeName = attrSymbol?.ToDisplayString();
             
-            if (fullTypeName != ExpectedAttributeName) {
+            bool isFactory = false;
+            if (fullTypeName == FactoryAttributeName) {
+                isFactory = true;
+            } else if (fullTypeName != ExpectedAttributeName) {
                 // Fallback: Check if the name matches exactly "AutoRegister" or "AutoRegisterAttribute" 
                 // if we can't resolve the full type (useful in complex Unity build environments)
                 string attrName = attr.Name.ToString();
-                if (attrName != "AutoRegister" && attrName != "AutoRegisterAttribute") {
+                if (attrName == "AutoRegisterFactory" || attrName == "AutoRegisterFactoryAttribute") {
+                    isFactory = true;
+                } else if (attrName != "AutoRegister" && attrName != "AutoRegisterAttribute") {
                     return null;
                 }
             }
@@ -53,11 +75,13 @@ internal class ClassAnalyzer {
             bool asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
             bool asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
             bool registerInHierarchy = ExtractBooleanProperty(context, attr, "RegisterInHierarchy", false, cancellationToken);
+            string[] asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
 
 
             // Extract ALL interfaces and check for MonoBehavior/Component
             var interfaceNames = new List<string>();
             bool isComponent = false;
+            bool isEntryPoint = false;
 
             if (classDecl.BaseList != null) {
                 foreach (var baseType in classDecl.BaseList.Types) {
@@ -67,6 +91,9 @@ internal class ClassAnalyzer {
                         string rawName = baseType.Type.ToString();
                         if (rawName.StartsWith("I") && char.IsUpper(rawName.Length > 1 ? rawName[1] : 'a')) {
                              interfaceNames.Add(rawName);
+                             if (EntryPointInterfaces.Contains(rawName)) {
+                                 isEntryPoint = true;
+                             }
                         }
                         else if (rawName == "MonoBehaviour" || rawName == "Component" || rawName == "SerializedMonoBehaviour" || rawName == "NetworkBehaviour") {
                              isComponent = true;
@@ -75,7 +102,11 @@ internal class ClassAnalyzer {
                     }
 
                     if (symbol.TypeKind == TypeKind.Interface) {
-                        interfaceNames.Add(symbol.ToDisplayString());
+                        string fullName = symbol.ToDisplayString();
+                        interfaceNames.Add(fullName);
+                        if (EntryPointInterfaces.Contains(fullName)) {
+                            isEntryPoint = true;
+                        }
                     } else if (symbol.TypeKind == TypeKind.Class) {
                         // Check if it's a Component (directly or indirectly)
                         var current = symbol;
@@ -90,7 +121,7 @@ internal class ClassAnalyzer {
                 }
             }
             
-            return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf, registerInHierarchy);
+            return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory);
         } catch {
             return null;
         }
@@ -229,5 +260,47 @@ internal class ClassAnalyzer {
         }
 
         return defaultValue;
+    }
+
+    private static string[] ExtractTypeArrayProperty(GeneratorSyntaxContext context, AttributeSyntax attr, string propertyName, CancellationToken cancellationToken) {
+        if (attr.ArgumentList == null) return System.Array.Empty<string>();
+
+        var arg = attr.ArgumentList.Arguments
+            .FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == propertyName);
+
+        if (arg == null) return System.Array.Empty<string>();
+
+        var types = new List<string>();
+
+        // Handle new[] { typeof(T) }
+        if (arg.Expression is ImplicitArrayCreationExpressionSyntax implicitArray) {
+            foreach (var expr in implicitArray.Initializer.Expressions) {
+                if (expr is TypeOfExpressionSyntax typeOfExpr) {
+                    var typeSymbol = context.SemanticModel.GetSymbolInfo(typeOfExpr.Type, cancellationToken).Symbol as ITypeSymbol;
+                    if (typeSymbol != null) {
+                        types.Add(typeSymbol.ToDisplayString());
+                    } else {
+                        types.Add(typeOfExpr.Type.ToString()); // Fallback
+                    }
+                }
+            }
+        } 
+        // Handle new Type[] { typeof(T) }
+        else if (arg.Expression is ArrayCreationExpressionSyntax explicitArray) {
+             if (explicitArray.Initializer != null) {
+                 foreach (var expr in explicitArray.Initializer.Expressions) {
+                     if (expr is TypeOfExpressionSyntax typeOfExpr) {
+                        var typeSymbol = context.SemanticModel.GetSymbolInfo(typeOfExpr.Type, cancellationToken).Symbol as ITypeSymbol;
+                        if (typeSymbol != null) {
+                            types.Add(typeSymbol.ToDisplayString());
+                        } else {
+                            types.Add(typeOfExpr.Type.ToString()); // Fallback
+                        }
+                    }
+                 }
+             }
+        }
+
+        return types.ToArray();
     }
 }
