@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-03-15
+
+### ⭐ Added - Type-Safe Scope Registration
+
+- **`[AutoRegisterIn<TScope>]` Generic Attribute**: Type-safe scope references with full IntelliSense support. No more string typos!
+- **Convention-Based Naming**: Automatic registration method names by stripping "LifetimeScope" suffix (e.g., `GameplayLifetimeScope` → `RegisterGameplay()`).
+- **`[ScopeName("Custom")]` Override**: Custom registration method names when convention doesn't fit.
+- **Compile-Time Validation**: Roslyn analyzers catch scope errors before they become runtime failures.
+
+### 🔒 Breaking Changes
+
+- **String-based scopes deprecated**: `[AutoRegister(scope: "Gameplay")]` is now marked `[Obsolete]` and produces compiler warnings.
+- **Migration required**: Update to `[AutoRegisterIn<GameplayLifetimeScope>]` syntax.
+- **See Migration Guide**: Refer to README.md for step-by-step migration instructions.
+
+### 🛡️ New Diagnostic Rules
+
+| Code | Severity | Description |
+|------|----------|-------------|
+| ND001 | Error | Scope type not found |
+| ND002 | Error | Type must inherit from LifetimeScope |
+| ND003 | Error | Circular scope dependency detected |
+| ND004 | Warning | Parent scope cannot depend on child scope |
+| ND103 | Warning | Scope has registrations but no LifetimeScope calls Register method |
+
+### 📚 Documentation
+
+- Updated README.md with v3.0 usage examples
+- Added migration guide (v2.x → v3.0)
+- Documented all diagnostic codes
+- Added parent-child scope injection best practices
+
+### 🧪 Testing
+
+- Added `TypeSafeScopeTests.cs` with comprehensive generator tests
+- Tests for convention-based naming
+- Tests for parent-child injection patterns
+
+### 🏗️ Architecture
+
+- `ServiceInfo` model extended with `ScopeTypeName` and `UsesTypeSafeScope` properties
+- `ClassAnalyzer` refactored to support both generic and legacy attributes
+- `RegistrationEmitter` updated with convention-based naming logic
+
+---
+
 ## [2.0.1] - 2026-03-04
 
 ### Fixed
