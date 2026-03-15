@@ -25,11 +25,18 @@ namespace UnityEngine {
     }
     public class MonoBehaviour : Object { }
     public class Component : Object { }
+    public struct Vector3 { public float x, y, z; }
+    public class Transform : Object { }
+    public class Time { public static float deltaTime = 0.016f; }
+    public static class Debug { public static void Log(object msg) => Console.WriteLine(msg); }
 }
 
 namespace VContainer.Unity {
     public interface IInitializable { void Initialize(); }
     public interface ITickable { void Tick(); }
+    public class LifetimeScope {
+        protected virtual void Configure(VContainer.IContainerBuilder builder) { }
+    }
 }
 
 namespace MySandBox {

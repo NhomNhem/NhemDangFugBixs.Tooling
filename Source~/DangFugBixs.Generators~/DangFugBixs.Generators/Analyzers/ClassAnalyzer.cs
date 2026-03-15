@@ -10,6 +10,7 @@ namespace NhemDangFugBixs.Generators.Analyzers;
 internal class ClassAnalyzer {
     private const string ExpectedAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterAttribute";
     private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
+    private const string LifetimeScopeForAttributeName = "NhemDangFugBixs.Attributes.LifetimeScopeForAttribute`1";
     private const string FactoryAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterFactoryAttribute";
     private const string SceneAttributeName = "NhemDangFugBixs.Attributes.AutoInjectSceneAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
@@ -28,6 +29,90 @@ internal class ClassAnalyzer {
         "System.IDisposable", "IDisposable"
     };
 
+    private static bool IsAttributeMatch(AttributeSyntax attr, string simpleName) {
+        string fullName = attr.Name.ToString();
+        string name = fullName;
+
+        // If it's a generic name or qualified name, extract the simple name part
+        if (attr.Name is GenericNameSyntax genericName) {
+            name = genericName.Identifier.Text;
+        } else if (attr.Name is QualifiedNameSyntax qualifiedName) {
+            // Find the rightmost part which might be a generic name
+            var current = qualifiedName.Right;
+            if (current is GenericNameSyntax gn) {
+                name = gn.Identifier.Text;
+            } else {
+                name = current.Identifier.Text;
+            }
+        } else if (fullName.Contains("<")) {
+            // Fallback for other syntactic forms
+            int index = fullName.IndexOf('<');
+            name = fullName.Substring(0, index);
+            if (name.Contains(".")) {
+                name = name.Split('.').Last();
+            }
+        } else if (fullName.Contains(".")) {
+            name = fullName.Split('.').Last();
+        }
+
+        return name == simpleName || name == $"{simpleName}Attribute";
+    }
+
+    public static ScopeMappingInfo? ExtractScopeMapping(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        try {
+            var classDecl = (ClassDeclarationSyntax)context.Node;
+            AttributeSyntax? mappingAttr = null;
+            AttributeSyntax? nameAttr = null;
+
+            foreach (var attrList in classDecl.AttributeLists) {
+                foreach (var attr in attrList.Attributes) {
+                    if (IsAttributeMatch(attr, "LifetimeScopeFor")) {
+                        mappingAttr = attr;
+                    } else if (IsAttributeMatch(attr, "ScopeName")) {
+                        nameAttr = attr;
+                    }
+                }
+            }
+
+            if (mappingAttr == null) return null;
+
+            // Extract identity type from generic argument
+            string? identityTypeName = null;
+            if (mappingAttr.Name is GenericNameSyntax genericName && genericName.TypeArgumentList.Arguments.Count > 0) {
+                var identityTypeArg = genericName.TypeArgumentList.Arguments[0];
+                var identityTypeSymbol = context.SemanticModel.GetTypeInfo(identityTypeArg, cancellationToken).Type;
+                if (identityTypeSymbol != null) {
+                    identityTypeName = identityTypeSymbol.ToDisplayString();
+                }
+            } else if (mappingAttr.Name is QualifiedNameSyntax qn && qn.Right is GenericNameSyntax gn && gn.TypeArgumentList.Arguments.Count > 0) {
+                var identityTypeArg = gn.TypeArgumentList.Arguments[0];
+                var identityTypeSymbol = context.SemanticModel.GetTypeInfo(identityTypeArg, cancellationToken).Type;
+                if (identityTypeSymbol != null) {
+                    identityTypeName = identityTypeSymbol.ToDisplayString();
+                }
+            }
+
+            if (string.IsNullOrEmpty(identityTypeName)) return null;
+
+            // Extract custom name if present
+            string className = classDecl.Identifier.Text;
+            if (nameAttr != null && nameAttr.ArgumentList != null && nameAttr.ArgumentList.Arguments.Count > 0) {
+                var nameExpr = nameAttr.ArgumentList.Arguments[0].Expression;
+                var constantValue = context.SemanticModel.GetConstantValue(nameExpr, cancellationToken);
+                if (constantValue.HasValue && constantValue.Value is string customName) {
+                    className = $"{customName}LifetimeScope"; // Add suffix so RegistrationEmitter handles it normally
+                }
+            }
+
+            var ns = classDecl.GetNamespace();
+            return new ScopeMappingInfo(ns, className, identityTypeName!);
+        } catch {
+            return null;
+        }
+    }
+
     public static ServiceInfo? ExtractInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -37,11 +122,7 @@ internal class ClassAnalyzer {
             // Check for AutoRegisterIn<TScope> generic attribute first
             var autoRegisterInAttr = classDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
-                .FirstOrDefault(x => {
-                    string name = x.Name.ToString();
-                    return name == "AutoRegisterIn" || name == "AutoRegisterInAttribute" ||
-                           name.EndsWith(".AutoRegisterIn") || name.EndsWith(".AutoRegisterInAttribute");
-                });
+                .FirstOrDefault(x => IsAttributeMatch(x, "AutoRegisterIn"));
 
             if (autoRegisterInAttr != null) {
                 return ExtractInfoFromGenericAttribute(context, classDecl, autoRegisterInAttr, cancellationToken);
@@ -50,13 +131,7 @@ internal class ClassAnalyzer {
             // Fall back to legacy AutoRegister attribute
             var attr = classDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
-                .FirstOrDefault(x => {
-                    string name = x.Name.ToString();
-                    return name == "AutoRegister" || name == "AutoRegisterAttribute" ||
-                           name.EndsWith(".AutoRegister") || name.EndsWith(".AutoRegisterAttribute") ||
-                           name == "AutoRegisterFactory" || name == "AutoRegisterFactoryAttribute" ||
-                           name.EndsWith(".AutoRegisterFactory") || name.EndsWith(".AutoRegisterFactoryAttribute");
-                });
+                .FirstOrDefault(x => IsAttributeMatch(x, "AutoRegister") || IsAttributeMatch(x, "AutoRegisterFactory"));
 
             if (attr == null) return null;
 
@@ -134,7 +209,7 @@ internal class ClassAnalyzer {
             string attrName = attr.Name.ToString();
             if (attrName == "AutoRegisterFactory" || attrName == "AutoRegisterFactoryAttribute") {
                 isFactory = true;
-            } else if (attrName != "AutoRegister" && attrName != "AutoRegisterAttribute") {
+            } else if (!IsAttributeMatch(attr, "AutoRegister")) {
                 return null;
             }
         }
@@ -215,22 +290,9 @@ internal class ClassAnalyzer {
 
             var attr = classDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
-                .FirstOrDefault(x => {
-                    string name = x.Name.ToString();
-                    return name == "AutoInjectScene" || name == "AutoInjectSceneAttribute" || 
-                           name.EndsWith(".AutoInjectScene") || name.EndsWith(".AutoInjectSceneAttribute");
-                });
+                .FirstOrDefault(x => IsAttributeMatch(x, "AutoInjectScene"));
 
             if (attr == null) return null;
-
-            var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
-            if (attrSymbol?.ToDisplayString() != SceneAttributeName) {
-                // Fallback: Check if the name matches exactly "AutoInjectScene" or "AutoInjectSceneAttribute"
-                string attrName = attr.Name.ToString();
-                if (attrName != "AutoInjectScene" && attrName != "AutoInjectSceneAttribute") {
-                    return null;
-                }
-            }
 
             var ns = classDecl.GetNamespace();
             return new SceneInjectionInfo(ns, classDecl.Identifier.Text);

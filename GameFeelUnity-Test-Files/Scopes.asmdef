@@ -1,5 +1,5 @@
 {
-    "name": "GameFeel_Scopes",
+    "name": "GameFeel_Scopes_TestFiles",
     "rootNamespace": "GameFeelUnity.Scopes",
     "references": [
         "VContainer"

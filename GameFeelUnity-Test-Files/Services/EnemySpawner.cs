@@ -1,3 +1,4 @@
+using GameFeelUnity.Scopes;
 using NhemDangFugBixs.Attributes;
 using VContainer.Unity;
 using UnityEngine;

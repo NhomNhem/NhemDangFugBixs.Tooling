@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="VContainer" Version="1.0.2" />
+      <!-- VContainer is mocked in Mocks.cs -->
     </ItemGroup>
 
 </Project>
