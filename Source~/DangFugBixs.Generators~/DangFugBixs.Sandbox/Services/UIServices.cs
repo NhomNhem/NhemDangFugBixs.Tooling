@@ -6,7 +6,7 @@ namespace DangFugBixs.Sandbox.Services;
 /// <summary>
 /// Example: UI service registered with custom scope name.
 /// </summary>
-[AutoRegisterIn<UserInterfaceLifetimeScope>]
+[AutoRegisterIn(typeof(UserInterfaceLifetimeScope))]
 public class UIService {
     public void ShowMenu(string menuName) {
         UnityEngine.Debug.Log($"Showing menu: {menuName}");
@@ -16,7 +16,7 @@ public class UIService {
 /// <summary>
 /// Example: HUD service also using the custom "UI" scope name.
 /// </summary>
-[AutoRegisterIn<UserInterfaceLifetimeScope>]
+[AutoRegisterIn(typeof(UserInterfaceLifetimeScope))]
 public class HUDService {
     public void UpdateHealth(float health) {
         UnityEngine.Debug.Log($"Health updated: {health}");

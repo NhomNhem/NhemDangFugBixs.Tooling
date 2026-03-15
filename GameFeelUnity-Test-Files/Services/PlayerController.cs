@@ -1,3 +1,4 @@
+using GameFeelUnity.Scopes;
 using NhemDangFugBixs.Attributes;
 using VContainer.Unity;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace GameFeelUnity.Tests.Services
     /// Tests: Type-safe scope reference, Scoped lifetime, EntryPoint (ITickable).
     /// CRITICAL TEST: Multiple parent scope services injected.
     /// </summary>
-    [AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Scoped)]
+    [AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Scoped)]
     public class PlayerController : ITickable
     {
         private readonly GameService _gameService;

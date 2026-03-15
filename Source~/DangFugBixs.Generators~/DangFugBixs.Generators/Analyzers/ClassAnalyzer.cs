@@ -9,8 +9,10 @@ namespace NhemDangFugBixs.Generators.Analyzers;
 
 internal class ClassAnalyzer {
     private const string ExpectedAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterAttribute";
-    private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
-    private const string LifetimeScopeForAttributeName = "NhemDangFugBixs.Attributes.LifetimeScopeForAttribute`1";
+    private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute";
+    private const string AutoRegisterInGenericAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
+    private const string LifetimeScopeForAttributeName = "NhemDangFugBixs.Attributes.LifetimeScopeForAttribute";
+    private const string LifetimeScopeForGenericAttributeName = "NhemDangFugBixs.Attributes.LifetimeScopeForAttribute`1";
     private const string FactoryAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterFactoryAttribute";
     private const string SceneAttributeName = "NhemDangFugBixs.Attributes.AutoInjectSceneAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
@@ -78,19 +80,32 @@ internal class ClassAnalyzer {
 
             if (mappingAttr == null) return null;
 
-            // Extract identity type from generic argument
             string? identityTypeName = null;
+
+            // 1. [LifetimeScopeFor<T>] (C# 11.0+)
             if (mappingAttr.Name is GenericNameSyntax genericName && genericName.TypeArgumentList.Arguments.Count > 0) {
                 var identityTypeArg = genericName.TypeArgumentList.Arguments[0];
                 var identityTypeSymbol = context.SemanticModel.GetTypeInfo(identityTypeArg, cancellationToken).Type;
                 if (identityTypeSymbol != null) {
                     identityTypeName = identityTypeSymbol.ToDisplayString();
                 }
-            } else if (mappingAttr.Name is QualifiedNameSyntax qn && qn.Right is GenericNameSyntax gn && gn.TypeArgumentList.Arguments.Count > 0) {
+            } 
+            // 2. [Attributes.LifetimeScopeFor<T>] (C# 11.0+)
+            else if (mappingAttr.Name is QualifiedNameSyntax qn && qn.Right is GenericNameSyntax gn && gn.TypeArgumentList.Arguments.Count > 0) {
                 var identityTypeArg = gn.TypeArgumentList.Arguments[0];
                 var identityTypeSymbol = context.SemanticModel.GetTypeInfo(identityTypeArg, cancellationToken).Type;
                 if (identityTypeSymbol != null) {
                     identityTypeName = identityTypeSymbol.ToDisplayString();
+                }
+            }
+            // 3. [LifetimeScopeFor(typeof(T))] (Compatible with all versions)
+            else if (mappingAttr.ArgumentList != null && mappingAttr.ArgumentList.Arguments.Count > 0) {
+                var arg = mappingAttr.ArgumentList.Arguments[0].Expression;
+                if (arg is TypeOfExpressionSyntax typeOfExpr) {
+                    var identityTypeSymbol = context.SemanticModel.GetTypeInfo(typeOfExpr.Type, cancellationToken).Type;
+                    if (identityTypeSymbol != null) {
+                        identityTypeName = identityTypeSymbol.ToDisplayString();
+                    }
                 }
             }
 
@@ -119,13 +134,13 @@ internal class ClassAnalyzer {
         try {
             var classDecl = (ClassDeclarationSyntax)context.Node;
 
-            // Check for AutoRegisterIn<TScope> generic attribute first
-            var autoRegisterInAttr = classDecl.AttributeLists
+            // Check for [AutoRegisterIn] attribute first (can be generic or typeof)
+            var typeSafeAttr = classDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
                 .FirstOrDefault(x => IsAttributeMatch(x, "AutoRegisterIn"));
 
-            if (autoRegisterInAttr != null) {
-                return ExtractInfoFromGenericAttribute(context, classDecl, autoRegisterInAttr, cancellationToken);
+            if (typeSafeAttr != null) {
+                return ExtractInfoFromTypeSafeAttribute(context, classDecl, typeSafeAttr, cancellationToken);
             }
 
             // Fall back to legacy AutoRegister attribute
@@ -141,7 +156,7 @@ internal class ClassAnalyzer {
         }
     }
 
-    private static ServiceInfo? ExtractInfoFromGenericAttribute(
+    private static ServiceInfo? ExtractInfoFromTypeSafeAttribute(
         GeneratorSyntaxContext context,
         ClassDeclarationSyntax classDecl,
         AttributeSyntax attr,
@@ -149,10 +164,11 @@ internal class ClassAnalyzer {
     {
         var ns = classDecl.GetNamespace();
 
-        // Extract scope type from generic argument
+        // Extract scope type from generic argument OR positional argument
         string? scopeTypeName = null;
         bool usesTypeSafeScope = false;
 
+        // 1. [AutoRegisterIn<T>] (C# 11.0+)
         if (attr.Name is GenericNameSyntax genericName && genericName.TypeArgumentList.Arguments.Count > 0) {
             var scopeTypeArg = genericName.TypeArgumentList.Arguments[0];
             var scopeTypeSymbol = context.SemanticModel.GetTypeInfo(scopeTypeArg, cancellationToken).Type;
@@ -160,17 +176,45 @@ internal class ClassAnalyzer {
                 scopeTypeName = scopeTypeSymbol.ToDisplayString();
                 usesTypeSafeScope = true;
             }
+        } 
+        // 2. [Attributes.AutoRegisterIn<T>] (C# 11.0+)
+        else if (attr.Name is QualifiedNameSyntax qn && qn.Right is GenericNameSyntax gn && gn.TypeArgumentList.Arguments.Count > 0) {
+            var scopeTypeArg = gn.TypeArgumentList.Arguments[0];
+            var scopeTypeSymbol = context.SemanticModel.GetTypeInfo(scopeTypeArg, cancellationToken).Type;
+            if (scopeTypeSymbol != null) {
+                scopeTypeName = scopeTypeSymbol.ToDisplayString();
+                usesTypeSafeScope = true;
+            }
+        }
+        // 3. [AutoRegisterIn(typeof(T))] (Compatible with all versions)
+        else if (attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
+            var arg = attr.ArgumentList.Arguments[0].Expression;
+            if (arg is TypeOfExpressionSyntax typeOfExpr) {
+                var scopeTypeSymbol = context.SemanticModel.GetTypeInfo(typeOfExpr.Type, cancellationToken).Type;
+                if (scopeTypeSymbol != null) {
+                    scopeTypeName = scopeTypeSymbol.ToDisplayString();
+                    usesTypeSafeScope = true;
+                }
+            }
         }
 
         // Extract lifetime from named argument
         string lifetime = "Singleton";
         if (attr.ArgumentList != null) {
+            // Find named argument "Lifetime"
             var lifetimeArg = attr.ArgumentList.Arguments
-                .FirstOrDefault(a => a.NameColon?.Name.Identifier.Text == "Lifetime");
+                .FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == "Lifetime" || a.NameColon?.Name.Identifier.Text == "Lifetime");
+            
             if (lifetimeArg != null) {
                 var lifetimeExpr = lifetimeArg.Expression;
                 if (lifetimeExpr is MemberAccessExpressionSyntax memberAccess) {
                     lifetime = memberAccess.Name.Identifier.Text;
+                } else {
+                    // Try to resolve constant if it's an enum
+                    var symbolInfo = context.SemanticModel.GetSymbolInfo(lifetimeExpr, cancellationToken);
+                    if (symbolInfo.Symbol is IFieldSymbol fieldSymbol) {
+                        lifetime = fieldSymbol.Name;
+                    }
                 }
             }
         }
