@@ -12,11 +12,11 @@ namespace GameFeelUnity.Scopes
         {
             // v3.0 generated registration method
             // Convention-based naming: GameLifetimeScope → RegisterGame()
-            NhemDangFugBixs.Generated.GameFeel_Scopes.VContainerRegistration.RegisterGame(builder);
+            NhemDangFugBixs.Generated.GameFeel_Scopes_TestFiles.VContainerRegistration.RegisterGame(builder);
             
             // Explicitly register child scopes (parent→child wiring)
             // Uncomment when GameplayLifetimeScope is ready:
-            // NhemDangFugBixs.Generated.GameFeel_Scopes.VContainerRegistration.RegisterGameplay(builder);
+            // NhemDangFugBixs.Generated.GameFeel_Scopes_TestFiles.VContainerRegistration.RegisterGameplay(builder);
         }
     }
 }
