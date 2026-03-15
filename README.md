@@ -7,6 +7,7 @@ A powerful C# Source Generator for **VContainer** that automates dependency regi
 - **Cross-Layer Discovery** (v3.1): Register services across different assemblies (`asmdef`) using **Identity Types**. Break the circular dependency trap in layered architectures!
 - **Type-Safe Scopes** (v3.0): Register services to specific `LifetimeScope` types using `[AutoRegisterIn(typeof(TScope))]` - full IntelliSense support, no more string typos!
 - **Unified Master Registration**: Single `VContainerRegistration.RegisterAll(builder)` call in your `LifetimeScope` registers every discovered service across all layers.
+- **Robust Code Emission** (v3.2): Generated code uses `partial` classes and `global::` prefixes, ensuring compatibility with complex multi-assembly projects and preventing naming collisions.
 - **Convention-Based Naming**: Automatic registration method names by stripping "LifetimeScope" suffix (e.g., `GameplayLifetimeScope` → `RegisterGameplay()`).
 - **Zero Boilerplate**: Register services and components using simple attributes.
 - **Smart Component Detection**: Automatically handles `MonoBehaviour` with options for `InHierarchy` or `NewGameObject`.
@@ -31,6 +32,7 @@ public class GameplayScope {}
 // Core.asmdef (References Shared)
 using NhemDangFugBixs.Attributes;
 
+// Use NLifetime alias for convenience
 [AutoRegisterIn(typeof(GameplayScope), Lifetime = NLifetime.Scoped)]
 public class EnemyPoolManager : IEnemyPoolManager, IDisposable {
     // This service will be automatically registered into 
@@ -75,6 +77,7 @@ public class DecoupledService { }
 - ✅ Compile-time validation (typos become compiler errors)
 - ✅ Refactoring-safe (rename scope class → all usages update)
 - ✅ **Layer-Safe** (v3.1): No circular dependencies in complex asmdef setups.
+- ✅ **Robust Emission** (v3.2): Works reliably in multi-assembly projects.
 
 ### 2. Convention-Based Naming
 
@@ -85,12 +88,13 @@ The generator automatically strips "LifetimeScope" suffix:
 | `GameLifetimeScope` | `RegisterGame()` |
 | `GameplayLifetimeScope` | `RegisterGameplay()` |
 | `UILifetimeScope` | `RegisterUI()` |
+| `DungeonLifetimeScope` | `RegisterDungeon()` |
 
 Override with `[ScopeName("Custom")]` when needed.
 
 ---
 
-## ⚠️ Migration Guide (v3.0 → v3.1)
+## ⚠️ Migration Guide (v3.0 → v3.1+)
 
 v3.1 switched from generic attributes to `typeof()` arguments for better compatibility with different C# language versions in Unity.
 

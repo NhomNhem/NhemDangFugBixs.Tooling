@@ -10,7 +10,7 @@ namespace DangFugBixs.Sandbox.Services;
 /// Demonstrates: Type-safe scope reference, Scoped lifetime, EntryPoint (IInitializable).
 /// Child scope can inject parent scope services (GameService).
 /// </summary>
-[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Scoped)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = NhemLifetime.Scoped)]
 public class EnemySpawner : IInitializable {
     private readonly GameService _gameService;
 
@@ -28,7 +28,7 @@ public class EnemySpawner : IInitializable {
 /// Example: Player controller in child scope.
 /// Demonstrates: Type-safe scope reference, Scoped lifetime, EntryPoint (ITickable).
 /// </summary>
-[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Scoped)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = NhemLifetime.Scoped)]
 public class PlayerController : ITickable {
     private readonly GameService _gameService;
     private readonly AudioService _audioService;
@@ -48,7 +48,7 @@ public class PlayerController : ITickable {
 /// Example: MonoBehaviour component in child scope.
 /// Demonstrates: Component registration on new GameObject.
 /// </summary>
-[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Scoped)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = NhemLifetime.Scoped)]
 public class BulletPool : MonoBehaviour {
     public void SpawnBullet(Vector3 position, Vector3 direction) {
         UnityEngine.Debug.Log($"Bullet spawned at {position}");
