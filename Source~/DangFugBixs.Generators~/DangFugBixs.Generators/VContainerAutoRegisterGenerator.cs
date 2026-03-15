@@ -46,43 +46,73 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
                 )
             .Where(info => info != null);
 
+        var scopeMappings = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: (node, _) => node is ClassDeclarationSyntax { AttributeLists.Count: > 0 },
+                transform: (ctx, token) => ClassAnalyzer.ExtractScopeMapping(ctx, token)
+                )
+            .Where(info => info != null);
+
         // phase 2: Output Generation - combine with compilation to get assembly name
         var combined = services.Collect()
             .Combine(sceneServices.Collect())
+            .Combine(scopeMappings.Collect())
             .Combine(context.CompilationProvider);
         
         context.RegisterSourceOutput(combined, Execute);
     }
 
     private static void Execute(SourceProductionContext context,
-        ((System.Collections.Immutable.ImmutableArray<ServiceInfo?> Services, System.Collections.Immutable.ImmutableArray<SceneInjectionInfo?> SceneServices) Data, Compilation Compilation) input) {
+        (((System.Collections.Immutable.ImmutableArray<ServiceInfo?> Services, System.Collections.Immutable.ImmutableArray<SceneInjectionInfo?> SceneServices) BaseData, System.Collections.Immutable.ImmutableArray<ScopeMappingInfo?> ScopeMappings) Data, Compilation Compilation) input) {
 
-        // Guard: only emit for allowed assemblies
-        var assemblyName = input.Compilation.AssemblyName ?? "";
-        if (!AllowedAssemblies.Contains(assemblyName)) return;
+        try {
+            var assemblyName = input.Compilation.AssemblyName ?? "";
 
-        var validServices = input.Data.Services
-            .Where(s => s.HasValue)
-            .Select(s => s!.Value)
-            .ToList();
+            // v3.1 Logic: If we have ScopeMappings, we perform a global scan of referenced assemblies
+            var scopeMappings = input.Data.ScopeMappings
+                .Where(s => s.HasValue)
+                .Select(s => s!.Value)
+                .ToList();
 
-        var validSceneServices = input.Data.SceneServices
-            .Where(s => s.HasValue)
-            .Select(s => s!.Value)
-            .ToList();
+            List<ServiceInfo> discoveredServices = new List<ServiceInfo>();
+            if (scopeMappings.Count > 0) {
+                discoveredServices = ReferencedAssemblyScanner.Scan(input.Compilation);
+            }
 
-        if (validServices.Count == 0 && validSceneServices.Count == 0) return;
+            // Filter valid local services
+            var validServices = input.Data.BaseData.Services
+                .Where(s => s.HasValue)
+                .Select(s => s!.Value)
+                .ToList();
 
-        var sourceCode = RegistrationEmitter.GenerateSource(validServices, validSceneServices, assemblyName);
+            // Combine local and discovered services
+            var allServices = validServices.Concat(discoveredServices).ToList();
 
-        // phase 3: Encapsulation
-        var hintName = string.IsNullOrEmpty(assemblyName) ? "VContainerRegistration.g.cs" : $"{assemblyName}.VContainerRegistration.g.cs";
-        context.AddSource(hintName, SourceText.From(sourceCode, Encoding.UTF8));
-        
-        // ALSO: Generate global usings file for NLifetime alias (only once per assembly)
-        if (validServices.Count > 0) {
-            var globalUsingsCode = GenerateGlobalUsings();
-            context.AddSource("NhemDangFugBixs.GlobalUsings.g.cs", SourceText.From(globalUsingsCode, Encoding.UTF8));
+            // Guard: only emit for allowed assemblies OR if we found services (opt-in via attribute)
+            bool assemblyAllowed = AllowedAssemblies.Contains(assemblyName);
+            if (!assemblyAllowed && allServices.Count == 0) return;
+
+            var validSceneServices = input.Data.BaseData.SceneServices
+                .Where(s => s.HasValue)
+                .Select(s => s!.Value)
+                .ToList();
+
+            if (allServices.Count == 0 && validSceneServices.Count == 0) return;
+
+            var sourceCode = RegistrationEmitter.GenerateSource(allServices, validSceneServices, assemblyName, scopeMappings);
+
+            // phase 3: Encapsulation
+            var hintName = string.IsNullOrEmpty(assemblyName) ? "VContainerRegistration.g.cs" : $"{assemblyName}.VContainerRegistration.g.cs";
+            context.AddSource(hintName, SourceText.From(sourceCode, Encoding.UTF8));
+
+            // ALSO: Generate global usings file for NLifetime alias (only once per assembly)
+            if (allServices.Count > 0) {
+                var globalUsingsCode = GenerateGlobalUsings();
+                context.AddSource("NhemDangFugBixs.GlobalUsings.g.cs", SourceText.From(globalUsingsCode, Encoding.UTF8));
+            }
+        } catch (Exception ex) {
+            var descriptor = new DiagnosticDescriptor("ND999", "Generator Error", $"VContainer generator failed: {ex.Message}", "Logic", DiagnosticSeverity.Error, true);
+            context.ReportDiagnostic(Diagnostic.Create(descriptor, Location.None));
         }
     }
     
