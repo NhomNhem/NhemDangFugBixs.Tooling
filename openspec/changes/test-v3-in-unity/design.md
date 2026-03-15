@@ -108,7 +108,7 @@ copy Analyzers\NhemDangFugBixs.Analyzers.dll → GameFeelUnity\Assets\Plugins\An
 - Setup hierarchy
 
 ### Step 4: Create Test Services (20 min)
-- Create services with `[AutoRegisterIn<TScope>]`
+- Create services with `[AutoRegisterIn(typeof(TScope))]`
 - Test parent-child injection
 - Test convention-based naming
 

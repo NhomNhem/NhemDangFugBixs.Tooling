@@ -8,7 +8,7 @@ namespace DangFugBixs.Sandbox.Services;
 /// Example: Game-wide singleton service registered in parent scope.
 /// Demonstrates: Type-safe scope reference, Singleton lifetime, EntryPoint (ITickable).
 /// </summary>
-[AutoRegisterIn<GameLifetimeScope>(Lifetime = Lifetime.Singleton)]
+[AutoRegisterIn(typeof(GameLifetimeScope), Lifetime = Lifetime.Singleton)]
 public class GameService : ITickable {
     public float GameTime { get; private set; }
 
@@ -21,7 +21,7 @@ public class GameService : ITickable {
 /// Example: Audio service registered in parent scope, accessible to all child scopes.
 /// Demonstrates: Type-safe scope reference, AsImplementedInterfaces = false (explicit binding).
 /// </summary>
-[AutoRegisterIn<GameLifetimeScope>(Lifetime = Lifetime.Singleton, AsImplementedInterfaces = false, AsSelf = true)]
+[AutoRegisterIn(typeof(GameLifetimeScope), Lifetime = Lifetime.Singleton, AsImplementedInterfaces = false, AsSelf = true)]
 public class AudioService {
     public void PlaySound(string soundName) {
         UnityEngine.Debug.Log($"Playing sound: {soundName}");
@@ -32,7 +32,7 @@ public class AudioService {
 /// Example: Save system registered in parent scope.
 /// Demonstrates: Type-safe scope reference, Singleton lifetime.
 /// </summary>
-[AutoRegisterIn<GameLifetimeScope>(Lifetime = Lifetime.Singleton)]
+[AutoRegisterIn(typeof(GameLifetimeScope), Lifetime = Lifetime.Singleton)]
 public class SaveSystem {
     public void Save() {
         UnityEngine.Debug.Log("Game saved");
