@@ -8,7 +8,7 @@ namespace NhemDangFugBixs.Runtime.Testing {
     /// A test service defined in a separate assembly (Runtime.dll)
     /// that should be discovered by the generator in Sandbox.
     /// </summary>
-    [NhemDangFugBixs.Attributes.AutoRegisterIn<CrossLayerIdentity>]
+    [NhemDangFugBixs.Attributes.AutoRegisterIn(typeof(CrossLayerIdentity))]
     public class CrossLayerService {
         public void DoSomething() => System.Console.WriteLine("CrossLayerService is working!");
     }

@@ -2,7 +2,8 @@
     "name": "GameFeel_Scopes_TestFiles",
     "rootNamespace": "GameFeelUnity.Scopes",
     "references": [
-        "VContainer"
+        "VContainer",
+        "GameFeel_Shared"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

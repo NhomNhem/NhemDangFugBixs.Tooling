@@ -7,45 +7,46 @@ using NhemDangFugBixs.Common.Models;
 namespace NhemDangFugBixs.Generators.Analyzers;
 
 internal static class ReferencedAssemblyScanner {
-    private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
+    private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute";
+    private const string AutoRegisterInGenericAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
 
     public static List<ServiceInfo> Scan(Compilation compilation) {
         var results = new List<ServiceInfo>();
 
-        // Get the attribute symbol from the compilation
+        // Get the attribute symbols from the compilation
         var attrSymbol = compilation.GetTypeByMetadataName(AutoRegisterInAttributeName);
-        if (attrSymbol == null) return results;
+        var genericAttrSymbol = compilation.GetTypeByMetadataName(AutoRegisterInGenericAttributeName);
+        
+        if (attrSymbol == null && genericAttrSymbol == null) return results;
 
         // Scan all referenced assemblies
         foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols) {
-            // Optimization: Only scan assemblies that reference our Runtime DLL
-            // (In Unity, this is usually implied if they use our attributes)
-            
-            ScanNamespace(assembly.GlobalNamespace, attrSymbol, results);
+            ScanNamespace(assembly.GlobalNamespace, attrSymbol, genericAttrSymbol, results);
         }
 
         return results;
     }
 
-    private static void ScanNamespace(INamespaceSymbol ns, INamedTypeSymbol attrSymbol, List<ServiceInfo> results) {
+    private static void ScanNamespace(INamespaceSymbol ns, INamedTypeSymbol? attrSymbol, INamedTypeSymbol? genericAttrSymbol, List<ServiceInfo> results) {
         foreach (var member in ns.GetMembers()) {
             if (member is INamespaceSymbol nestedNs) {
-                ScanNamespace(nestedNs, attrSymbol, results);
+                ScanNamespace(nestedNs, attrSymbol, genericAttrSymbol, results);
             } else if (member is INamedTypeSymbol type) {
-                ScanType(type, attrSymbol, results);
+                ScanType(type, attrSymbol, genericAttrSymbol, results);
             }
         }
     }
 
-    private static void ScanType(INamedTypeSymbol type, INamedTypeSymbol attrSymbol, List<ServiceInfo> results) {
+    private static void ScanType(INamedTypeSymbol type, INamedTypeSymbol? attrSymbol, INamedTypeSymbol? genericAttrSymbol, List<ServiceInfo> results) {
         // Scan nested types
         foreach (var nestedType in type.GetTypeMembers()) {
-            ScanType(nestedType, attrSymbol, results);
+            ScanType(nestedType, attrSymbol, genericAttrSymbol, results);
         }
 
-        // Check for AutoRegisterInAttribute
+        // Check for AutoRegisterInAttribute (either version)
         var attr = type.GetAttributes().FirstOrDefault(a => 
-            SymbolEqualityComparer.Default.Equals(a.AttributeClass?.OriginalDefinition, attrSymbol));
+            (attrSymbol != null && SymbolEqualityComparer.Default.Equals(a.AttributeClass, attrSymbol)) ||
+            (genericAttrSymbol != null && SymbolEqualityComparer.Default.Equals(a.AttributeClass?.OriginalDefinition, genericAttrSymbol)));
 
         if (attr != null) {
             var info = ExtractServiceInfo(type, attr);
@@ -56,12 +57,25 @@ internal static class ReferencedAssemblyScanner {
     }
 
     private static ServiceInfo? ExtractServiceInfo(INamedTypeSymbol type, AttributeData attr) {
-        // Extract Identity Type from generic argument
-        var attrClass = attr.AttributeClass;
-        if (attrClass == null || attrClass.TypeArguments.Length == 0) return null;
+        string? scopeTypeName = null;
+        bool usesTypeSafeScope = false;
 
-        var identityType = attrClass.TypeArguments[0];
-        string scopeTypeName = identityType.ToDisplayString();
+        // 1. Extract from generic argument if it's the generic version
+        if (attr.AttributeClass != null && attr.AttributeClass.TypeArguments.Length > 0) {
+            var identityType = attr.AttributeClass.TypeArguments[0];
+            scopeTypeName = identityType.ToDisplayString();
+            usesTypeSafeScope = true;
+        } 
+        // 2. Extract from positional constructor argument if it's the non-generic version
+        else if (attr.ConstructorArguments.Length > 0) {
+            var arg = attr.ConstructorArguments[0];
+            if (arg.Kind == TypedConstantKind.Type && arg.Value is ITypeSymbol typeSymbol) {
+                scopeTypeName = typeSymbol.ToDisplayString();
+                usesTypeSafeScope = true;
+            }
+        }
+
+        if (string.IsNullOrEmpty(scopeTypeName)) return null;
 
         // Extract properties (Lifetime, etc.)
         string lifetime = "Singleton";
@@ -128,7 +142,7 @@ internal static class ReferencedAssemblyScanner {
             isEntryPoint,
             false, // isFactory - can add support if needed
             scopeTypeName,
-            true // usesTypeSafeScope
+            usesTypeSafeScope
         );
     }
 

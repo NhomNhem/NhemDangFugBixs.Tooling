@@ -11,8 +11,7 @@ namespace GameFeelUnity.Tests.Scopes
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            // Child scope registration - inherits parent services
-            NhemDangFugBixs.Generated.AssemblyCSharp.VContainerRegistration.RegisterGameplay(builder);
+            
         }
     }
 }

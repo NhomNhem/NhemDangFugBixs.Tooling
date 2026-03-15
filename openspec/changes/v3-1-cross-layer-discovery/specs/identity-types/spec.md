@@ -5,11 +5,11 @@ The system SHALL support the use of any class or interface as an Identity Type f
 
 #### Scenario: Define Identity in Base Assembly
 - **WHEN** a developer creates `public class GameScope {}` in a base assembly
-- **THEN** this type can be used in `[AutoRegisterIn<GameScope>]` and `[LifetimeScopeFor<GameScope>]`
+- **THEN** this type can be used in `[AutoRegisterIn(typeof(GameScope))]` and `[LifetimeScopeFor(typeof(GameScope))]`
 
 ### Requirement: Identity-to-Scope Mapping
-The system SHALL allow mapping an Identity Type to a specific `LifetimeScope` class using the `[LifetimeScopeFor<T>]` attribute.
+The system SHALL allow mapping an Identity Type to a specific `LifetimeScope` class using the `[LifetimeScopeFor(typeof(T))]` attribute.
 
 #### Scenario: Map Identity to LifetimeScope
-- **WHEN** `[LifetimeScopeFor<GameScope>]` is applied to `GameLifetimeScope`
+- **WHEN** `[LifetimeScopeFor(typeof(GameScope))]` is applied to `GameLifetimeScope`
 - **THEN** any service registered to `GameScope` is automatically registered to `GameLifetimeScope`

@@ -9,19 +9,23 @@ namespace NhemDangFugBixs.Attributes {
     /// Note: Uses NhemDangFugBixs.Attributes.Lifetime which has the same values as VContainer.Lifetime.
     /// In your Unity project files, use the fully qualified name or an alias to avoid ambiguity.
     /// </summary>
-    /// <typeparam name="TScope">The LifetimeScope type (or Identity Type) that will register this service.</typeparam>
     /// <example>
     /// <code>
     /// // Option 1: Direct Reference (Same Assembly / Dependency Order)
-    /// [AutoRegisterIn&lt;GameplayLifetimeScope&gt;]
+    /// [AutoRegisterIn(typeof(GameplayLifetimeScope))]
     /// 
     /// // Option 2: Identity Type (Cross-Layer / Decoupled)
     /// // Use an empty class defined in a shared low-level assembly
-    /// [AutoRegisterIn&lt;GameScope&gt;]
+    /// [AutoRegisterIn(typeof(GameScope))]
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public sealed class AutoRegisterInAttribute<TScope> : Attribute {
+    public sealed class AutoRegisterInAttribute : Attribute {
+        /// <summary>
+        /// The LifetimeScope type (or Identity Type) that will register this service.
+        /// </summary>
+        public Type ScopeType { get; }
+
         /// <summary>
         /// The lifetime for this registration.
         /// Values match VContainer.Lifetime (Singleton, Transient, Scoped).
@@ -47,5 +51,9 @@ namespace NhemDangFugBixs.Attributes {
         /// Explicit interface types to bind to (overrides AsImplementedInterfaces).
         /// </summary>
         public Type[] AsTypes { get; set; }
+
+        public AutoRegisterInAttribute(Type scopeType) {
+            ScopeType = scopeType;
+        }
     }
 }
