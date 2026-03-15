@@ -1,3 +1,4 @@
+using GameFeelUnity.Scopes;
 using NhemDangFugBixs.Attributes;
 using VContainer.Unity;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace GameFeelUnity.Tests.Services
     /// Example: Game-wide singleton service registered in parent scope.
     /// Tests: Type-safe scope reference, Singleton lifetime, EntryPoint (ITickable).
     /// </summary>
-    [AutoRegisterIn<GameLifetimeScope>(Lifetime = Lifetime.Singleton)]
+    [AutoRegisterIn(typeof(GameLifetimeScope), Lifetime = Lifetime.Singleton)]
     public class GameService : ITickable
     {
         public float GameTime { get; private set; }

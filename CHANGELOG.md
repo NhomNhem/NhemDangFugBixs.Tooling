@@ -5,11 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2026-03-15
+
+### ⭐ Added - Cross-Layer Discovery
+
+- **Cross-Layer Support**: Register services from low-level assemblies (e.g., `Core.asmdef`) into high-level scopes (e.g., `Main.asmdef`) without circular dependencies.
+- **Identity Types**: Support for lightweight marker types to decouple services from concrete `LifetimeScope` implementations.
+- **`[LifetimeScopeFor(typeof(TIdentity))]` Attribute**: Maps a `LifetimeScope` to an Identity Type for cross-assembly discovery.
+- **Unified Master Registration**: Single `VContainerRegistration.RegisterAll(builder)` call in the high-level scope registers discovered services from all layers.
+- **Automatic Metadata Scanning**: Source Generator now scans all referenced assemblies for registration attributes.
+
+### 🔒 Breaking Changes
+
+- **Non-Generic Attributes**: Switched from `[AutoRegisterIn<T>]` to `[AutoRegisterIn(typeof(T))]` for compatibility with Unity's C# version (generic attributes require C# 11.0).
+
 ## [3.0.0] - 2026-03-15
 
 ### ⭐ Added - Type-Safe Scope Registration
 
-- **`[AutoRegisterIn<TScope>]` Generic Attribute**: Type-safe scope references with full IntelliSense support. No more string typos!
+- **Type-Safe Scope Attribute**: Support for `[AutoRegisterIn(typeof(TScope))]` with full IntelliSense support. No more string typos!
 - **Convention-Based Naming**: Automatic registration method names by stripping "LifetimeScope" suffix (e.g., `GameplayLifetimeScope` → `RegisterGameplay()`).
 - **`[ScopeName("Custom")]` Override**: Custom registration method names when convention doesn't fit.
 - **Compile-Time Validation**: Roslyn analyzers catch scope errors before they become runtime failures.
@@ -17,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🔒 Breaking Changes
 
 - **String-based scopes deprecated**: `[AutoRegister(scope: "Gameplay")]` is now marked `[Obsolete]` and produces compiler warnings.
-- **Migration required**: Update to `[AutoRegisterIn<GameplayLifetimeScope>]` syntax.
+- **Migration required**: Update to `[AutoRegisterIn(typeof(GameplayLifetimeScope))]` syntax.
 - **See Migration Guide**: Refer to README.md for step-by-step migration instructions.
 
 ### 🛡️ New Diagnostic Rules

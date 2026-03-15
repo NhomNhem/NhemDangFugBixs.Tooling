@@ -10,7 +10,7 @@ namespace GameFeelUnity.Tests.Services
     /// Tests: Type-safe scope reference, Scoped lifetime, EntryPoint (IInitializable).
     /// CRITICAL TEST: Parent scope service (GameService) injected into child scope service.
     /// </summary>
-    [AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Scoped)]
+    [AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Scoped)]
     public class EnemySpawner : IInitializable
     {
         private readonly GameService _gameService;

@@ -4,7 +4,7 @@
 The analyzer SHALL produce error ND001 when the specified scope type cannot be resolved.
 
 #### Scenario: Type name is misspelled
-- **WHEN** user writes `[AutoRegisterIn<GameplayLifeimeScope>]` (typo)
+- **WHEN** user writes `[AutoRegisterIn(typeof(GameplayLifeimeScope))]` (typo)
 - **THEN** analyzer produces error ND001: "Type 'GameplayLifeimeScope' not found"
 
 #### Scenario: Type is in unloaded assembly
@@ -15,11 +15,11 @@ The analyzer SHALL produce error ND001 when the specified scope type cannot be r
 The analyzer SHALL produce error ND002 when the specified scope type does not inherit from `VContainer.Unity.LifetimeScope`.
 
 #### Scenario: Type is a plain class
-- **WHEN** user writes `[AutoRegisterIn<string>]` or `[AutoRegisterIn<MyService>]`
+- **WHEN** user writes `[AutoRegisterIn(typeof(string))]` or `[AutoRegisterIn(typeof(MyService))]`
 - **THEN** analyzer produces error ND002: "Type must inherit from LifetimeScope"
 
 #### Scenario: Type is an interface
-- **WHEN** user writes `[AutoRegisterIn<IService>]`
+- **WHEN** user writes `[AutoRegisterIn(typeof(IService))]`
 - **THEN** analyzer produces error ND002
 
 ### Requirement: ND003 - Circular scope dependency
@@ -37,11 +37,11 @@ The analyzer SHALL produce error ND003 when circular scope parent relationships 
 The analyzer SHALL produce warning ND004 when a parent scope service attempts to inject a child scope service.
 
 #### Scenario: Parent service injects child service
-- **WHEN** `[AutoRegisterIn<Game>]` class has constructor parameter of type `[AutoRegisterIn<Gameplay>]` class
+- **WHEN** `[AutoRegisterIn(typeof(Game))]` class has constructor parameter of type `[AutoRegisterIn(typeof(Gameplay))]` class
 - **THEN** analyzer produces warning ND004: "Parent scope service cannot depend on child scope service"
 
 #### Scenario: Child service injects parent service
-- **WHEN** `[AutoRegisterIn<Gameplay>]` class has constructor parameter of type `[AutoRegisterIn<Game>]` class
+- **WHEN** `[AutoRegisterIn(typeof(Gameplay))]` class has constructor parameter of type `[AutoRegisterIn(typeof(Game))]` class
 - **THEN** no diagnostic (this is valid)
 
 ### Requirement: ND103 - Unused scope registration

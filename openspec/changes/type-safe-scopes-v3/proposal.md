@@ -4,7 +4,7 @@ The current string-based scope registration system (`scope: "Gameplay"`) is erro
 
 ## What Changes
 
-- **Type-Safe Scope Attribute**: New `[AutoRegisterIn<TScope>]` generic attribute for clean, IDE-friendly scope selection
+- **Type-Safe Scope Attribute**: New `[AutoRegisterIn(typeof(TScope))]` generic attribute for clean, IDE-friendly scope selection
 - **Convention-Based Naming**: Automatic method name generation by stripping "LifetimeScope" suffix (e.g., `GameplayLifetimeScope` → `RegisterGameplay()`)
 - **Scope Validation Diagnostics**: 4 new Roslyn analyzer rules (ND001-ND004) catching scope errors at compile-time
 - **Hierarchical Scope Support**: Explicit parent-child scope wiring with analyzer validation
@@ -14,7 +14,7 @@ The current string-based scope registration system (`scope: "Gameplay"`) is erro
 
 ### New Capabilities
 
-- `type-safe-scopes`: Generic attribute syntax `[AutoRegisterIn<TScope>]` for type-safe scope registration
+- `type-safe-scopes`: Generic attribute syntax `[AutoRegisterIn(typeof(TScope))]` for type-safe scope registration
 - `scope-diagnostics`: Roslyn analyzer rules validating scope types, hierarchy, and cross-scope dependencies
 - `convention-based-naming`: Automatic registration method naming from type names
 - `scope-hierarchy-validation`: Compile-time validation of parent-child scope relationships

@@ -5,7 +5,7 @@ The migration guide from v2.x to v3.0 SHALL be accurate and actionable.
 
 #### Scenario: Find-and-replace works
 - **WHEN** user follows migration guide find-and-replace instructions
-- **THEN** all `[AutoRegister(scope: "...")]` are converted to `[AutoRegisterIn<...>]`
+- **THEN** all `[AutoRegister(scope: "...")]` are converted to `[AutoRegisterIn(typeof(...))]`
 
 #### Scenario: Migration produces working code
 - **WHEN** user completes migration steps
@@ -20,13 +20,13 @@ The `[Obsolete]` attribute on legacy `AutoRegisterAttribute` SHALL produce compi
 
 #### Scenario: Warning message is helpful
 - **WHEN** user sees deprecation warning
-- **THEN** message includes guidance to use `AutoRegisterIn<TScope>` instead
+- **THEN** message includes guidance to use `AutoRegisterIn(typeof(TScope))` instead
 
 ### Requirement: Diagnostic Feedback
 Roslyn analyzer diagnostics SHALL provide actionable error messages.
 
 #### Scenario: Invalid scope type produces error
-- **WHEN** user writes `[AutoRegisterIn<string>]` (invalid type)
+- **WHEN** user writes `[AutoRegisterIn(typeof(string))]` (invalid type)
 - **THEN** analyzer produces ND002 error with helpful message
 
 #### Scenario: Missing scope type produces error

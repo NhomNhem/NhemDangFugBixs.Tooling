@@ -14,7 +14,7 @@
 
 ## 3. Generator Analyzer Updates
 
-- [x] 3.1 Update `ClassAnalyzer.ExtractInfo()` to detect `[AutoRegisterIn<TScope>]` generic attribute
+- [x] 3.1 Update `ClassAnalyzer.ExtractInfo()` to detect `[AutoRegisterIn(typeof(TScope))]` generic attribute
 - [x] 3.2 Implement scope type extraction from generic argument
 - [x] 3.3 Implement scope type extraction from `typeof()` expression
 - [x] 3.4 Add semantic validation: verify type inherits `LifetimeScope`
@@ -40,7 +40,7 @@
 
 ## 6. Unit Tests
 
-- [x] 6.1 Create generator tests for `[AutoRegisterIn<TScope>]` syntax
+- [x] 6.1 Create generator tests for `[AutoRegisterIn(typeof(TScope))]` syntax
 - [x] 6.2 Create generator tests for convention-based naming
 - [ ] 6.3 Create analyzer tests for ND001, ND002, ND003, ND004
 - [ ] 6.4 Create analyzer tests for ND103 warning

@@ -5,7 +5,7 @@ A powerful C# Source Generator for **VContainer** that automates dependency regi
 ## 🌟 Key Features
 
 - **Cross-Layer Discovery** (v3.1): Register services across different assemblies (`asmdef`) using **Identity Types**. Break the circular dependency trap in layered architectures!
-- **Type-Safe Scopes** (v3.0): Register services to specific `LifetimeScope` types using `[AutoRegisterIn<TScope>]` - full IntelliSense support, no more string typos!
+- **Type-Safe Scopes** (v3.0): Register services to specific `LifetimeScope` types using `[AutoRegisterIn(typeof(TScope))]` - full IntelliSense support, no more string typos!
 - **Unified Master Registration**: Single `VContainerRegistration.RegisterAll(builder)` call in your `LifetimeScope` registers every discovered service across all layers.
 - **Convention-Based Naming**: Automatic registration method names by stripping "LifetimeScope" suffix (e.g., `GameplayLifetimeScope` → `RegisterGameplay()`).
 - **Zero Boilerplate**: Register services and components using simple attributes.
@@ -57,14 +57,14 @@ using NhemDangFugBixs.Attributes;
 using VContainer.Unity;
 
 // Parent scope service (Singleton, accessible to all children)
-[AutoRegisterIn<GameLifetimeScope>(Lifetime = Lifetime.Singleton)]
+[AutoRegisterIn(typeof(GameLifetimeScope), Lifetime = Lifetime.Singleton)]
 public class GameService : ITickable {
     public float GameTime { get; private set; }
     public void Tick() => GameTime += UnityEngine.Time.deltaTime;
 }
 
 // Child scope service (Scoped, can inject parent services) ✅
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Scoped)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Scoped)]
 public class EnemySpawner : IInitializable {
     // Parent scope service injected into child scope - works!
     public EnemySpawner(GameService gameService) { }
@@ -88,14 +88,14 @@ public class GameScope {}
 ### Step 2: Use Identity in Services (In a low-level assembly)
 ```csharp
 // Core.asmdef (References Shared)
-[AutoRegisterIn<GameScope>]
+[AutoRegisterIn(typeof(GameScope))]
 public class MyService {}
 ```
 
 ### Step 3: Map Identity to LifetimeScope (In a high-level assembly)
 ```csharp
 // Main.asmdef (References Core and Shared)
-[LifetimeScopeFor<GameScope>]
+[LifetimeScopeFor(typeof(GameScope))]
 public class GameLifetimeScope : LifetimeScope {
     protected override void Configure(IContainerBuilder builder) {
         // ONE call to register EVERYTHING from ALL layers
@@ -113,12 +113,12 @@ public class GameLifetimeScope : LifetimeScope {
 The recommended way to register services with compile-time safety:
 
 ```csharp
-// Primary syntax - generic attribute (clean, IDE-friendly)
-[AutoRegisterIn<GameplayLifetimeScope>]
+// Primary syntax - typeof() for type safety
+[AutoRegisterIn(typeof(GameplayLifetimeScope))]
 public class EnemySpawner { }
 
 // Cross-layer syntax - use an Identity Type (v3.1+)
-[AutoRegisterIn<GameScope>]
+[AutoRegisterIn(typeof(GameScope))]
 public class DecoupledService { }
 ```
 
@@ -148,10 +148,10 @@ Child scopes can inject parent scope services (but not vice versa):
 
 ```csharp
 // ✅ VALID: Child scope injecting parent service
-[AutoRegisterIn<GameLifetimeScope>]  // Parent
+[AutoRegisterIn(typeof(GameLifetimeScope))]  // Parent
 public class GameService { }
 
-[AutoRegisterIn<GameplayLifetimeScope>]  // Child
+[AutoRegisterIn(typeof(GameplayLifetimeScope))]  // Child
 public class EnemySpawner {
     public EnemySpawner(GameService game) { } // ✅ Works!
 }
@@ -165,7 +165,7 @@ public class EnemySpawner {
 Classes implementing VContainer lifecycle interfaces are automatically registered using `RegisterEntryPoint`.
 
 ```csharp
-[AutoRegisterIn<GameplayLifetimeScope>]
+[AutoRegisterIn(typeof(GameplayLifetimeScope))]
 public class SmoothCamera : ITickable {
     public void Tick() { /* ... */ }
 }
@@ -178,11 +178,11 @@ Handles components based on their presence in the scene.
 
 ```csharp
 // Find existing instance in Hierarchy
-[AutoRegisterIn<GameplayLifetimeScope>(RegisterInHierarchy = true)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), RegisterInHierarchy = true)]
 public class AudioManager : MonoBehaviour { }
 
 // Or create on a new GameObject
-[AutoRegisterIn<GameplayLifetimeScope>]
+[AutoRegisterIn(typeof(GameplayLifetimeScope))]
 public class PooledObject : MonoBehaviour { }
 ```
 
@@ -191,7 +191,7 @@ public class PooledObject : MonoBehaviour { }
 Restrict bindings to specific interfaces instead of all implemented ones.
 
 ```csharp
-[AutoRegisterIn<GameLifetimeScope>(AsTypes = new[] { typeof(IDebugOnly) })]
+[AutoRegisterIn(typeof(GameLifetimeScope), AsTypes = new[] { typeof(IDebugOnly) })]
 public class DebugService : IDebugOnly, IInternalSystem { }
 ```
 

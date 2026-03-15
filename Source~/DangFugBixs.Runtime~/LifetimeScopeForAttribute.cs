@@ -6,10 +6,9 @@ namespace NhemDangFugBixs.Attributes {
     /// This identity is used by services in other assemblies to register themselves
     /// without needing a direct reference to the LifetimeScope type.
     /// </summary>
-    /// <typeparam name="TIdentity">The Identity Type (marker class or interface) used for discovery.</typeparam>
     /// <example>
     /// <code>
-    /// [LifetimeScopeFor&lt;GameScope&gt;]
+    /// [LifetimeScopeFor(typeof(GameScope))]
     /// public class GameLifetimeScope : LifetimeScope {
     ///     protected override void Configure(IContainerBuilder builder) {
     ///         VContainerRegistration.RegisterAll(builder);
@@ -18,6 +17,14 @@ namespace NhemDangFugBixs.Attributes {
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public sealed class LifetimeScopeForAttribute<TIdentity> : Attribute {
+    public sealed class LifetimeScopeForAttribute : Attribute {
+        /// <summary>
+        /// The Identity Type (marker class or interface) used for discovery.
+        /// </summary>
+        public Type IdentityType { get; }
+
+        public LifetimeScopeForAttribute(Type identityType) {
+            IdentityType = identityType;
+        }
     }
 }

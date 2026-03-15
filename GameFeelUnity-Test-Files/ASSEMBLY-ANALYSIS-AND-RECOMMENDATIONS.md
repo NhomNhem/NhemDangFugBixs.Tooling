@@ -14,17 +14,17 @@
 │  Core.asmdef (GameFeel_Core)                                    │
 │  ├── References: Shared, Data, VContainer, MessagePipe         │
 │  └── Contains: Core game logic, Presenters                     │
-│      └── ❌ ERROR: Uses [AutoRegisterIn<GameplayLifetimeScope>]│
+│      └── ❌ ERROR: Uses [AutoRegisterIn(typeof(GameplayLifetimeScope))]│
 │                                                                 │
 │  Gameplay.asmdef (GameFeel_Gameplay)                            │
 │  ├── References: Core, Services, Shared, Data                  │
 │  └── Contains: Gameplay-specific logic, EnemyPoolManager       │
-│      └── ❌ ERROR: Uses [AutoRegisterIn<GameplayLifetimeScope>]│
+│      └── ❌ ERROR: Uses [AutoRegisterIn(typeof(GameplayLifetimeScope))]│
 │                                                                 │
 │  Services.asmdef (GameFeel_Services)                            │
 │  ├── References: Shared, Data, VContainer                      │
 │  └── Contains: Service layer, DeterministicWorldGenerator      │
-│      └── ❌ ERROR: Uses [AutoRegisterIn<GameplayLifetimeScope>]│
+│      └── ❌ ERROR: Uses [AutoRegisterIn(typeof(GameplayLifetimeScope))]│
 │                                                                 │
 │  Data.asmdef (GameFeel_Data)                                    │
 │  ├── References: Shared                                        │
@@ -223,7 +223,7 @@ If you don't want to create a new assembly, **put scopes in Shared.asmdef**:
 
 The Source Generator runs **during compilation** of each assembly. When it processes `EnemyPoolManager.cs` in Gameplay assembly:
 
-1. It sees `[AutoRegisterIn<GameplayLifetimeScope>]`
+1. It sees `[AutoRegisterIn(typeof(GameplayLifetimeScope))]`
 2. It needs to resolve `GameplayLifetimeScope` type
 3. With Scopes assembly referenced, it can find the type
 4. Generator validates the type exists and inherits LifetimeScope

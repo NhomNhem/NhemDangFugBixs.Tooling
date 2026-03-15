@@ -1,10 +1,10 @@
 ## ADDED Requirements
 
 ### Requirement: Type-Safe Scope Registration in Unity
-The generator SHALL correctly process `[AutoRegisterIn<TScope>]` attributes in a Unity project.
+The generator SHALL correctly process `[AutoRegisterIn(typeof(TScope))]` attributes in a Unity project.
 
 #### Scenario: Generic attribute generates registration
-- **WHEN** user writes `[AutoRegisterIn<GameplayLifetimeScope>]` on a class in Unity
+- **WHEN** user writes `[AutoRegisterIn(typeof(GameplayLifetimeScope))]` on a class in Unity
 - **THEN** generator creates registration in `RegisterGameplay()` method
 
 #### Scenario: Convention-based naming works
@@ -26,9 +26,9 @@ The system SHALL support parent scope services being injected into child scope s
 The generator SHALL auto-detect VContainer lifecycle interfaces in Unity project.
 
 #### Scenario: ITickable detected as entry point
-- **WHEN** class with `[AutoRegisterIn<TScope>]` implements `ITickable`
+- **WHEN** class with `[AutoRegisterIn(typeof(TScope))]` implements `ITickable`
 - **THEN** generator uses `RegisterEntryPoint<T>()` instead of `Register<T>()`
 
 #### Scenario: IInitializable detected as entry point
-- **WHEN** class with `[AutoRegisterIn<TScope>]` implements `IInitializable`
+- **WHEN** class with `[AutoRegisterIn(typeof(TScope))]` implements `IInitializable`
 - **THEN** generator uses `RegisterEntryPoint<T>()`

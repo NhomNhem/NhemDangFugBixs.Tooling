@@ -20,7 +20,7 @@
 ## Goals / Non-Goals
 
 **Goals:**
-- Type-safe scope references using C# generics (`[AutoRegisterIn<TScope>]`)
+- Type-safe scope references using C# generics (`[AutoRegisterIn(typeof(TScope))]`)
 - Convention-based method naming (auto-strip "LifetimeScope" suffix)
 - Compile-time validation via Roslyn diagnostics (ND001-ND004)
 - Parent-child scope hierarchy validation
@@ -36,7 +36,7 @@
 
 ### Decision 1: Generic Attribute Syntax
 
-**Choice:** `[AutoRegisterIn<TScope>]` as primary syntax
+**Choice:** `[AutoRegisterIn(typeof(TScope))]` as primary syntax
 
 **Alternatives Considered:**
 - `typeof()` parameter: `[AutoRegister(scope: typeof(TScope))]` — more verbose
@@ -144,7 +144,7 @@ public class GameLifetimeScope : LifetimeScope {
 User Code                          Generator Pipeline
 ───────────                        ──────────────────
 
-[AutoRegisterIn<GameplayScope>]    ClassAnalyzer extracts:
+[AutoRegisterIn(typeof(GameplayScope))]    ClassAnalyzer extracts:
 public class EnemySpawner { }      - Type: EnemySpawner
                                    - ScopeType: GameplayLifetimeScope
                                    - Validates: inherits LifetimeScope
@@ -179,11 +179,11 @@ public class EnemySpawner { }      - Type: EnemySpawner
 **Step 1: Update attribute syntax**
 ```bash
 # Find: [AutoRegister(scope: "
-# Replace: [AutoRegisterIn<
+# Replace: [AutoRegisterIn(typeof(
 
 # Manual fixes:
-[AutoRegister(scope: "Gameplay")] → [AutoRegisterIn<GameplayLifetimeScope>]
-[AutoRegister(scope: "Game")] → [AutoRegisterIn<GameLifetimeScope>]
+[AutoRegister(scope: "Gameplay")] → [AutoRegisterIn(typeof(GameplayLifetimeScope))]
+[AutoRegister(scope: "Game")] → [AutoRegisterIn(typeof(GameLifetimeScope))]
 ```
 
 **Step 2: Update Configure() calls**
@@ -209,7 +209,7 @@ If v3.0 has critical issues:
 ## Open Questions
 
 1. **Should we support multiple scopes per class?**
-   - `[AutoRegisterIn<Game>, AutoRegisterIn<Gameplay>]`
+   - `[AutoRegisterIn(typeof(Game)), AutoRegisterIn(typeof(Gameplay))]`
    - Decision: Defer to v3.1 (low priority, adds complexity)
 
 2. **Should scope hierarchy be attribute-declared?**

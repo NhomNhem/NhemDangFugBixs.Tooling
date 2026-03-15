@@ -6,10 +6,10 @@
 
 ## 2. Generator Logic - Analysis Phase
 
-- [x] 2.1 Update `ClassAnalyzer.cs` to detect `[LifetimeScopeFor<T>]` attribute.
-- [x] 2.2 Implement `ReferencedAssemblyScanner` to find `[AutoRegisterIn<T>]` in metadata.
+- [x] 2.1 Update `ClassAnalyzer.cs` to detect `[LifetimeScopeFor(typeof(T))]` attribute.
+- [x] 2.2 Implement `ReferencedAssemblyScanner` to find `[AutoRegisterIn(typeof(T))]` in metadata.
 - [x] 2.3 Create mapping logic between discovered Identity Types and mapped `LifetimeScope` types.
-- [x] 2.4 Add validation to prevent multiple `[LifetimeScopeFor<T>]` for the same Identity.
+- [x] 2.4 Add validation to prevent multiple `[LifetimeScopeFor(typeof(T))]` for the same Identity.
 
 ## 3. Generator Logic - Emission Phase
 

@@ -10,7 +10,7 @@ namespace DangFugBixs.Tests;
 [TestFixture]
 public class TypeSafeScopeTests {
     private static readonly MetadataReference RuntimeAssembly = MetadataReference.CreateFromFile(
-        typeof(NhemDangFugBixs.Attributes.AutoRegisterInAttribute<>).Assembly.Location);
+        typeof(NhemDangFugBixs.Attributes.AutoRegisterInAttribute).Assembly.Location);
 
     private static readonly MetadataReference VContainerAssembly = MetadataReference.CreateFromFile(
         typeof(VContainer.Lifetime).Assembly.Location);
@@ -24,7 +24,7 @@ using VContainer.Unity;
 
 public class TestLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<TestLifetimeScope>]
+[AutoRegisterIn(typeof(TestLifetimeScope))]
 public class TestService { }
 ";
 
@@ -47,7 +47,7 @@ using VContainer.Unity;
 
 public class GameplayLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Scoped)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Scoped)]
 public class EnemySpawner { }
 ";
 
@@ -70,10 +70,10 @@ using VContainer.Unity;
 public class GameplayLifetimeScope : LifetimeScope { }
 public class GameLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<GameplayLifetimeScope>]
+[AutoRegisterIn(typeof(GameplayLifetimeScope))]
 public class EnemySpawner { }
 
-[AutoRegisterIn<GameLifetimeScope>]
+[AutoRegisterIn(typeof(GameLifetimeScope))]
 public class GameService { }
 ";
 
@@ -99,7 +99,7 @@ public interface ITestService { }
 
 public class TestLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<TestLifetimeScope>(AsImplementedInterfaces = true)]
+[AutoRegisterIn(typeof(TestLifetimeScope), AsImplementedInterfaces = true)]
 public class TestService : ITestService { }
 ";
 
@@ -120,7 +120,7 @@ using VContainer.Unity;
 
 public class TestLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<TestLifetimeScope>(AsSelf = true)]
+[AutoRegisterIn(typeof(TestLifetimeScope), AsSelf = true)]
 public class TestService { }
 ";
 
@@ -141,7 +141,7 @@ using VContainer.Unity;
 
 public class GameLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<GameLifetimeScope>]
+[AutoRegisterIn(typeof(GameLifetimeScope))]
 public class TickSystem : ITickable {
     public void Tick() { }
 }
@@ -164,7 +164,7 @@ using VContainer.Unity;
 
 public class GameplayLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<GameplayLifetimeScope>]
+[AutoRegisterIn(typeof(GameplayLifetimeScope))]
 public class InitSystem : IInitializable {
     public void Initialize() { }
 }
@@ -188,7 +188,7 @@ using UnityEngine;
 
 public class GameLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<GameLifetimeScope>]
+[AutoRegisterIn(typeof(GameLifetimeScope))]
 public class CameraController : MonoBehaviour { }
 ";
 
@@ -210,7 +210,7 @@ using UnityEngine;
 
 public class GameLifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<GameLifetimeScope>(RegisterInHierarchy = true)]
+[AutoRegisterIn(typeof(GameLifetimeScope), RegisterInHierarchy = true)]
 public class AudioManager : MonoBehaviour { }
 ";
 
@@ -233,13 +233,13 @@ public class GameLifetimeScope : LifetimeScope { }
 public class GameplayLifetimeScope : LifetimeScope { }
 public class UILifetimeScope : LifetimeScope { }
 
-[AutoRegisterIn<GameLifetimeScope>]
+[AutoRegisterIn(typeof(GameLifetimeScope))]
 public class GameService { }
 
-[AutoRegisterIn<GameplayLifetimeScope>]
+[AutoRegisterIn(typeof(GameplayLifetimeScope))]
 public class EnemySpawner { }
 
-[AutoRegisterIn<UILifetimeScope>]
+[AutoRegisterIn(typeof(UILifetimeScope))]
 public class UIService { }
 ";
 
@@ -295,3 +295,4 @@ public class LegacyService { }
         return driver.GetRunResult();
     }
 }
+

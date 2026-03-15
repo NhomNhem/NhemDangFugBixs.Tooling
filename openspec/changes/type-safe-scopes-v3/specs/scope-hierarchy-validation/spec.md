@@ -8,7 +8,7 @@ The system SHALL support explicit parent-child scope relationships where parent 
 - **THEN** child scope services are registered within parent's container hierarchy
 
 #### Scenario: Child scope resolves parent service
-- **WHEN** `[AutoRegisterIn<Gameplay>]` class injects `[AutoRegisterIn<Game>]` class
+- **WHEN** `[AutoRegisterIn(typeof(Gameplay))]` class injects `[AutoRegisterIn(typeof(Game))]` class
 - **THEN** VContainer resolves the parent service successfully
 
 ### Requirement: Scope hierarchy validation
