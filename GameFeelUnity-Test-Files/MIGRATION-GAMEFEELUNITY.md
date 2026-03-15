@@ -21,7 +21,7 @@ global using NLifetime = NhemDangFugBixs.Attributes.Lifetime;
 [AutoRegister(Lifetime = NhemDangFugBixs.Attributes.Lifetime.Transient, scope: "Gameplay")]
 
 // AFTER (v3.0):
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = NLifetime.Transient)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = NLifetime.Transient)]
 ```
 
 **No manual setup needed!** The generator handles it automatically.
@@ -59,7 +59,7 @@ public class HealthPresenter : IHealthPresenter {
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 using NLifetime = NhemDangFugBixs.Attributes.Lifetime; // Alias for convenience
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = NLifetime.Transient)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = NLifetime.Transient)]
 public class HealthPresenter : IHealthPresenter {
 ```
 
@@ -79,7 +79,7 @@ public class PlayerAnimationPresenter : IPlayerAnimationPresenter {
 ```csharp
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Singleton)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Singleton)]
 public class PlayerAnimationPresenter : IPlayerAnimationPresenter {
 ```
 
@@ -101,7 +101,7 @@ public class BulletPresenter {
 ```csharp
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Transient)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Transient)]
 public class BulletPresenter {
 ```
 
@@ -121,7 +121,7 @@ public class PlayerHungerPresenter {
 ```csharp
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Singleton)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Singleton)]
 public class PlayerHungerPresenter {
 ```
 
@@ -142,7 +142,7 @@ public class PlayerPresenter : IPlayerPresenter, ITickable {
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 using VContainer.Unity; // For ITickable
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Singleton, AsSelf = true)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Singleton, AsSelf = true)]
 public class PlayerPresenter : IPlayerPresenter, ITickable {
 ```
 
@@ -163,7 +163,7 @@ public class EnemyPresenter : IEnemyPresenter, ITickable {
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 using VContainer.Unity; // For ITickable
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Transient)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Transient)]
 public class EnemyPresenter : IEnemyPresenter, ITickable {
 ```
 
@@ -183,7 +183,7 @@ public class EnemyPoolManager {
 ```csharp
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Singleton)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Singleton)]
 public class EnemyPoolManager {
 ```
 
@@ -203,7 +203,7 @@ public class MapPoolManager {
 ```csharp
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Singleton)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Singleton)]
 public class MapPoolManager {
 ```
 
@@ -223,7 +223,7 @@ public class DeterministicWorldGenerator {
 ```csharp
 using Assets.Scripts.Runtime.Tests.Scopes; // Add this using
 
-[AutoRegisterIn<GameplayLifetimeScope>(Lifetime = Lifetime.Singleton)]
+[AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = Lifetime.Singleton)]
 public class DeterministicWorldGenerator {
 ```
 
@@ -243,7 +243,7 @@ using Assets.Scripts.Runtime.Tests.Scopes; // For GameplayLifetimeScope
 
 After making changes:
 
-- [ ] All `[AutoRegister(...)]` replaced with `[AutoRegisterIn<GameplayLifetimeScope>(...)]`
+- [ ] All `[AutoRegister(...)]` replaced with `[AutoRegisterIn(typeof(GameplayLifetimeScope), ...)]`
 - [ ] All `scope: "Gameplay"` removed (replaced by generic type parameter)
 - [ ] All `NhemDangFugBixs.Attributes.Lifetime.` prefixes removed (just use `Lifetime.`)
 - [ ] Added `using Assets.Scripts.Runtime.Tests.Scopes;` to each file
@@ -270,7 +270,7 @@ For advanced users, you can use Find & Replace in your IDE:
 
 **Replace:**
 ```
-[AutoRegisterIn<$2LifetimeScope>(Lifetime = Lifetime.$1)
+[AutoRegisterIn(typeof($2LifetimeScope), Lifetime = Lifetime.$1)
 ```
 
 **Then manually add the using statements.**

@@ -6,7 +6,7 @@ The v3.0 type-safe scopes implementation is complete in the tooling project, but
 
 - **Deploy v3.0 DLLs to GameFeelUnity**: Copy Runtime, Generators, and Analyzers DLLs to the Unity project
 - **Setup test LifetimeScopes**: Create GameLifetimeScope and GameplayLifetimeScope in the Unity project
-- **Migrate existing services**: Convert existing `[AutoRegister]` usages to `[AutoRegisterIn<TScope>]`
+- **Migrate existing services**: Convert existing `[AutoRegister]` usages to `[AutoRegisterIn(typeof(TScope))]`
 - **Validate generated code**: Verify convention-based naming and scope grouping works correctly
 - **Test parent-child injection**: Ensure child scopes can inject parent services
 - **Document issues**: Capture any bugs, errors, or UX problems encountered

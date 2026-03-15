@@ -22,10 +22,10 @@
 
 ## 4. Create Test Services
 
-- [x] 4.1 Create GameService with `[AutoRegisterIn<GameLifetimeScope>]`
-- [x] 4.2 Create AudioService with `[AutoRegisterIn<GameLifetimeScope>]`
-- [x] 4.3 Create EnemySpawner with `[AutoRegisterIn<GameplayLifetimeScope>]`
-- [x] 4.4 Create PlayerController with `[AutoRegisterIn<GameplayLifetimeScope>]`
+- [x] 4.1 Create GameService with `[AutoRegisterIn(typeof(GameLifetimeScope))]`
+- [x] 4.2 Create AudioService with `[AutoRegisterIn(typeof(GameLifetimeScope))]`
+- [x] 4.3 Create EnemySpawner with `[AutoRegisterIn(typeof(GameplayLifetimeScope))]`
+- [x] 4.4 Create PlayerController with `[AutoRegisterIn(typeof(GameplayLifetimeScope))]`
 - [ ] 4.5 Verify parent-child injection (EnemySpawner injects GameService)
 
 ## 5. Validate Generated Code

@@ -8,12 +8,12 @@ The generator SHALL generate registration methods for each scope using conventio
 - No validation that scope string matches actual `LifetimeScope` type
 
 **New Behavior:**
-- Method names derived from scope type name: `[AutoRegisterIn<GameplayLifetimeScope>]` → `RegisterGameplay()`
+- Method names derived from scope type name: `[AutoRegisterIn(typeof(GameplayLifetimeScope))]` → `RegisterGameplay()`
 - Compile-time validation that scope type exists and inherits `LifetimeScope`
 - Convention-based naming strips "LifetimeScope" suffix automatically
 
 #### Scenario: Generate registration for type-safe scope
-- **WHEN** user writes `[AutoRegisterIn<GameplayLifetimeScope>] public class EnemySpawner { }`
+- **WHEN** user writes `[AutoRegisterIn(typeof(GameplayLifetimeScope))] public class EnemySpawner { }`
 - **THEN** generator creates `RegisterGameplay()` method containing `builder.Register<EnemySpawner>(...)`
 
 #### Scenario: Generate registration with custom scope name
@@ -21,5 +21,5 @@ The generator SHALL generate registration methods for each scope using conventio
 - **THEN** generator creates `RegisterUI()` method
 
 #### Scenario: Multiple scopes in same assembly
-- **WHEN** assembly has services with `[AutoRegisterIn<GameLifetimeScope>]` and `[AutoRegisterIn<GameplayLifetimeScope>]`
+- **WHEN** assembly has services with `[AutoRegisterIn(typeof(GameLifetimeScope))]` and `[AutoRegisterIn(typeof(GameplayLifetimeScope))]`
 - **THEN** generator creates both `RegisterGame()` and `RegisterGameplay()` methods in same `VContainerRegistration` class

@@ -1,3 +1,4 @@
+using GameFeelUnity.Scopes;
 using NhemDangFugBixs.Attributes;
 using VContainer.Unity;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace GameFeelUnity.Tests.Services
     /// Example: Audio service registered in parent scope, accessible to all child scopes.
     /// Tests: Type-safe scope reference, Singleton lifetime.
     /// </summary>
-    [AutoRegisterIn<GameLifetimeScope>(Lifetime = Lifetime.Singleton)]
+    [AutoRegisterIn(typeof(GameLifetimeScope), Lifetime = Lifetime.Singleton)]
     public class AudioService
     {
         public void PlaySound(string soundName)

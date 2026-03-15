@@ -28,9 +28,9 @@ namespace NhemDangFugBixs.Generated.DangFugBixsSandbox
         public static void RegisterGameplay(IContainerBuilder builder)
         {
             VContainer.Unity.EntryPointsBuilder.EnsureDispatcherRegistered(builder);
-            builder.RegisterEntryPoint<DangFugBixs.Sandbox.Services.EnemySpawner>(Lifetime.Singleton).AsSelf();
-            builder.RegisterEntryPoint<DangFugBixs.Sandbox.Services.PlayerController>(Lifetime.Singleton).AsSelf();
-            builder.RegisterComponentOnNewGameObject<DangFugBixs.Sandbox.Services.BulletPool>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            builder.RegisterEntryPoint<DangFugBixs.Sandbox.Services.EnemySpawner>(Lifetime.Scoped).AsSelf();
+            builder.RegisterEntryPoint<DangFugBixs.Sandbox.Services.PlayerController>(Lifetime.Scoped).AsSelf();
+            builder.RegisterComponentOnNewGameObject<DangFugBixs.Sandbox.Services.BulletPool>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
             builder.RegisterComponentInHierarchy<DangFugBixs.Sandbox.Services.CameraController>().AsImplementedInterfaces().AsSelf();
         }
         

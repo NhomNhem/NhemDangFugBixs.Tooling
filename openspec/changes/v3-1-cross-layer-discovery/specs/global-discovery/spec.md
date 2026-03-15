@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Cross-Assembly Metadata Scan
-The Source Generator SHALL scan all referenced assemblies for `[AutoRegisterIn<T>]` attributes when the current assembly contains a class marked with `[LifetimeScopeFor<T>]`.
+The Source Generator SHALL scan all referenced assemblies for `[AutoRegisterIn(typeof(T))]` attributes when the current assembly contains a class marked with `[LifetimeScopeFor(typeof(T))]`.
 
 #### Scenario: Scan Referenced Assemblies
 - **WHEN** assembly `Main` references assembly `Core`
