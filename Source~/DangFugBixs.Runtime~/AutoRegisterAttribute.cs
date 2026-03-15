@@ -6,29 +6,29 @@ namespace NhemDangFugBixs.Attributes {
     /// </summary>
     /// <remarks>
     /// <para>
-    /// <b>Deprecated:</b> In v3.0, use <see cref="AutoRegisterInAttribute{TScope}"/> for type-safe scope references.
+    /// <b>Deprecated:</b> In v3.0, use <see cref="AutoRegisterInAttribute"/> for type-safe scope references.
     /// </para>
     /// <code>
     /// // Old (deprecated):
-    /// [AutoRegister(Lifetime.Singleton, scope: "Gameplay")]
+    /// [AutoRegister(NhemLifetime.Singleton, scope: "Gameplay")]
     /// 
     /// // New (recommended):
-    /// [AutoRegisterIn&lt;GameplayLifetimeScope&gt;(Lifetime = Lifetime.Singleton)]
+    /// [AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = NLifetime.Singleton)]
     /// </code>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    [Obsolete("Use AutoRegisterIn<TScope> for type-safe scope references. This attribute will be removed in v4.0.")]
+    [Obsolete("Use AutoRegisterIn(typeof(TScope)) for type-safe scope references. This attribute will be removed in v4.0.")]
     public sealed class AutoRegisterAttribute : Attribute {
         /// <summary>
         /// The lifetime for this registration.
         /// </summary>
-        public Lifetime Lifetime { get; }
+        public NhemLifetime Lifetime { get; }
 
         /// <summary>
         /// The scope name for registration. This is deprecated in favor of type-safe scope references.
         /// </summary>
-        /// <remarks>Deprecated: Use <see cref="AutoRegisterInAttribute{TScope}"/> instead.</remarks>
-        [Obsolete("Use AutoRegisterIn<TScope> for type-safe scope references.")]
+        /// <remarks>Deprecated: Use <see cref="AutoRegisterInAttribute"/> instead.</remarks>
+        [Obsolete("Use AutoRegisterIn(typeof(TScope)) for type-safe scope references.")]
         public string Scope { get; }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace NhemDangFugBixs.Attributes {
         /// </summary>
         /// <param name="lifetime">The lifetime for this registration.</param>
         /// <param name="scope">The scope name (deprecated).</param>
-        [Obsolete("Use AutoRegisterIn<TScope> for type-safe scope references.")]
-        public AutoRegisterAttribute(NhemDangFugBixs.Attributes.Lifetime lifetime = NhemDangFugBixs.Attributes.Lifetime.Singleton, string scope = "Global") {
+        [Obsolete("Use AutoRegisterIn(typeof(TScope)) for type-safe scope references.")]
+        public AutoRegisterAttribute(NhemDangFugBixs.Attributes.NhemLifetime lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Singleton, string scope = "Global") {
             this.Lifetime = lifetime;
             this.Scope = scope;
         }
