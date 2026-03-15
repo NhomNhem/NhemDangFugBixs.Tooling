@@ -122,7 +122,8 @@ internal class ClassAnalyzer {
             }
 
             var ns = classDecl.GetNamespace();
-            return new ScopeMappingInfo(ns, className, identityTypeName!);
+            string originalClassName = classDecl.Identifier.Text;
+            return new ScopeMappingInfo(ns, className, identityTypeName!, originalClassName);
         } catch {
             return null;
         }

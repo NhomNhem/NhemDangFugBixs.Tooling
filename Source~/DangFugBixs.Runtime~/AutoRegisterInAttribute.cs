@@ -6,7 +6,7 @@ namespace NhemDangFugBixs.Attributes {
     /// The scope type should inherit from VContainer.Unity.LifetimeScope, OR it can be an
     /// Identity Type mapped via [LifetimeScopeFor] for cross-assembly discovery.
     /// 
-    /// Note: Uses NhemDangFugBixs.Attributes.Lifetime which has the same values as VContainer.Lifetime.
+    /// Note: Uses NhemDangFugBixs.Attributes.NhemLifetime which has the same values as VContainer.Lifetime.
     /// In your Unity project files, use the fully qualified name or an alias to avoid ambiguity.
     /// </summary>
     /// <example>
@@ -30,7 +30,7 @@ namespace NhemDangFugBixs.Attributes {
         /// The lifetime for this registration.
         /// Values match VContainer.Lifetime (Singleton, Transient, Scoped).
         /// </summary>
-        public Lifetime Lifetime { get; set; } = Lifetime.Singleton;
+        public NhemLifetime Lifetime { get; set; } = NhemLifetime.Singleton;
 
         /// <summary>
         /// Whether to bind to all implemented interfaces.
