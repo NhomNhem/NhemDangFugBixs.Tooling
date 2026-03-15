@@ -13,9 +13,26 @@ internal readonly struct ServiceInfo {
     public bool IsEntryPoint { get; }
     public bool IsFactory { get; }
     public string[] AsTypes { get; }
+    public string? ScopeTypeName { get; }
+    public bool UsesTypeSafeScope { get; }
 
     public string FullName => string.IsNullOrEmpty(Namespace) ? ClassName : $"{Namespace}.{ClassName}";
 
-    public ServiceInfo(string ns, string className, string lifetime, string scopeName, string[] interfaceNames, bool isComponent, bool asImplementedInterfaces, bool asSelf, bool registerInHierarchy, string[] asTypes, bool isEntryPoint, bool isFactory) 
-        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory) = (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory);
+    public ServiceInfo(
+        string ns,
+        string className,
+        string lifetime,
+        string scopeName,
+        string[] interfaceNames,
+        bool isComponent,
+        bool asImplementedInterfaces,
+        bool asSelf,
+        bool registerInHierarchy,
+        string[] asTypes,
+        bool isEntryPoint,
+        bool isFactory,
+        string? scopeTypeName = null,
+        bool usesTypeSafeScope = false)
+        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope) =
+           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope);
 }
