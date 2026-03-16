@@ -10,30 +10,39 @@ internal static class ReferencedAssemblyScanner {
     private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute";
     private const string AutoRegisterInGenericAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
 
-    public static List<ServiceInfo> Scan(Compilation compilation) {
+    public static (List<ServiceInfo> Services, List<string> Warnings) Scan(Compilation compilation) {
         var results = new List<ServiceInfo>();
+        var warnings = new List<string>();
 
         // Get the attribute symbols from the compilation
         var attrSymbol = compilation.GetTypeByMetadataName(AutoRegisterInAttributeName);
         var genericAttrSymbol = compilation.GetTypeByMetadataName(AutoRegisterInGenericAttributeName);
         
-        if (attrSymbol == null && genericAttrSymbol == null) return results;
+        if (attrSymbol == null && genericAttrSymbol == null) return (results, warnings);
 
         // Scan all referenced assemblies
         foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols) {
-            ScanNamespace(assembly.GlobalNamespace, attrSymbol, genericAttrSymbol, results);
+            try {
+                ScanNamespace(assembly.GlobalNamespace, attrSymbol, genericAttrSymbol, results);
+            } catch (System.Exception ex) {
+                warnings.Add($"{assembly.Name}: {ex.Message}");
+            }
         }
 
-        return results;
+        return (results, warnings);
     }
 
     private static void ScanNamespace(INamespaceSymbol ns, INamedTypeSymbol? attrSymbol, INamedTypeSymbol? genericAttrSymbol, List<ServiceInfo> results) {
-        foreach (var member in ns.GetMembers()) {
-            if (member is INamespaceSymbol nestedNs) {
-                ScanNamespace(nestedNs, attrSymbol, genericAttrSymbol, results);
-            } else if (member is INamedTypeSymbol type) {
-                ScanType(type, attrSymbol, genericAttrSymbol, results);
+        try {
+            foreach (var member in ns.GetMembers()) {
+                if (member is INamespaceSymbol nestedNs) {
+                    ScanNamespace(nestedNs, attrSymbol, genericAttrSymbol, results);
+                } else if (member is INamedTypeSymbol type) {
+                    ScanType(type, attrSymbol, genericAttrSymbol, results);
+                }
             }
+        } catch {
+            // Gracefully ignore namespace resolution failures
         }
     }
 
