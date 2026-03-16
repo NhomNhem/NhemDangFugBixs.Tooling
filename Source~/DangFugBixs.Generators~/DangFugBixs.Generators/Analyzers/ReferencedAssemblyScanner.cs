@@ -135,6 +135,8 @@ internal static class ReferencedAssemblyScanner {
         
         // v3.5: Use robust entry point detection
         bool isEntryPoint = interfaceNames.Any(i => NhemDangFugBixs.Generators.Utils.InterfaceUtils.IsVContainerEntryPoint(i));
+        bool isExceptionHandler = interfaceNames.Any(i => i.EndsWith("IEntryPointExceptionHandler"));
+        bool isBuildCallback = interfaceNames.Any(i => i.EndsWith("IBuildCallback"));
 
         return new ServiceInfo(
             type.ContainingNamespace?.ToDisplayString() ?? "",
@@ -150,7 +152,9 @@ internal static class ReferencedAssemblyScanner {
             isEntryPoint,
             false, // isFactory - can add support if needed
             scopeTypeName,
-            usesTypeSafeScope
+            usesTypeSafeScope,
+            isExceptionHandler,
+            isBuildCallback
         );
     }
 

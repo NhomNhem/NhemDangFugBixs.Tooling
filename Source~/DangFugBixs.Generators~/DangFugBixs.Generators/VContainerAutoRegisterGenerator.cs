@@ -71,7 +71,7 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             
             // Initialize stats
             var stats = new GenerationStats {
-                Version = "v3.4.0",
+                Version = "v3.6.0",
                 Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
             };
 
