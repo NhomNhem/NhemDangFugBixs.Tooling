@@ -133,9 +133,8 @@ internal static class ReferencedAssemblyScanner {
         
         bool isComponent = IsSubclassOf(type, "UnityEngine.Component") || IsSubclassOf(type, "UnityEngine.MonoBehaviour");
         
-        // Simplified entry point check for metadata (can be improved)
-        bool isEntryPoint = interfaceNames.Any(i => i.Contains("VContainer.Unity.I") && 
-            (i.EndsWith("Initializable") || i.EndsWith("Startable") || i.EndsWith("Tickable") || i.EndsWith("Disposable")));
+        // v3.5: Use robust entry point detection
+        bool isEntryPoint = interfaceNames.Any(i => NhemDangFugBixs.Generators.Utils.InterfaceUtils.IsVContainerEntryPoint(i));
 
         return new ServiceInfo(
             type.ContainingNamespace?.ToDisplayString() ?? "",
