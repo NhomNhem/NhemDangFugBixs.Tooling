@@ -10,7 +10,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/ASSEMBLY-ANALYSIS-AND-RECOMMENDATIONS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/ASSEMBLY-ANALYSIS-AND-RECOMMENDATIONS.md.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/GameLifetimeScope.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/GameLifetimeScope.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/GameplayLifetimeScope.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/GameplayLifetimeScope.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/MIGRATION-GAMEFEELUNITY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/MIGRATION-GAMEFEELUNITY.md.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/README.md.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes.asmdef" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes.asmdef.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes/GameLifetimeScope.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes/GameLifetimeScope.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes/GameplayLifetimeScope.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes/GameplayLifetimeScope.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/AudioService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/AudioService.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/EnemySpawner.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/EnemySpawner.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/GameService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/GameService.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/PlayerController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/PlayerController.cs.meta" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +62,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="1749" />
+    <option name="cachedIndexableFilesCount" value="1771" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -220,6 +245,7 @@
       <workItem from="1770633267237" duration="4409000" />
       <workItem from="1773575640204" duration="86000" />
       <workItem from="1773592706978" duration="933000" />
+      <workItem from="1773619999734" duration="53000" />
     </task>
     <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
       <option name="closed" value="true" />
