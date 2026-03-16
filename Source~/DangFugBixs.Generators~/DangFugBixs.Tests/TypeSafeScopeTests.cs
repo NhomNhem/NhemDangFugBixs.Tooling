@@ -290,9 +290,9 @@ public class LegacyService { }
         var generator = new VContainerAutoRegisterGenerator();
 
         var driver = CSharpGeneratorDriver.Create(generator);
-        driver = driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+        var runDriver = driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
-        return driver.GetRunResult();
+        return runDriver.GetRunResult();
     }
 }
 

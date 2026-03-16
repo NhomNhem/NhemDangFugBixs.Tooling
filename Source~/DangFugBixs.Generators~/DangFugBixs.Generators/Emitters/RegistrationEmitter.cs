@@ -159,10 +159,8 @@ internal static class RegistrationEmitter {
                                 writer.WriteLine($"builder.RegisterFactory<{fullName}>(c => () => c.Resolve<{fullName}>(), {lifetime}){suffix};");
                             } else if (svc.IsEntryPoint && !svc.IsExceptionHandler && !svc.IsBuildCallback) {
                                 // Entry point without special callback logic uses RegisterEntryPoint
-                                // We don't append suffix here because RegisterEntryPoint handles interfaces internally,
-                                // but we do if they specifically requested AsSelf or something else, although usually RegisterEntryPoint<T> is enough.
-                                // To be safe and follow VContainer docs, we just use RegisterEntryPoint
-                                writer.WriteLine($"builder.RegisterEntryPoint<{fullName}>({lifetime});");
+                                // We append suffix so .AsSelf() is included if the user requested it.
+                                writer.WriteLine($"builder.RegisterEntryPoint<{fullName}>({lifetime}){suffix};");
                             } else {
                                 // Normal register (this includes ExceptionHandlers and BuildCallbacks so they can be resolved)
                                 writer.WriteLine($"builder.Register<{fullName}>({lifetime}){suffix};");
