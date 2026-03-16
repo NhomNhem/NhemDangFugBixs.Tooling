@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2026-03-16
+
+### ⭐ Added - Resilient Scanning & Traceability
+
+- **Resilient Assembly Scanning**: The generator now gracefully handles unresolved assembly references (CS0234/AssemblyResolutionException). Instead of crashing, it skips the problematic assembly and reports a warning.
+- **Traceability Headers**: Generated files now include metadata headers with version, timestamp, service count, and any scan warnings for easier troubleshooting.
+- **Diagnostic ND104**: Added a new warning diagnostic that appears in the Unity console when an assembly scan fails, providing the assembly name and error message.
+- **Improved Resiliency**: Added defensive try-catch blocks around all external symbol member access during discovery.
+
 ## [3.3.0] - 2026-03-16
 
 ### ⭐ Added - Final Robustness & Collision Fixes
