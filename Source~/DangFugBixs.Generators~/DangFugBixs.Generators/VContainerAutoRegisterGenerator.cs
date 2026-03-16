@@ -108,7 +108,8 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
 
             // phase 3: Encapsulation
             // Generate ONE file per assembly containing everything including the global usings
-            var hintName = string.IsNullOrEmpty(sanitizedHint) ? "VContainerRegistration.g.cs" : $"{sanitizedHint}.VContainerRegistration.g.cs";
+            // v3.3: Use stable hint name {sanitizedHint}.g.cs to overwrite older versions correctly
+            var hintName = string.IsNullOrEmpty(sanitizedHint) ? "VContainerRegistration.g.cs" : $"{sanitizedHint}.g.cs";
             context.AddSource(hintName, SourceText.From(sourceCode, Encoding.UTF8));
 
         } catch (Exception ex) {

@@ -46,7 +46,7 @@
 - **Type-Safe Scopes**: Always prefer `[AutoRegisterIn(typeof(TScope))]` over the deprecated string-based `[AutoRegister]`.
 - **Naming Conventions**: The generator strips "LifetimeScope" from the class name to create registration methods:
   - `GameLifetimeScope` → `VContainerRegistration.RegisterGame(builder)`
-- **Aliases**: Use the automatically generated `NLifetime` alias for `NhemDangFugBixs.Attributes.Lifetime` to avoid conflicts with VContainer's native `Lifetime` enum.
+- **Lifetime**: Use `NhemDangFugBixs.Attributes.NhemLifetime` for specifying registration lifetimes to avoid conflicts with VContainer's native `Lifetime` enum.
 
 ### Coding Standards
 - **Source Generators**: Implement `IIncrementalGenerator` for performance.
