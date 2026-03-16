@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 2026-03-16
+
+### ⭐ Added - Advanced VContainer Features
+
+- **Global Exception Handlers**: The generator now automatically detects classes implementing `IEntryPointExceptionHandler` and registers them using `builder.RegisterEntryPointExceptionHandler`. This allows for centralized error handling for all entry point ticks/initializations.
+- **Build Callbacks**: Classes implementing `IBuildCallback` are now automatically registered with `builder.RegisterBuildCallback`, allowing for complex post-build setup logic.
+- **Mandatory VContainer Imports**: The generator now safely includes `using VContainer;` and `using VContainer.Unity;` in the generated file headers to ensure all extension methods are available, preventing CS1061 errors.
+- **Polymorphic Component Registration**: Fixed a critical bug where MonoBehaviours implementing entry point interfaces (e.g., `ITickable`) were missing their interface bindings. They are now correctly registered using `RegisterComponent...` combined with `.AsImplementedInterfaces()`.
+
 ## [3.5.0] - 2026-03-16
 
 ### ⭐ Added - Robust Entry Point Detection

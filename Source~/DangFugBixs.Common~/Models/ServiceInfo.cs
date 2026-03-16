@@ -15,6 +15,8 @@ internal readonly struct ServiceInfo {
     public string[] AsTypes { get; }
     public string? ScopeTypeName { get; }
     public bool UsesTypeSafeScope { get; }
+    public bool IsExceptionHandler { get; }
+    public bool IsBuildCallback { get; }
 
     public string FullName => string.IsNullOrEmpty(Namespace) ? ClassName : $"{Namespace}.{ClassName}";
 
@@ -32,7 +34,9 @@ internal readonly struct ServiceInfo {
         bool isEntryPoint,
         bool isFactory,
         string? scopeTypeName = null,
-        bool usesTypeSafeScope = false)
-        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope) =
-           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope);
+        bool usesTypeSafeScope = false,
+        bool isExceptionHandler = false,
+        bool isBuildCallback = false)
+        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope, IsExceptionHandler, IsBuildCallback) =
+           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback);
 }
