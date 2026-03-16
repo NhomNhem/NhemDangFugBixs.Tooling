@@ -213,13 +213,13 @@ internal class ClassAnalyzer {
         string[] asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
 
         // Extract interfaces and component info
-        var (interfaceNames, isComponent, isEntryPoint) = ExtractClassInfo(context, classDecl, cancellationToken);
+        var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback) = ExtractClassInfo(context, classDecl, cancellationToken);
 
         return new ServiceInfo(
             ns, classDecl.Identifier.Text, lifetime, "Global",
             interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf,
             registerInHierarchy, asTypes, isEntryPoint, false,
-            scopeTypeName, usesTypeSafeScope);
+            scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback);
     }
 
     private static ServiceInfo? ExtractInfoFromLegacyAttribute(
@@ -260,12 +260,12 @@ internal class ClassAnalyzer {
         string[] asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
 
         // Extract interfaces and component info
-        var (interfaceNames, isComponent, isEntryPoint) = ExtractClassInfo(context, classDecl, cancellationToken);
+        var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback) = ExtractClassInfo(context, classDecl, cancellationToken);
 
-        return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory);
+        return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, null, false, isExceptionHandler, isBuildCallback);
     }
 
-    private static (List<string> interfaceNames, bool isComponent, bool isEntryPoint) ExtractClassInfo(
+    private static (List<string> interfaceNames, bool isComponent, bool isEntryPoint, bool isExceptionHandler, bool isBuildCallback) ExtractClassInfo(
         GeneratorSyntaxContext context,
         ClassDeclarationSyntax classDecl,
         CancellationToken cancellationToken)
@@ -273,6 +273,8 @@ internal class ClassAnalyzer {
         var interfaceNames = new List<string>();
         bool isComponent = false;
         bool isEntryPoint = false;
+        bool isExceptionHandler = false;
+        bool isBuildCallback = false;
 
         if (classDecl.BaseList != null) {
             foreach (var baseType in classDecl.BaseList.Types) {
@@ -283,6 +285,12 @@ internal class ClassAnalyzer {
                         interfaceNames.Add(rawName);
                         if (InterfaceUtils.IsVContainerEntryPoint(rawName)) {
                             isEntryPoint = true;
+                        }
+                        if (rawName.EndsWith("IEntryPointExceptionHandler")) {
+                            isExceptionHandler = true;
+                        }
+                        if (rawName.EndsWith("IBuildCallback")) {
+                            isBuildCallback = true;
                         }
                     }
                     else if (rawName == "MonoBehaviour" || rawName == "Component" || rawName == "SerializedMonoBehaviour" || rawName == "NetworkBehaviour") {
@@ -297,6 +305,12 @@ internal class ClassAnalyzer {
                     if (InterfaceUtils.IsVContainerEntryPoint(fullName)) {
                         isEntryPoint = true;
                     }
+                    if (fullName.EndsWith("IEntryPointExceptionHandler")) {
+                        isExceptionHandler = true;
+                    }
+                    if (fullName.EndsWith("IBuildCallback")) {
+                        isBuildCallback = true;
+                    }
                 } else if (symbol.TypeKind == TypeKind.Class) {
                     var current = symbol;
                     while (current != null) {
@@ -310,7 +324,7 @@ internal class ClassAnalyzer {
             }
         }
 
-        return (interfaceNames, isComponent, isEntryPoint);
+        return (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback);
     }
 
     public static SceneInjectionInfo? ExtractSceneInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
