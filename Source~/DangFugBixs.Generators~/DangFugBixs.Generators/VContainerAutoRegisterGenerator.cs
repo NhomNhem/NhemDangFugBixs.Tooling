@@ -69,6 +69,12 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
         try {
             var assemblyName = input.Compilation.AssemblyName ?? "";
             
+            // Initialize stats
+            var stats = new GenerationStats {
+                Version = "v3.4.0",
+                Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            };
+
             // Use stable hint name that allows overwriting older v3.1 files if possible
             // We keep the dots but handle other invalid chars
             string sanitizedHint = new string(assemblyName.Select(c => char.IsLetterOrDigit(c) || c == '.' ? c : '_').ToArray());
@@ -81,7 +87,17 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
 
             List<ServiceInfo> discoveredServices = new List<ServiceInfo>();
             if (scopeMappings.Count > 0) {
-                discoveredServices = ReferencedAssemblyScanner.Scan(input.Compilation);
+                var scanResult = ReferencedAssemblyScanner.Scan(input.Compilation);
+                discoveredServices = scanResult.Services;
+
+                // Report warnings as diagnostics
+                foreach (var warning in scanResult.Warnings) {
+                    stats.Warnings.Add(warning);
+                    var parts = warning.Split(new[] { ':' }, 2);
+                    string asmName = parts.Length > 0 ? parts[0].Trim() : "Unknown";
+                    string msg = parts.Length > 1 ? parts[1].Trim() : warning;
+                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.UnresolvedAssemblyScan, Location.None, asmName, msg));
+                }
             }
 
             // Filter valid local services
@@ -92,6 +108,7 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
 
             // Combine local and discovered services
             var allServices = validServices.Concat(discoveredServices).ToList();
+            stats.ServiceCount = allServices.Count;
 
             // Guard: only emit for allowed assemblies OR if we found services (opt-in via attribute)
             bool assemblyAllowed = AllowedAssemblies.Contains(assemblyName);
@@ -104,7 +121,7 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
 
             if (allServices.Count == 0 && validSceneServices.Count == 0) return;
 
-            var sourceCode = RegistrationEmitter.GenerateSource(allServices, validSceneServices, assemblyName, scopeMappings);
+            var sourceCode = RegistrationEmitter.GenerateSource(allServices, validSceneServices, assemblyName, scopeMappings, stats);
 
             // phase 3: Encapsulation
             // Generate ONE file per assembly containing everything including the global usings
@@ -113,8 +130,7 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             context.AddSource(hintName, SourceText.From(sourceCode, Encoding.UTF8));
 
         } catch (Exception ex) {
-            var descriptor = new DiagnosticDescriptor("ND999", "Generator Error", $"VContainer generator failed: {ex.Message}", "Logic", DiagnosticSeverity.Error, true);
-            context.ReportDiagnostic(Diagnostic.Create(descriptor, Location.None));
+            context.ReportDiagnostic(Diagnostic.Create(Diagnostics.GeneratorError, Location.None, ex.Message));
         }
     }
 }
