@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-03-16
+
+### ⭐ Added - Robust Entry Point Detection
+
+- **Intelligent Interface Matching**: Upgraded the detection logic for VContainer life-cycle interfaces (IInitializable, ITickable, etc.). It now supports fully qualified names and correctly handles cases where the semantic model fails to resolve the interface symbol.
+- **Expanded Interface Support**: Added explicit support for `IAsyncStartable`.
+- **Centralized Detection Logic**: Moved entry point detection to a shared utility used by both the local class analyzer and the referenced assembly scanner for perfect consistency.
+
 ## [3.4.0] - 2026-03-16
 
 ### ⭐ Added - Resilient Scanning & Traceability
