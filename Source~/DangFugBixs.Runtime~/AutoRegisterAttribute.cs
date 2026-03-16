@@ -13,7 +13,7 @@ namespace NhemDangFugBixs.Attributes {
     /// [AutoRegister(NhemLifetime.Singleton, scope: "Gameplay")]
     /// 
     /// // New (recommended):
-    /// [AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = NLifetime.Singleton)]
+    /// [AutoRegisterIn(typeof(GameplayLifetimeScope), Lifetime = NhemLifetime.Singleton)]
     /// </code>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]

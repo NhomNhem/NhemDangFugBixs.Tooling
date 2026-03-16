@@ -413,3 +413,5 @@ FodyWeavers.xsd
 
 # Local build configuration
 LocalBuild.props
+
+openspec/
