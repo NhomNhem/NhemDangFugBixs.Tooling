@@ -16,20 +16,6 @@ internal class ClassAnalyzer {
     private const string FactoryAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterFactoryAttribute";
     private const string SceneAttributeName = "NhemDangFugBixs.Attributes.AutoInjectSceneAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
-    private static readonly HashSet<string> EntryPointInterfaces = new() {
-        "VContainer.Unity.IInitializable", "IInitializable",
-        "VContainer.Unity.IPostInitializable", "IPostInitializable",
-        "VContainer.Unity.IStartable", "IStartable",
-        "VContainer.Unity.IPostStartable", "IPostStartable",
-        "VContainer.Unity.IFixedTickable", "IFixedTickable",
-        "VContainer.Unity.IPostFixedTickable", "IPostFixedTickable",
-        "VContainer.Unity.ITickable", "ITickable",
-        "VContainer.Unity.IPostTickable", "IPostTickable",
-        "VContainer.Unity.ILateTickable", "ILateTickable",
-        "VContainer.Unity.IPostLateTickable", "IPostLateTickable",
-        "VContainer.Unity.IAsyncStartable", "IAsyncStartable",
-        "System.IDisposable", "IDisposable"
-    };
 
     private static bool IsAttributeMatch(AttributeSyntax attr, string simpleName) {
         string fullName = attr.Name.ToString();
@@ -295,7 +281,7 @@ internal class ClassAnalyzer {
                     string rawName = baseType.Type.ToString();
                     if (rawName.StartsWith("I") && char.IsUpper(rawName.Length > 1 ? rawName[1] : 'a')) {
                         interfaceNames.Add(rawName);
-                        if (EntryPointInterfaces.Contains(rawName)) {
+                        if (InterfaceUtils.IsVContainerEntryPoint(rawName)) {
                             isEntryPoint = true;
                         }
                     }
@@ -308,7 +294,7 @@ internal class ClassAnalyzer {
                 if (symbol.TypeKind == TypeKind.Interface) {
                     string fullName = symbol.ToDisplayString();
                     interfaceNames.Add(fullName);
-                    if (EntryPointInterfaces.Contains(fullName)) {
+                    if (InterfaceUtils.IsVContainerEntryPoint(fullName)) {
                         isEntryPoint = true;
                     }
                 } else if (symbol.TypeKind == TypeKind.Class) {
