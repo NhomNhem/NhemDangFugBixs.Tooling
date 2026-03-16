@@ -17,6 +17,8 @@ internal readonly struct ServiceInfo {
     public bool UsesTypeSafeScope { get; }
     public bool IsExceptionHandler { get; }
     public bool IsBuildCallback { get; }
+    public bool IsInstaller { get; }
+    public int InstallerOrder { get; }
 
     public string FullName => string.IsNullOrEmpty(Namespace) ? ClassName : $"{Namespace}.{ClassName}";
 
@@ -36,7 +38,9 @@ internal readonly struct ServiceInfo {
         string? scopeTypeName = null,
         bool usesTypeSafeScope = false,
         bool isExceptionHandler = false,
-        bool isBuildCallback = false)
-        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope, IsExceptionHandler, IsBuildCallback) =
-           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback);
+        bool isBuildCallback = false,
+        bool isInstaller = false,
+        int installerOrder = 0)
+        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope, IsExceptionHandler, IsBuildCallback, IsInstaller, InstallerOrder) =
+           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder);
 }

@@ -4,17 +4,17 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace NhemDangFugBixs.Generators.Analyzers;
 
 internal class ClassAnalyzer {
-    private const string ExpectedAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterAttribute";
     private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute";
     private const string AutoRegisterInGenericAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
     private const string LifetimeScopeForAttributeName = "NhemDangFugBixs.Attributes.LifetimeScopeForAttribute";
     private const string LifetimeScopeForGenericAttributeName = "NhemDangFugBixs.Attributes.LifetimeScopeForAttribute`1";
-    private const string FactoryAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterFactoryAttribute";
     private const string SceneAttributeName = "NhemDangFugBixs.Attributes.AutoInjectSceneAttribute";
+    private const string InstallerOrderAttributeName = "NhemDangFugBixs.Attributes.InstallerOrderAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
 
     private static bool IsAttributeMatch(AttributeSyntax attr, string simpleName) {
@@ -121,7 +121,7 @@ internal class ClassAnalyzer {
         try {
             var classDecl = (ClassDeclarationSyntax)context.Node;
 
-            // Check for [AutoRegisterIn] attribute first (can be generic or typeof)
+            // Check for [AutoRegisterIn] attribute (can be generic or typeof)
             var typeSafeAttr = classDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
                 .FirstOrDefault(x => IsAttributeMatch(x, "AutoRegisterIn"));
@@ -130,14 +130,7 @@ internal class ClassAnalyzer {
                 return ExtractInfoFromTypeSafeAttribute(context, classDecl, typeSafeAttr, cancellationToken);
             }
 
-            // Fall back to legacy AutoRegister attribute
-            var attr = classDecl.AttributeLists
-                .SelectMany(x => x.Attributes)
-                .FirstOrDefault(x => IsAttributeMatch(x, "AutoRegister") || IsAttributeMatch(x, "AutoRegisterFactory"));
-
-            if (attr == null) return null;
-
-            return ExtractInfoFromLegacyAttribute(context, classDecl, attr, cancellationToken);
+            return null;
         } catch {
             return null;
         }
@@ -213,59 +206,16 @@ internal class ClassAnalyzer {
         string[] asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
 
         // Extract interfaces and component info
-        var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback) = ExtractClassInfo(context, classDecl, cancellationToken);
+        var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder) = ExtractClassInfo(context, classDecl, cancellationToken);
 
         return new ServiceInfo(
             ns, classDecl.Identifier.Text, lifetime, "Global",
             interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf,
             registerInHierarchy, asTypes, isEntryPoint, false,
-            scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback);
+            scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder);
     }
 
-    private static ServiceInfo? ExtractInfoFromLegacyAttribute(
-        GeneratorSyntaxContext context,
-        ClassDeclarationSyntax classDecl,
-        AttributeSyntax attr,
-        CancellationToken cancellationToken)
-    {
-        // Verify attribute type using semantic model (with fallback to name only)
-        var attrSymbol = context.SemanticModel.GetSymbolInfo(attr, cancellationToken).Symbol?.ContainingType;
-        var fullTypeName = attrSymbol?.ToDisplayString();
-
-        bool isFactory = false;
-        if (fullTypeName == FactoryAttributeName) {
-            isFactory = true;
-        } else if (fullTypeName != ExpectedAttributeName) {
-            // Fallback: Check if the name matches exactly "AutoRegister" or "AutoRegisterAttribute"
-            string attrName = attr.Name.ToString();
-            if (attrName == "AutoRegisterFactory" || attrName == "AutoRegisterFactoryAttribute") {
-                isFactory = true;
-            } else if (!IsAttributeMatch(attr, "AutoRegister")) {
-                return null;
-            }
-        }
-
-        var ns = classDecl.GetNamespace();
-
-        // Extract lifetime using semantic model (handles named arguments)
-        string lifetime = ExtractLifetime(context, attr, cancellationToken);
-
-        // Extract scope using semantic model (handles named arguments)
-        string scope = ExtractScope(context, attr, cancellationToken);
-
-        // Extract boolean properties
-        bool asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
-        bool asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
-        bool registerInHierarchy = ExtractBooleanProperty(context, attr, "RegisterInHierarchy", false, cancellationToken);
-        string[] asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
-
-        // Extract interfaces and component info
-        var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback) = ExtractClassInfo(context, classDecl, cancellationToken);
-
-        return new ServiceInfo(ns, classDecl.Identifier.Text, lifetime, scope, interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, null, false, isExceptionHandler, isBuildCallback);
-    }
-
-    private static (List<string> interfaceNames, bool isComponent, bool isEntryPoint, bool isExceptionHandler, bool isBuildCallback) ExtractClassInfo(
+    private static (List<string> interfaceNames, bool isComponent, bool isEntryPoint, bool isExceptionHandler, bool isBuildCallback, bool isInstaller, int installerOrder) ExtractClassInfo(
         GeneratorSyntaxContext context,
         ClassDeclarationSyntax classDecl,
         CancellationToken cancellationToken)
@@ -275,6 +225,8 @@ internal class ClassAnalyzer {
         bool isEntryPoint = false;
         bool isExceptionHandler = false;
         bool isBuildCallback = false;
+        bool isInstaller = false;
+        int installerOrder = 0;
 
         if (classDecl.BaseList != null) {
             foreach (var baseType in classDecl.BaseList.Types) {
@@ -291,6 +243,9 @@ internal class ClassAnalyzer {
                         }
                         if (rawName.EndsWith("IBuildCallback")) {
                             isBuildCallback = true;
+                        }
+                        if (rawName.EndsWith("IVContainerInstaller")) {
+                            isInstaller = true;
                         }
                     }
                     else if (rawName == "MonoBehaviour" || rawName == "Component" || rawName == "SerializedMonoBehaviour" || rawName == "NetworkBehaviour") {
@@ -311,6 +266,9 @@ internal class ClassAnalyzer {
                     if (fullName.EndsWith("IBuildCallback")) {
                         isBuildCallback = true;
                     }
+                    if (fullName.EndsWith("IVContainerInstaller")) {
+                        isInstaller = true;
+                    }
                 } else if (symbol.TypeKind == TypeKind.Class) {
                     var current = symbol;
                     while (current != null) {
@@ -324,7 +282,22 @@ internal class ClassAnalyzer {
             }
         }
 
-        return (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback);
+        // If it's an installer, look for [InstallerOrder]
+        if (isInstaller) {
+            var orderAttr = classDecl.AttributeLists
+                .SelectMany(x => x.Attributes)
+                .FirstOrDefault(x => IsAttributeMatch(x, "InstallerOrder"));
+
+            if (orderAttr != null && orderAttr.ArgumentList != null && orderAttr.ArgumentList.Arguments.Count > 0) {
+                var orderExpr = orderAttr.ArgumentList.Arguments[0].Expression;
+                var constantValue = context.SemanticModel.GetConstantValue(orderExpr, cancellationToken);
+                if (constantValue.HasValue && constantValue.Value is int orderValue) {
+                    installerOrder = orderValue;
+                }
+            }
+        }
+
+        return (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder);
     }
 
     public static SceneInjectionInfo? ExtractSceneInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
@@ -346,86 +319,6 @@ internal class ClassAnalyzer {
         }
     }
 
-
-
-    private static string ExtractLifetime(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken) {
-        if (attr.ArgumentList == null || attr.ArgumentList.Arguments.Count == 0) {
-            return "Singleton"; // Default
-        }
-
-        // Find lifetime argument (either positional [0] or named "lifetime")
-        AttributeArgumentSyntax? lifetimeArg = null;
-        
-        // First check for named argument
-        lifetimeArg = attr.ArgumentList.Arguments
-            .FirstOrDefault(a => a.NameColon?.Name.Identifier.Text == "lifetime");
-        
-        // If not found, assume first positional argument is lifetime
-        if (lifetimeArg == null && attr.ArgumentList.Arguments.Count > 0) {
-            var firstArg = attr.ArgumentList.Arguments[0];
-            // Only use it if it's NOT named "scope"
-            if (firstArg.NameColon?.Name.Identifier.Text != "scope") {
-                lifetimeArg = firstArg;
-            }
-        }
-
-        if (lifetimeArg == null) {
-            return "Singleton"; // Default if not found
-        }
-
-        var lifetimeExpr = lifetimeArg.Expression;
-        var symbolInfo = context.SemanticModel.GetSymbolInfo(lifetimeExpr, cancellationToken);
-        
-        // If it's an enum member, get its name
-        if (symbolInfo.Symbol is IFieldSymbol fieldSymbol && fieldSymbol.ContainingType.TypeKind == TypeKind.Enum) {
-            var lifetimeValue = fieldSymbol.Name;
-            if (ValidLifetimes.Contains(lifetimeValue)) {
-                return lifetimeValue;
-            }
-        }
-
-        // Default fallback
-        return "Singleton";
-    }
-
-    private static string ExtractScope(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken) {
-        if (attr.ArgumentList == null || attr.ArgumentList.Arguments.Count == 0) {
-            return "Global"; // Default
-        }
-
-        // Find scope argument (either positional [1] or named "scope")
-        AttributeArgumentSyntax? scopeArg = null;
-        
-        // First check for named argument
-        scopeArg = attr.ArgumentList.Arguments
-            .FirstOrDefault(a => a.NameColon?.Name.Identifier.Text == "scope");
-        
-        // If not found, check if there's a second positional argument
-        if (scopeArg == null && attr.ArgumentList.Arguments.Count > 1) {
-            var secondArg = attr.ArgumentList.Arguments[1];
-            // Only use it if it's NOT named "lifetime"
-            if (secondArg.NameColon?.Name.Identifier.Text != "lifetime") {
-                scopeArg = secondArg;
-            }
-        }
-
-        if (scopeArg == null) {
-            return "Global"; // Default if not found
-        }
-
-        var scopeExpr = scopeArg.Expression;
-        
-        // Use semantic model to get constant string value
-        var constantValue = context.SemanticModel.GetConstantValue(scopeExpr, cancellationToken);
-        
-        if (constantValue.HasValue && constantValue.Value is string scopeStr) {
-            return scopeStr;
-        }
-
-        // If not a constant, return default
-        return "Global";
-    }
-
     private static bool ExtractBooleanProperty(GeneratorSyntaxContext context, AttributeSyntax attr, string propertyName, bool defaultValue, CancellationToken cancellationToken) {
         if (attr.ArgumentList == null) return defaultValue;
 
@@ -438,12 +331,6 @@ internal class ClassAnalyzer {
         var constantValue = context.SemanticModel.GetConstantValue(arg.Expression, cancellationToken);
         if (constantValue.HasValue && constantValue.Value is bool boolVal) {
             return boolVal;
-        }
-
-        // Fallback syntactic check
-        if (arg.Expression is LiteralExpressionSyntax literal) {
-            if (literal.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.TrueLiteralExpression)) return true;
-            if (literal.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.FalseLiteralExpression)) return false;
         }
 
         return defaultValue;

@@ -9,6 +9,7 @@ namespace NhemDangFugBixs.Generators.Analyzers;
 internal static class ReferencedAssemblyScanner {
     private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute";
     private const string AutoRegisterInGenericAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
+    private const string InstallerOrderAttributeName = "NhemDangFugBixs.Attributes.InstallerOrderAttribute";
 
     public static (List<ServiceInfo> Services, List<string> Warnings) Scan(Compilation compilation) {
         var results = new List<ServiceInfo>();
@@ -17,13 +18,14 @@ internal static class ReferencedAssemblyScanner {
         // Get the attribute symbols from the compilation
         var attrSymbol = compilation.GetTypeByMetadataName(AutoRegisterInAttributeName);
         var genericAttrSymbol = compilation.GetTypeByMetadataName(AutoRegisterInGenericAttributeName);
+        var orderAttrSymbol = compilation.GetTypeByMetadataName(InstallerOrderAttributeName);
         
         if (attrSymbol == null && genericAttrSymbol == null) return (results, warnings);
 
         // Scan all referenced assemblies
         foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols) {
             try {
-                ScanNamespace(assembly.GlobalNamespace, attrSymbol, genericAttrSymbol, results);
+                ScanNamespace(assembly.GlobalNamespace, attrSymbol, genericAttrSymbol, orderAttrSymbol, results);
             } catch (System.Exception ex) {
                 warnings.Add($"{assembly.Name}: {ex.Message}");
             }
@@ -32,13 +34,13 @@ internal static class ReferencedAssemblyScanner {
         return (results, warnings);
     }
 
-    private static void ScanNamespace(INamespaceSymbol ns, INamedTypeSymbol? attrSymbol, INamedTypeSymbol? genericAttrSymbol, List<ServiceInfo> results) {
+    private static void ScanNamespace(INamespaceSymbol ns, INamedTypeSymbol? attrSymbol, INamedTypeSymbol? genericAttrSymbol, INamedTypeSymbol? orderAttrSymbol, List<ServiceInfo> results) {
         try {
             foreach (var member in ns.GetMembers()) {
                 if (member is INamespaceSymbol nestedNs) {
-                    ScanNamespace(nestedNs, attrSymbol, genericAttrSymbol, results);
+                    ScanNamespace(nestedNs, attrSymbol, genericAttrSymbol, orderAttrSymbol, results);
                 } else if (member is INamedTypeSymbol type) {
-                    ScanType(type, attrSymbol, genericAttrSymbol, results);
+                    ScanType(type, attrSymbol, genericAttrSymbol, orderAttrSymbol, results);
                 }
             }
         } catch {
@@ -46,10 +48,10 @@ internal static class ReferencedAssemblyScanner {
         }
     }
 
-    private static void ScanType(INamedTypeSymbol type, INamedTypeSymbol? attrSymbol, INamedTypeSymbol? genericAttrSymbol, List<ServiceInfo> results) {
+    private static void ScanType(INamedTypeSymbol type, INamedTypeSymbol? attrSymbol, INamedTypeSymbol? genericAttrSymbol, INamedTypeSymbol? orderAttrSymbol, List<ServiceInfo> results) {
         // Scan nested types
         foreach (var nestedType in type.GetTypeMembers()) {
-            ScanType(nestedType, attrSymbol, genericAttrSymbol, results);
+            ScanType(nestedType, attrSymbol, genericAttrSymbol, orderAttrSymbol, results);
         }
 
         // Check for AutoRegisterInAttribute (either version)
@@ -58,14 +60,14 @@ internal static class ReferencedAssemblyScanner {
             (genericAttrSymbol != null && SymbolEqualityComparer.Default.Equals(a.AttributeClass?.OriginalDefinition, genericAttrSymbol)));
 
         if (attr != null) {
-            var info = ExtractServiceInfo(type, attr);
+            var info = ExtractServiceInfo(type, attr, orderAttrSymbol);
             if (info.HasValue) {
                 results.Add(info.Value);
             }
         }
     }
 
-    private static ServiceInfo? ExtractServiceInfo(INamedTypeSymbol type, AttributeData attr) {
+    private static ServiceInfo? ExtractServiceInfo(INamedTypeSymbol type, AttributeData attr, INamedTypeSymbol? orderAttrSymbol) {
         string? scopeTypeName = null;
         bool usesTypeSafeScope = false;
 
@@ -137,6 +139,18 @@ internal static class ReferencedAssemblyScanner {
         bool isEntryPoint = interfaceNames.Any(i => NhemDangFugBixs.Generators.Utils.InterfaceUtils.IsVContainerEntryPoint(i));
         bool isExceptionHandler = interfaceNames.Any(i => i.EndsWith("IEntryPointExceptionHandler"));
         bool isBuildCallback = interfaceNames.Any(i => i.EndsWith("IBuildCallback"));
+        bool isInstaller = interfaceNames.Any(i => i.EndsWith("IVContainerInstaller"));
+
+        int installerOrder = 0;
+        if (isInstaller && orderAttrSymbol != null) {
+            var orderAttr = type.GetAttributes().FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, orderAttrSymbol));
+            if (orderAttr != null && orderAttr.ConstructorArguments.Length > 0) {
+                var arg = orderAttr.ConstructorArguments[0];
+                if (arg.Value is int val) {
+                    installerOrder = val;
+                }
+            }
+        }
 
         return new ServiceInfo(
             type.ContainingNamespace?.ToDisplayString() ?? "",
@@ -154,7 +168,9 @@ internal static class ReferencedAssemblyScanner {
             scopeTypeName,
             usesTypeSafeScope,
             isExceptionHandler,
-            isBuildCallback
+            isBuildCallback,
+            isInstaller,
+            installerOrder
         );
     }
 

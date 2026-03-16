@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-03-17
+
+### ⭐ Added - Module/Installer Pattern
+
+- **VContainer Installers**: Introduced `IVContainerInstaller` interface. The generator now automatically detects, instantiates, and executes these installers within their respective scopes. This allows for decoupled, modular registration logic.
+- **Installer Ordering**: Added `[InstallerOrder(int)]` attribute to define execution priority among multiple installers. Lower numbers execute first.
+- **Strict Validation**: Added new Roslyn Analyzers (`ND105-ND107`) to ensure installers are public, have parameterless constructors, and are not components (MonoBehaviours).
+- **Unified Diagnostics**: Standardized all diagnostic codes to the `NDxxx` prefix for a cleaner development experience.
+- **Improved Registration Flow**: Re-structured the generated code to execute installers *before* other services, ensuring foundational dependencies are established early.
+
+### ⚠️ BREAKING CHANGES
+
+- **Legacy Attributes Removed**: Completely removed the deprecated `[AutoRegister(string)]` and `[AutoRegisterFactory]` attributes.
+- **Stricter Access Control**: Installers used with the generator MUST now be `public` to ensure accessibility from the generated code.
+- **Parameterless Constructor Requirement**: Installers MUST provide a public parameterless constructor.
+
 ## [3.6.0] - 2026-03-16
 
 ### ⭐ Added - Advanced VContainer Features

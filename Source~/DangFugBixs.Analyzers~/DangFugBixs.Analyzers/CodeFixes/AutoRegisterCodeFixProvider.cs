@@ -15,13 +15,15 @@ namespace NhemDangFugBixs.Analyzers.CodeFixes;
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AutoRegisterCodeFixProvider)), Shared]
 public class AutoRegisterCodeFixProvider : CodeFixProvider {
     public override ImmutableArray<string> FixableDiagnosticIds 
-        => ImmutableArray.Create(AutoRegisterRules.NHM001Id);
+        => ImmutableArray.Create(AutoRegisterRules.ND001Id);
 
     public override FixAllProvider GetFixAllProvider() 
         => WellKnownFixAllProviders.BatchFixer;
 
     public override async Task RegisterCodeFixesAsync(CodeFixContext context) {
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+        if (root == null) return;
+
         var diagnostic = context.Diagnostics.First();
         var diagnosticSpan = diagnostic.Location.SourceSpan;
 
@@ -32,7 +34,7 @@ public class AutoRegisterCodeFixProvider : CodeFixProvider {
 
         context.RegisterCodeFix(
             CodeAction.Create(
-                title: "Fix class modifiers for [AutoRegister]",
+                title: "Fix class modifiers for [AutoRegisterIn]",
                 createChangedDocument: c => FixModifiersAsync(context.Document, declaration, c),
                 equivalenceKey: nameof(AutoRegisterCodeFixProvider)),
             diagnostic);
@@ -44,8 +46,9 @@ public class AutoRegisterCodeFixProvider : CodeFixProvider {
 
         var newClassDeclaration = classDeclaration.WithModifiers(SyntaxFactory.TokenList(newModifiers));
         var root = await document.GetSyntaxRootAsync(cancellationToken);
-        var newRoot = root.ReplaceNode(classDeclaration, newClassDeclaration);
+        if (root == null) return document;
 
+        var newRoot = root.ReplaceNode(classDeclaration, newClassDeclaration);
         return document.WithSyntaxRoot(newRoot);
     }
 }

@@ -4,14 +4,43 @@ A powerful C# Source Generator for **VContainer** that automates dependency regi
 
 ## 🌟 Key Features
 
+- **Module/Installer Pattern** (v4.0): Decouple complex registration logic into dedicated `IVContainerInstaller` classes. The generator automatically instantiates, sorts, and executes them before other registrations.
 - **Cross-Layer Discovery** (v3.1): Register services across different assemblies (`asmdef`) using **Identity Types**. Break the circular dependency trap in layered architectures!
-- **Type-Safe Scopes** (v3.0): Register services to specific `LifetimeScope` types using `[AutoRegisterIn(typeof(TScope))]` - full IntelliSense support, no more string typos!
+- **Type-Safe Scopes** (v3.0): Register services to specific `LifetimeScope` types using `[AutoRegisterIn(typeof(TScope))]` - full IntelliSense support!
 - **Unified Master Registration**: Single `VContainerRegistration.RegisterAll(builder)` call in your `LifetimeScope` registers every discovered service across all layers.
-- **Robust Code Emission** (v3.2): Generated code uses `partial` classes and `global::` prefixes, ensuring compatibility with complex multi-assembly projects and preventing naming collisions.
-- **Convention-Based Naming**: Automatic registration method names by stripping "LifetimeScope" suffix (e.g., `GameplayLifetimeScope` → `RegisterGameplay()`).
-- **Zero Boilerplate**: Register services and components using simple attributes.
-- **Smart Component Detection**: Automatically handles `MonoBehaviour` with options for `InHierarchy` or `NewGameObject`.
-- **Compile-Time Validation**: Roslyn analyzers catch scope errors before runtime (ND001-ND103).
+- **Robust Code Emission**: Generated code uses `partial` classes and `global::` prefixes, ensuring compatibility with complex multi-assembly projects.
+- **Compile-Time Validation**: Roslyn analyzers catch scope and installer errors before runtime (ND001-ND107).
+
+---
+
+## 🏗️ Module/Installer Pattern (v4.0)
+
+For complex configurations (third-party libs, ScriptableObjects, factories), use **Installers** to keep your `LifetimeScope` clean.
+
+### 1. Define an Installer
+```csharp
+using NhemDangFugBixs.Attributes;
+using VContainer;
+
+[AutoRegisterIn(typeof(GameScope))]
+[InstallerOrder(-100)] // Run before other installers
+public class LoggingInstaller : IVContainerInstaller {
+    public void Install(IContainerBuilder builder) {
+        builder.Register<ILogger, ConsoleLogger>(Lifetime.Singleton);
+        // Add complex setup here...
+    }
+}
+```
+
+### 2. Automatic Execution
+The generator detects the installer and emits it into the scope registration:
+```csharp
+// Generated code
+public static void RegisterGame(IContainerBuilder builder) {
+    new global::LoggingInstaller().Install(builder);
+    // ... other registrations
+}
+```
 
 ---
 
@@ -32,12 +61,8 @@ public class GameplayScope {}
 // Core.asmdef (References Shared)
 using NhemDangFugBixs.Attributes;
 
-// Use NLifetime alias for convenience
-[AutoRegisterIn(typeof(GameplayScope), Lifetime = NLifetime.Scoped)]
-public class EnemyPoolManager : IEnemyPoolManager, IDisposable {
-    // This service will be automatically registered into 
-    // any LifetimeScope mapped to GameplayScope.
-}
+[AutoRegisterIn(typeof(GameplayScope), Lifetime = NhemLifetime.Scoped)]
+public class EnemyPoolManager : IEnemyPoolManager, IDisposable { }
 ```
 
 #### 3. Map Identity to LifetimeScope (Main Layer)
@@ -48,7 +73,6 @@ using NhemDangFugBixs.Attributes;
 [LifetimeScopeFor(typeof(GameplayScope))]
 public class GameplayLifetimeScope : LifetimeScope {
     protected override void Configure(IContainerBuilder builder) {
-        // ONE call to register EVERYTHING from ALL layers
         VContainerRegistration.RegisterAll(builder);
     }
 }
@@ -63,21 +87,14 @@ public class GameplayLifetimeScope : LifetimeScope {
 The recommended way to register services with compile-time safety:
 
 ```csharp
-// Primary syntax - typeof() for Unity compatibility
 [AutoRegisterIn(typeof(GameplayLifetimeScope))]
 public class EnemySpawner { }
-
-// Cross-layer syntax - use an Identity Type (v3.1+)
-[AutoRegisterIn(typeof(GameplayScope))]
-public class DecoupledService { }
 ```
 
 **Benefits:**
-- ✅ Full IntelliSense support (IDE suggests scope types)
-- ✅ Compile-time validation (typos become compiler errors)
-- ✅ Refactoring-safe (rename scope class → all usages update)
-- ✅ **Layer-Safe** (v3.1): No circular dependencies in complex asmdef setups.
-- ✅ **Robust Emission** (v3.2): Works reliably in multi-assembly projects.
+- ✅ Full IntelliSense support
+- ✅ Compile-time validation
+- ✅ Refactoring-safe
 
 ### 2. Convention-Based Naming
 
@@ -87,26 +104,22 @@ The generator automatically strips "LifetimeScope" suffix:
 |-----------------|------------------|
 | `GameLifetimeScope` | `RegisterGame()` |
 | `GameplayLifetimeScope` | `RegisterGameplay()` |
-| `UILifetimeScope` | `RegisterUI()` |
-| `DungeonLifetimeScope` | `RegisterDungeon()` |
-
-Override with `[ScopeName("Custom")]` when needed.
 
 ---
 
-## ⚠️ Migration Guide (v3.0 → v3.1+)
+## ⚠️ Migration Guide (v3.x → v4.0)
 
-v3.1 switched from generic attributes to `typeof()` arguments for better compatibility with different C# language versions in Unity.
+v4.0 is a major breaking change that removes legacy attributes and introduces stricter validation.
 
-### Before (v3.0)
-```csharp
-[AutoRegisterIn<GameLifetimeScope>]
-```
+### BREAKING CHANGES:
+- **Removed**: `[AutoRegister(string scope)]` (Legacy string-based registration).
+- **Removed**: `[AutoRegisterFactory]` (Use `IVContainerInstaller` for complex factory setup).
+- **Stricter Validation**: Installers MUST be `public` and have a parameterless constructor.
 
-### After (v3.1)
-```csharp
-[AutoRegisterIn(typeof(GameLifetimeScope))]
-```
+### Migration Steps:
+1. Replace any remaining `[AutoRegister("Name")]` with `[AutoRegisterIn(typeof(Scope))]`.
+2. Convert `[AutoRegisterFactory]` logic into an `IVContainerInstaller` implementation.
+3. Ensure all services use `NhemLifetime` instead of the deprecated `Lifetime` enum alias if applicable.
 
 ---
 
@@ -114,10 +127,12 @@ v3.1 switched from generic attributes to `typeof()` arguments for better compati
 
 | Code | Severity | Description |
 |------|----------|-------------|
-| ND001 | Error | Scope type not found |
-| ND002 | Error | Type must inherit from LifetimeScope |
-| ND003 | Error | Circular scope dependency detected |
-| ND004 | Warning | Parent scope cannot depend on child scope |
+| ND001 | Error | Invalid AutoRegisterIn target (Static/Abstract) |
+| ND002 | Warning | Missing interface implementation |
+| ND003 | Warning | Invalid constructor for VContainer |
+| ND105 | Error | Installer missing public parameterless constructor |
+| ND106 | Error | Installer must be public |
+| ND107 | Error | Installer cannot be a Component (MonoBehaviour) |
 
 ---
 

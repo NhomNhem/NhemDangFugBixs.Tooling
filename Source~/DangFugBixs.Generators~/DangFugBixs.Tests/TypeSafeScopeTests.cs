@@ -152,7 +152,7 @@ public class TickSystem : ITickable {
 
         // Assert
         var generatedCode = result.GeneratedTrees[0].ToString();
-        Assert.That(generatedCode, Does.Contain("RegisterEntryPoint<TickSystem>"));
+        Assert.That(generatedCode, Does.Contain("RegisterEntryPoint<global::TickSystem>"));
     }
 
     [Test]
@@ -175,7 +175,7 @@ public class InitSystem : IInitializable {
 
         // Assert
         var generatedCode = result.GeneratedTrees[0].ToString();
-        Assert.That(generatedCode, Does.Contain("RegisterEntryPoint<InitSystem>"));
+        Assert.That(generatedCode, Does.Contain("RegisterEntryPoint<global::InitSystem>"));
     }
 
     [Test]
@@ -197,7 +197,7 @@ public class CameraController : MonoBehaviour { }
 
         // Assert
         var generatedCode = result.GeneratedTrees[0].ToString();
-        Assert.That(generatedCode, Does.Contain("RegisterComponentOnNewGameObject<CameraController>"));
+        Assert.That(generatedCode, Does.Contain("RegisterComponentOnNewGameObject<global::CameraController>"));
     }
 
     [Test]
@@ -219,7 +219,7 @@ public class AudioManager : MonoBehaviour { }
 
         // Assert
         var generatedCode = result.GeneratedTrees[0].ToString();
-        Assert.That(generatedCode, Does.Contain("RegisterComponentInHierarchy<AudioManager>"));
+        Assert.That(generatedCode, Does.Contain("RegisterComponentInHierarchy<global::AudioManager>"));
     }
 
     [Test]
@@ -251,23 +251,6 @@ public class UIService { }
         Assert.That(generatedCode, Does.Contain("RegisterGame("));
         Assert.That(generatedCode, Does.Contain("RegisterGameplay("));
         Assert.That(generatedCode, Does.Contain("RegisterUI("));
-    }
-
-    [Test]
-    public void AutoRegister_LegacyAttribute_ProducesObsoleteWarning() {
-        // Arrange
-        var source = @"
-using NhemDangFugBixs.Attributes;
-
-[AutoRegister(scope: ""Global"")]
-public class LegacyService { }
-";
-
-        // Act
-        var result = RunGenerator(source);
-
-        // Assert
-        Assert.That(result.Diagnostics.Any(d => d.Severity == DiagnosticSeverity.Warning && d.Id == "CS0618"), Is.True);
     }
 
     private GeneratorDriverRunResult RunGenerator(string source) {
