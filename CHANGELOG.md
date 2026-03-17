@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2026-03-18
+
+### ⭐ Added - DI Guardrails & Smoke Testing
+
+- **MessagePipe Broker Guard (ND008)**: New analyzer that validates MessagePipe `IPublisher<T>` and `ISubscriber<T>` dependencies. Warns when a type injects MessagePipe services but no corresponding `[AutoRegisterMessageBrokerIn]` registration exists in a reachable scope.
+- **ILogger Root Guard (ND009)**: New analyzer that validates `ILogger<T>` constructor dependencies. Warns when types inject loggers but the root scope doesn't have both `ILoggerFactory` and `ILogger<>` registrations.
+- **DI Smoke Test Tool**: New CLI tool (`DangFugBixs.DiSmokeValidation`) for fail-fast validation before Unity Play mode. Uses reflection to validate generated injectors, MessagePipe broker reachability, and ILogger root infrastructure.
+  - Usage: `dotnet run --project DangFugBixs.DiSmokeValidation -- <assembly.dll> [--format json|text]`
+
+### 🧪 Testing
+
+- **MessagePipe Guard Tests**: 4 tests covering same-scope, root-scope, missing broker, and non-generated consumer scenarios.
+- **ILogger Guard Tests**: 3 tests covering valid setup, missing factory, and missing adapter scenarios.
+- **Smoke Validation Tests**: 15 tests covering complete graphs, missing components, and JSON output formatting.
+
+### 📊 Statistics
+
+- **Total Tests**: 44 (all passing)
+- **Diagnostic Codes**: ND001-ND107 (13 active diagnostics)
+- **CLI Tools**: 1 (DI Smoke Validation)
+
+## [4.1.0] - 2026-03-18
+
+### ⭐ Added - Resiliency & Safety Guards
+
+- **Conflict Detection Analyzer (ND005)**: New analyzer that prevents "Double Registration" by flagging manual `builder.Register<T>` calls for types already marked with `[AutoRegisterIn]`.
+- **Smart EntryPoint Registration**: The generator now intelligently filters out VContainer lifecycle interfaces (ITickable, IStartable, etc.) when emitting `RegisterEntryPoint`, preventing redundant lifecycle method calls.
+- **Global Registration Deduplication**: Added a strict deduplication pass to the generator to ensure each type is only registered once, even if discovered across multiple assemblies.
+
+### ⚙️ Improved
+
+- **Version Alignment**: Standardized all internal version markers and statistics to v4.1.0.
+
 ## [4.0.0] - 2026-03-17
 
 ### ⭐ Added - Module/Installer Pattern

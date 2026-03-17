@@ -35,10 +35,10 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
         // phase 1: Input Processing 
         var services = context.SyntaxProvider
             .CreateSyntaxProvider(
-                predicate: (node, _) => node is ClassDeclarationSyntax { AttributeLists.Count: > 0 },
-                transform: (ctx, token) => ClassAnalyzer.ExtractInfo(ctx, token)
+                predicate: (node, _) => node is TypeDeclarationSyntax { AttributeLists.Count: > 0 } and (ClassDeclarationSyntax or StructDeclarationSyntax),
+                transform: (ctx, token) => ClassAnalyzer.ExtractInfos(ctx, token)
                 )
-            .Where(info => info != null);
+            .SelectMany((infos, _) => infos);
 
         var sceneServices = context.SyntaxProvider
             .CreateSyntaxProvider(
@@ -54,24 +54,32 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
                 )
             .Where(info => info != null);
 
+        var rootLogging = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: (node, _) => node is ClassDeclarationSyntax,
+                transform: (ctx, token) => ClassAnalyzer.ExtractRootLoggingInfo(ctx, token)
+                )
+            .Where(info => info != null);
+
         // phase 2: Output Generation - combine with compilation to get assembly name
         var combined = services.Collect()
             .Combine(sceneServices.Collect())
             .Combine(scopeMappings.Collect())
+            .Combine(rootLogging.Collect())
             .Combine(context.CompilationProvider);
         
-        context.RegisterSourceOutput(combined, Execute);
+        context.RegisterSourceOutput(combined, (spc, input) => Execute(spc, input));
     }
 
     private static void Execute(SourceProductionContext context,
-        (((System.Collections.Immutable.ImmutableArray<ServiceInfo?> Services, System.Collections.Immutable.ImmutableArray<SceneInjectionInfo?> SceneServices) BaseData, System.Collections.Immutable.ImmutableArray<ScopeMappingInfo?> ScopeMappings) Data, Compilation Compilation) input) {
+        ((((System.Collections.Immutable.ImmutableArray<ServiceInfo> Services, System.Collections.Immutable.ImmutableArray<SceneInjectionInfo?> SceneServices) BaseData, System.Collections.Immutable.ImmutableArray<ScopeMappingInfo?> ScopeMappings) Data, System.Collections.Immutable.ImmutableArray<RootLoggingInfo?> RootLogging) LoggingData, Compilation Compilation) input) {
 
         try {
             var assemblyName = input.Compilation.AssemblyName ?? "";
             
             // Initialize stats
             var stats = new GenerationStats {
-                Version = "v3.6.2",
+                Version = "v4.1.0",
                 Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
             };
 
@@ -80,9 +88,18 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             string sanitizedHint = new string(assemblyName.Select(c => char.IsLetterOrDigit(c) || c == '.' ? c : '_').ToArray());
 
             // v3.1 Logic: If we have ScopeMappings, we perform a global scan of referenced assemblies
-            var scopeMappings = input.Data.ScopeMappings
+            var scopeMappings = input.LoggingData.Data.ScopeMappings
                 .Where(s => s.HasValue)
                 .Select(s => s!.Value)
+                .ToList();
+            var rootLogging = input.LoggingData.RootLogging
+                .Where(info => info.HasValue)
+                .Select(info => info!.Value)
+                .GroupBy(info => info.ScopeName)
+                .Select(group => new RootLoggingInfo(
+                    group.Key,
+                    group.Any(i => i.HasLoggerFactory),
+                    group.Any(i => i.HasLoggerAdapter)))
                 .ToList();
 
             List<ServiceInfo> discoveredServices = new List<ServiceInfo>();
@@ -101,20 +118,25 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             }
 
             // Filter valid local services
-            var validServices = input.Data.BaseData.Services
-                .Where(s => s.HasValue)
-                .Select(s => s!.Value)
-                .ToList();
+            var validServices = input.LoggingData.Data.BaseData.Services.ToList();
 
             // Combine local and discovered services
             var allServices = validServices.Concat(discoveredServices).ToList();
+
+            // v4.1: Deduplication pass - ensure each unique class is registered only once globally
+            // We group by FullName to prevent duplicates from multiple assemblies
+            allServices = allServices
+                .GroupBy(s => s.FullName)
+                .Select(g => g.First())
+                .ToList();
+
             stats.ServiceCount = allServices.Count;
 
             // Guard: only emit for allowed assemblies OR if we found services (opt-in via attribute)
             bool assemblyAllowed = AllowedAssemblies.Contains(assemblyName);
             if (!assemblyAllowed && allServices.Count == 0) return;
 
-            var validSceneServices = input.Data.BaseData.SceneServices
+            var validSceneServices = input.LoggingData.Data.BaseData.SceneServices
                 .Where(s => s.HasValue)
                 .Select(s => s!.Value)
                 .ToList();
@@ -122,12 +144,16 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             if (allServices.Count == 0 && validSceneServices.Count == 0) return;
 
             var sourceCode = RegistrationEmitter.GenerateSource(allServices, validSceneServices, assemblyName, scopeMappings, stats);
+            var reportCode = ReportEmitter.GenerateSource(allServices, rootLogging, assemblyName);
 
             // phase 3: Encapsulation
             // Generate ONE file per assembly containing everything including the global usings
             // v3.3: Use stable hint name {sanitizedHint}.g.cs to overwrite older versions correctly
             var hintName = string.IsNullOrEmpty(sanitizedHint) ? "VContainerRegistration.g.cs" : $"{sanitizedHint}.g.cs";
             context.AddSource(hintName, SourceText.From(sourceCode, Encoding.UTF8));
+
+            var reportHintName = string.IsNullOrEmpty(sanitizedHint) ? "VContainerRegistration.Report.g.cs" : $"{sanitizedHint}.Report.g.cs";
+            context.AddSource(reportHintName, SourceText.From(reportCode, Encoding.UTF8));
 
         } catch (Exception ex) {
             context.ReportDiagnostic(Diagnostic.Create(Diagnostics.GeneratorError, Location.None, ex.Message));

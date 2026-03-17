@@ -50,7 +50,7 @@ namespace NhemDangFugBixs.Attributes {
         /// <summary>
         /// Explicit interface types to bind to (overrides AsImplementedInterfaces).
         /// </summary>
-        public Type[] AsTypes { get; set; }
+        public Type[] AsTypes { get; set; } = Array.Empty<Type>();
 
         public AutoRegisterInAttribute(Type scopeType) {
             ScopeType = scopeType;

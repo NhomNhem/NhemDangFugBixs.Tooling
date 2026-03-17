@@ -63,12 +63,15 @@ public class AutoRegisterRules : DiagnosticAnalyzer {
         isEnabledByDefault: true);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics 
-        => ImmutableArray.Create(ND001, ND002, ND003, ND105, ND106, ND107);
+        => ImmutableArray.Create(ND001, ND002, ND003, ND105, ND106, ND107, ConflictCheckRule.ND005);
 
     public override void Initialize(AnalysisContext context) {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
         context.RegisterSymbolAction(AnalyzeNamedType, SymbolKind.NamedType);
+        
+        // Add ConflictCheckRule initialization logic here if we want to combine them, 
+        // but it's cleaner to have it as its own analyzer if configured correctly in the project.
     }
 
     private static void AnalyzeNamedType(SymbolAnalysisContext context) {

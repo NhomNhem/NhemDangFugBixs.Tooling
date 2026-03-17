@@ -16,6 +16,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Analyzers.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Common", "DangFugBixs.Common~\DangFugBixs.Common.csproj", "{75D75F7C-5DB3-4253-BD92-509AE0DF26F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.DiSmokeValidation", "DangFugBixs.Tools~\DangFugBixs.DiSmokeValidation\DangFugBixs.DiSmokeValidation.csproj", "{17CB6170-FAC1-4C11-9425-3442F3F33297}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.DiSmokeValidation.Tests", "DangFugBixs.Tools~\DangFugBixs.DiSmokeValidation.Tests\DangFugBixs.DiSmokeValidation.Tests.csproj", "{7DB50F42-4542-4C66-AA72-5512B1063565}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +126,14 @@ Global
 		{75D75F7C-5DB3-4253-BD92-509AE0DF26F3}.Release|x64.Build.0 = Release|Any CPU
 		{75D75F7C-5DB3-4253-BD92-509AE0DF26F3}.Release|x86.ActiveCfg = Release|Any CPU
 		{75D75F7C-5DB3-4253-BD92-509AE0DF26F3}.Release|x86.Build.0 = Release|Any CPU
+		{17CB6170-FAC1-4C11-9425-3442F3F33297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17CB6170-FAC1-4C11-9425-3442F3F33297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17CB6170-FAC1-4C11-9425-3442F3F33297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17CB6170-FAC1-4C11-9425-3442F3F33297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DB50F42-4542-4C66-AA72-5512B1063565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DB50F42-4542-4C66-AA72-5512B1063565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DB50F42-4542-4C66-AA72-5512B1063565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DB50F42-4542-4C66-AA72-5512B1063565}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
