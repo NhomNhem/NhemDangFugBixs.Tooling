@@ -1,8 +1,10 @@
 using NhemDangFugBixs.Common.Models;
+using NhemDangFugBixs.Common.Utils;
 using NhemDangFugBixs.Generators.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 
@@ -115,34 +117,111 @@ internal class ClassAnalyzer {
         }
     }
 
-    public static ServiceInfo? ExtractInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
+    private const string AutoRegisterMessageBrokerInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterMessageBrokerInAttribute";
+
+    public static ImmutableArray<ServiceInfo> ExtractInfos(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
 
+        var results = new List<ServiceInfo>();
         try {
-            var classDecl = (ClassDeclarationSyntax)context.Node;
+            var typeDecl = (TypeDeclarationSyntax)context.Node;
 
-            // Check for [AutoRegisterIn] attribute (can be generic or typeof)
-            var typeSafeAttr = classDecl.AttributeLists
+            // 1. Process [AutoRegisterIn] attributes
+            var typeSafeAttrs = typeDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
-                .FirstOrDefault(x => IsAttributeMatch(x, "AutoRegisterIn"));
+                .Where(x => IsAttributeMatch(x, "AutoRegisterIn"));
 
-            if (typeSafeAttr != null) {
-                return ExtractInfoFromTypeSafeAttribute(context, classDecl, typeSafeAttr, cancellationToken);
+            foreach (var attr in typeSafeAttrs) {
+                var info = ExtractInfoFromTypeSafeAttribute(context, typeDecl, attr, cancellationToken);
+                if (info != null) results.Add(info.Value);
             }
 
-            return null;
+            // 2. Process [AutoRegisterMessageBrokerIn] attributes
+            var brokerAttrs = typeDecl.AttributeLists
+                .SelectMany(x => x.Attributes)
+                .Where(x => IsAttributeMatch(x, "AutoRegisterMessageBrokerIn"));
+
+            foreach (var attr in brokerAttrs) {
+                var info = ExtractMessageBrokerInfo(context, typeDecl, attr, cancellationToken);
+                if (info != null) results.Add(info.Value);
+            }
+
         } catch {
-            return null;
+            // Log error if needed
         }
+        return results.ToImmutableArray();
+    }
+
+    private static ServiceInfo? ExtractMessageBrokerInfo(
+        GeneratorSyntaxContext context,
+        TypeDeclarationSyntax typeDecl,
+        AttributeSyntax attr,
+        CancellationToken cancellationToken)
+    {
+        var ns = typeDecl.GetNamespace();
+        string? scopeTypeName = null;
+        bool usesTypeSafeScope = false;
+
+        // Extract scope type (Generic or TypeOf)
+        if (attr.Name is GenericNameSyntax genericName && genericName.TypeArgumentList.Arguments.Count > 0) {
+            var scopeTypeArg = genericName.TypeArgumentList.Arguments[0];
+            var scopeTypeSymbol = context.SemanticModel.GetTypeInfo(scopeTypeArg, cancellationToken).Type;
+            if (scopeTypeSymbol != null) {
+                scopeTypeName = scopeTypeSymbol.ToDisplayString();
+                usesTypeSafeScope = true;
+            }
+        } else if (attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
+            var arg = attr.ArgumentList.Arguments[0].Expression;
+            if (arg is TypeOfExpressionSyntax typeOfExpr) {
+                var scopeTypeSymbol = context.SemanticModel.GetTypeInfo(typeOfExpr.Type, cancellationToken).Type;
+                if (scopeTypeSymbol != null) {
+                    scopeTypeName = scopeTypeSymbol.ToDisplayString();
+                    usesTypeSafeScope = true;
+                }
+            }
+        }
+
+        // Extract lifetime
+        string lifetime = ExtractLifetime(context, attr, cancellationToken);
+
+        return new ServiceInfo(
+            ns, typeDecl.Identifier.Text, lifetime, "Global",
+            new string[0], false, false, false,
+            false, new string[0], false, false,
+            scopeTypeName, usesTypeSafeScope, false, false, false, 0,
+            true, typeDecl.Identifier.Text);
+    }
+
+    private static string ExtractLifetime(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken) {
+        string lifetime = "Singleton";
+        if (attr.ArgumentList != null) {
+            // Find named argument "Lifetime"
+            var lifetimeArg = attr.ArgumentList.Arguments
+                .FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == "Lifetime" || a.NameColon?.Name.Identifier.Text == "Lifetime");
+            
+            if (lifetimeArg != null) {
+                var lifetimeExpr = lifetimeArg.Expression;
+                if (lifetimeExpr is MemberAccessExpressionSyntax memberAccess) {
+                    lifetime = memberAccess.Name.Identifier.Text;
+                } else {
+                    // Try to resolve constant if it's an enum
+                    var symbolInfo = context.SemanticModel.GetSymbolInfo(lifetimeExpr, cancellationToken);
+                    if (symbolInfo.Symbol is IFieldSymbol fieldSymbol) {
+                        lifetime = fieldSymbol.Name;
+                    }
+                }
+            }
+        }
+        return lifetime;
     }
 
     private static ServiceInfo? ExtractInfoFromTypeSafeAttribute(
         GeneratorSyntaxContext context,
-        ClassDeclarationSyntax classDecl,
+        TypeDeclarationSyntax typeDecl,
         AttributeSyntax attr,
         CancellationToken cancellationToken)
     {
-        var ns = classDecl.GetNamespace();
+        var ns = typeDecl.GetNamespace();
 
         // Extract scope type from generic argument OR positional argument
         string? scopeTypeName = null;
@@ -179,25 +258,7 @@ internal class ClassAnalyzer {
         }
 
         // Extract lifetime from named argument
-        string lifetime = "Singleton";
-        if (attr.ArgumentList != null) {
-            // Find named argument "Lifetime"
-            var lifetimeArg = attr.ArgumentList.Arguments
-                .FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == "Lifetime" || a.NameColon?.Name.Identifier.Text == "Lifetime");
-            
-            if (lifetimeArg != null) {
-                var lifetimeExpr = lifetimeArg.Expression;
-                if (lifetimeExpr is MemberAccessExpressionSyntax memberAccess) {
-                    lifetime = memberAccess.Name.Identifier.Text;
-                } else {
-                    // Try to resolve constant if it's an enum
-                    var symbolInfo = context.SemanticModel.GetSymbolInfo(lifetimeExpr, cancellationToken);
-                    if (symbolInfo.Symbol is IFieldSymbol fieldSymbol) {
-                        lifetime = fieldSymbol.Name;
-                    }
-                }
-            }
-        }
+        string lifetime = ExtractLifetime(context, attr, cancellationToken);
 
         // Extract boolean properties
         bool asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
@@ -206,18 +267,23 @@ internal class ClassAnalyzer {
         string[] asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
 
         // Extract interfaces and component info
-        var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder) = ExtractClassInfo(context, classDecl, cancellationToken);
+        var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder) = ExtractClassInfo(context, typeDecl, cancellationToken);
+        var metadata = ExtractMessagePipeConsumerMetadata(context, typeDecl, cancellationToken);
+        foreach (var pair in ExtractLoggerConsumerMetadata(context, typeDecl, cancellationToken)) {
+            metadata[pair.Key] = pair.Value;
+        }
 
         return new ServiceInfo(
-            ns, classDecl.Identifier.Text, lifetime, "Global",
+            ns, typeDecl.Identifier.Text, lifetime, "Global",
             interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf,
             registerInHierarchy, asTypes, isEntryPoint, false,
-            scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder);
+            scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder,
+            false, null, metadata);
     }
 
     private static (List<string> interfaceNames, bool isComponent, bool isEntryPoint, bool isExceptionHandler, bool isBuildCallback, bool isInstaller, int installerOrder) ExtractClassInfo(
         GeneratorSyntaxContext context,
-        ClassDeclarationSyntax classDecl,
+        TypeDeclarationSyntax typeDecl,
         CancellationToken cancellationToken)
     {
         var interfaceNames = new List<string>();
@@ -228,8 +294,8 @@ internal class ClassAnalyzer {
         bool isInstaller = false;
         int installerOrder = 0;
 
-        if (classDecl.BaseList != null) {
-            foreach (var baseType in classDecl.BaseList.Types) {
+        if (typeDecl.BaseList != null) {
+            foreach (var baseType in typeDecl.BaseList.Types) {
                 var symbol = context.SemanticModel.GetTypeInfo(baseType.Type, cancellationToken).Type;
                 if (symbol == null || symbol.TypeKind == TypeKind.Error) {
                     string rawName = baseType.Type.ToString();
@@ -284,7 +350,7 @@ internal class ClassAnalyzer {
 
         // If it's an installer, look for [InstallerOrder]
         if (isInstaller) {
-            var orderAttr = classDecl.AttributeLists
+            var orderAttr = typeDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
                 .FirstOrDefault(x => IsAttributeMatch(x, "InstallerOrder"));
 
@@ -300,23 +366,109 @@ internal class ClassAnalyzer {
         return (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder);
     }
 
+    private static Dictionary<string, string> ExtractMessagePipeConsumerMetadata(
+        GeneratorSyntaxContext context,
+        TypeDeclarationSyntax typeDecl,
+        CancellationToken cancellationToken) {
+        var metadata = new Dictionary<string, string>();
+        var typeSymbol = context.SemanticModel.GetDeclaredSymbol(typeDecl, cancellationToken) as INamedTypeSymbol;
+        if (typeSymbol == null) {
+            return metadata;
+        }
+
+        var consumers = new List<string>();
+
+        foreach (var ctor in typeSymbol.InstanceConstructors.Where(c => c.DeclaredAccessibility == Accessibility.Public)) {
+            foreach (var parameter in ctor.Parameters) {
+                if (SemanticScopeUtils.TryGetMessagePipeDependency(parameter.Type, out var messageType, out var role) &&
+                    messageType != null) {
+                    consumers.Add($"{role}:{messageType.ToDisplayString()}");
+                }
+            }
+        }
+
+        if (consumers.Count > 0) {
+            metadata["MessagePipeConsumers"] = string.Join(";", consumers.Distinct());
+        }
+
+        return metadata;
+    }
+
+    private static Dictionary<string, string> ExtractLoggerConsumerMetadata(
+        GeneratorSyntaxContext context,
+        TypeDeclarationSyntax typeDecl,
+        CancellationToken cancellationToken) {
+        var metadata = new Dictionary<string, string>();
+        var typeSymbol = context.SemanticModel.GetDeclaredSymbol(typeDecl, cancellationToken) as INamedTypeSymbol;
+        if (typeSymbol == null) {
+            return metadata;
+        }
+
+        var consumers = new List<string>();
+        foreach (var ctor in typeSymbol.InstanceConstructors.Where(c => c.DeclaredAccessibility == Accessibility.Public)) {
+            foreach (var parameter in ctor.Parameters) {
+                if (SemanticScopeUtils.TryGetLoggerDependency(parameter.Type, out var categoryType) && categoryType != null) {
+                    consumers.Add(categoryType.ToDisplayString());
+                }
+            }
+        }
+
+        if (consumers.Count > 0) {
+            metadata["LoggerConsumers"] = string.Join(";", consumers.Distinct());
+        }
+
+        return metadata;
+    }
+
     public static SceneInjectionInfo? ExtractSceneInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         
         try {
-            var classDecl = (ClassDeclarationSyntax)context.Node;
+            var typeDecl = (TypeDeclarationSyntax)context.Node;
 
-            var attr = classDecl.AttributeLists
+            var attr = typeDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
                 .FirstOrDefault(x => IsAttributeMatch(x, "AutoInjectScene"));
 
             if (attr == null) return null;
 
-            var ns = classDecl.GetNamespace();
-            return new SceneInjectionInfo(ns, classDecl.Identifier.Text);
+            var ns = typeDecl.GetNamespace();
+            return new SceneInjectionInfo(ns, typeDecl.Identifier.Text);
         } catch {
             return null;
         }
+    }
+
+    public static RootLoggingInfo? ExtractRootLoggingInfo(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (context.Node is not ClassDeclarationSyntax classDecl) {
+            return null;
+        }
+
+        var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDecl, cancellationToken) as INamedTypeSymbol;
+        if (typeSymbol == null || !InheritsLifetimeScope(typeSymbol) || !SemanticScopeUtils.IsRootScopeName(typeSymbol.Name)) {
+            return null;
+        }
+
+        var hasLoggerFactory = false;
+        var hasLoggerAdapter = false;
+
+        foreach (var method in classDecl.Members.OfType<MethodDeclarationSyntax>().Where(m => m.Identifier.Text == "Configure")) {
+            foreach (var invocation in method.DescendantNodes().OfType<InvocationExpressionSyntax>()) {
+                foreach (var referencedType in GetReferencedTypes(context.SemanticModel, invocation, cancellationToken)) {
+                    if (!hasLoggerFactory && SemanticScopeUtils.IsLoggerFactoryType(referencedType)) {
+                        hasLoggerFactory = true;
+                    }
+
+                    if (!hasLoggerAdapter && SemanticScopeUtils.IsLoggerAdapterType(referencedType)) {
+                        hasLoggerAdapter = true;
+                    }
+                }
+            }
+        }
+
+        return new RootLoggingInfo(typeSymbol.Name, hasLoggerFactory, hasLoggerAdapter);
     }
 
     private static bool ExtractBooleanProperty(GeneratorSyntaxContext context, AttributeSyntax attr, string propertyName, bool defaultValue, CancellationToken cancellationToken) {
@@ -334,6 +486,43 @@ internal class ClassAnalyzer {
         }
 
         return defaultValue;
+    }
+
+    private static bool InheritsLifetimeScope(INamedTypeSymbol typeSymbol) {
+        var current = typeSymbol.BaseType;
+        while (current != null) {
+            if (current.Name == "LifetimeScope" || current.ToDisplayString() == "VContainer.Unity.LifetimeScope") {
+                return true;
+            }
+
+            current = current.BaseType;
+        }
+
+        return false;
+    }
+
+    private static IEnumerable<ITypeSymbol> GetReferencedTypes(
+        SemanticModel semanticModel,
+        InvocationExpressionSyntax invocation,
+        CancellationToken cancellationToken) {
+        if (invocation.Expression is MemberAccessExpressionSyntax memberAccess &&
+            memberAccess.Name is GenericNameSyntax genericName) {
+            foreach (var typeArg in genericName.TypeArgumentList.Arguments) {
+                var type = semanticModel.GetTypeInfo(typeArg, cancellationToken).Type;
+                if (type != null) {
+                    yield return type;
+                }
+            }
+        }
+
+        foreach (var argument in invocation.ArgumentList.Arguments) {
+            if (argument.Expression is TypeOfExpressionSyntax typeOfExpr) {
+                var type = semanticModel.GetTypeInfo(typeOfExpr.Type, cancellationToken).Type;
+                if (type != null) {
+                    yield return type;
+                }
+            }
+        }
     }
 
     private static string[] ExtractTypeArrayProperty(GeneratorSyntaxContext context, AttributeSyntax attr, string propertyName, CancellationToken cancellationToken) {
