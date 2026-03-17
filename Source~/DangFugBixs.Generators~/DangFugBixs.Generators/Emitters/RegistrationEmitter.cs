@@ -167,29 +167,63 @@ internal static class RegistrationEmitter {
     }
 
     private static void EmitRegistration(IndentedTextWriter writer, ServiceInfo svc) {
-        var suffix = "";
-
-        if (svc.AsTypes != null && svc.AsTypes.Length > 0) {
-            suffix += ".As(" + string.Join(", ", svc.AsTypes.Select(t => $"typeof(global::{t})")) + ")";
-        } else {
-            if (svc.AsImplementedInterfaces) suffix += ".AsImplementedInterfaces()";
-            if (svc.AsSelf) suffix += ".AsSelf()";
-        }
-
         string fullName = $"global::{svc.FullName}";
         string lifetime = $"global::VContainer.Lifetime.{svc.Lifetime}";
 
         if (svc.RegisterInHierarchy) {
+            string suffix = GetSmartSuffix(svc);
             writer.WriteLine($"builder.RegisterComponentInHierarchy<{fullName}>(){suffix};");
+        } else if (svc.IsMessagePipeBroker) {
+            string messageType = svc.MessageType != null ? $"global::{svc.MessageType}" : fullName;
+            writer.WriteLine($"builder.RegisterMessageBroker<{messageType}>({lifetime});");
         } else if (svc.IsComponent) {
+            string suffix = GetSmartSuffix(svc);
             writer.WriteLine($"builder.RegisterComponentOnNewGameObject<{fullName}>({lifetime}){suffix};");
         } else if (svc.IsFactory) {
+            string suffix = GetSmartSuffix(svc);
             writer.WriteLine($"builder.RegisterFactory<{fullName}>(c => () => c.Resolve<{fullName}>(), {lifetime}){suffix};");
         } else if (svc.IsEntryPoint && !svc.IsExceptionHandler && !svc.IsBuildCallback) {
+            // Smart EntryPoint Registration: VContainer handles lifecycle interfaces natively.
+            // Only explicitly map to non-lifecycle interfaces.
+            string suffix = GetSmartEntryPointSuffix(svc);
             writer.WriteLine($"builder.RegisterEntryPoint<{fullName}>({lifetime}){suffix};");
         } else {
+            string suffix = GetSmartSuffix(svc);
             writer.WriteLine($"builder.Register<{fullName}>({lifetime}){suffix};");
         }
+    }
+
+    private static string GetSmartSuffix(ServiceInfo svc) {
+        if (svc.AsTypes != null && svc.AsTypes.Length > 0) {
+            return ".As(" + string.Join(", ", svc.AsTypes.Select(t => $"typeof(global::{t})")) + ")";
+        }
+
+        var suffix = "";
+        bool shouldBindImplementedInterfaces = svc.AsImplementedInterfaces || (svc.IsComponent && svc.IsEntryPoint);
+        if (shouldBindImplementedInterfaces) suffix += ".AsImplementedInterfaces()";
+        if (svc.AsSelf) suffix += ".AsSelf()";
+        return suffix;
+    }
+
+    private static string GetSmartEntryPointSuffix(ServiceInfo svc) {
+        if (svc.AsTypes != null && svc.AsTypes.Length > 0) {
+            return ".As(" + string.Join(", ", svc.AsTypes.Select(t => $"typeof(global::{t})")) + ")";
+        }
+
+        // Identify non-lifecycle interfaces
+        var customInterfaces = svc.InterfaceNames
+            .Where(i => !InterfaceUtils.IsVContainerEntryPoint(i))
+            .ToList();
+
+        if (customInterfaces.Count > 0) {
+            // Map to custom interfaces explicitly
+            var interfaces = string.Join(", ", customInterfaces.Select(i => $"typeof(global::{i})"));
+            return $".As({interfaces}).AsSelf()";
+        }
+
+        // If it only implements lifecycle interfaces, RegisterEntryPoint handles it. 
+        // We just add .AsSelf() to ensure it's resolvable by its own type.
+        return ".AsSelf()";
     }
 
     private static ServiceInfo MapToScope(ServiceInfo s, string targetScopeName) {
@@ -197,7 +231,8 @@ internal static class RegistrationEmitter {
             s.Namespace, s.ClassName, s.Lifetime, s.ScopeName,
             s.InterfaceNames, s.IsComponent, s.AsImplementedInterfaces,
             s.AsSelf, s.RegisterInHierarchy, s.AsTypes, s.IsEntryPoint,
-            s.IsFactory, targetScopeName, true, s.IsExceptionHandler, s.IsBuildCallback, s.IsInstaller, s.InstallerOrder);
+            s.IsFactory, targetScopeName, true, s.IsExceptionHandler, s.IsBuildCallback, 
+            s.IsInstaller, s.InstallerOrder, s.IsMessagePipeBroker, s.MessageType, s.Metadata);
     }
 
     private static string GetScopeKey(ServiceInfo service) {
