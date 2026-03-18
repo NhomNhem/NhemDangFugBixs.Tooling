@@ -26,6 +26,7 @@
     <ItemGroup>
         <Compile Include="..\..\DangFugBixs.Common~\Models\**\*.cs" Link="Common\Models\%(RecursiveDir)%(FileName)%(Extension)" />
         <Compile Include="..\..\DangFugBixs.Common~\DangFugBixs.Common\Utils\**\*.cs" Link="Common\Utils\%(RecursiveDir)%(FileName)%(Extension)" />
+        <Compile Include="..\..\DangFugBixs.Runtime~\**\*.cs" Link="Runtime\%(RecursiveDir)%(FileName)%(Extension)" Exclude="..\..\DangFugBixs.Runtime~\obj\**\*.cs;..\..\DangFugBixs.Runtime~\bin\**\*.cs" />
     </ItemGroup>
 
     <ItemGroup>

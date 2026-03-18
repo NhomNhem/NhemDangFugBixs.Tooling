@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using NhemDangFugBixs.Common.Models;
+using NhemDangFugBixs.Attributes;
 
 namespace NhemDangFugBixs.Generators.Analyzers;
 
@@ -170,7 +171,11 @@ internal static class ReferencedAssemblyScanner {
             isExceptionHandler,
             isBuildCallback,
             isInstaller,
-            installerOrder
+            installerOrder,
+            false, // isMessagePipeBroker
+            null,  // messageType
+            MessagePipeType.Publisher, // messagePipeKind
+            new Dictionary<string, string>() // metadata
         );
     }
 
