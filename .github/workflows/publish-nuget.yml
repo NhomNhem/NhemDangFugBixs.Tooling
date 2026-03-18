@@ -1,0 +1,77 @@
+name: Publish CLI to NuGet
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 5.2.0)'
+        required: true
+        default: '5.2.0'
+
+env:
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  publish-nuget:
+    name: Publish DangFugBixs.Cli to NuGet
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Get Version from Tag or Input
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION=${{ github.event.inputs.version }}
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
+      
+      - name: Update CLI Version
+        run: |
+          sed -i 's/<Version>.*<\/Version>/<Version>${{ steps.get_version.outputs.version }}<\/Version>/g' \
+            Source~/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj
+      
+      - name: Restore Dependencies
+        run: dotnet restore Source~/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj
+      
+      - name: Build CLI
+        run: dotnet build Source~/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj -c Release --no-restore
+      
+      - name: Pack CLI
+        run: |
+          mkdir -p nupkg
+          dotnet pack Source~/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj -c Release -o nupkg --no-build
+      
+      - name: Verify Package
+        run: |
+          echo "Packages created:"
+          ls -la nupkg/
+      
+      - name: Push to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push nupkg/*.nupkg \
+            --api-key $NUGET_API_KEY \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+      
+      - name: Upload Package Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: nupkg/*.nupkg
+          retention-days: 30

@@ -1,0 +1,92 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g., v5.2.0)'
+        required: true
+        default: 'v5.2.0'
+
+env:
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      discussions: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Get Tag
+        id: get_tag
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            TAG=${GITHUB_REF#refs/tags/}
+          else
+            TAG=${{ github.event.inputs.tag }}
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Releasing: $TAG"
+      
+      - name: Generate Release Notes
+        id: release_notes
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          echo "Previous tag: $PREVIOUS_TAG"
+          
+          if [ -z "$PREVIOUS_TAG" ]; then
+            NOTES=$(git log --pretty=format:"- %s (%h)" $TAG)
+          else
+            NOTES=$(git log --pretty=format:"- %s (%h)" $PREVIOUS_TAG..$TAG)
+          fi
+          
+          # Escape special characters for GitHub Actions
+          NOTES="${NOTES//'%'/'%25'}"
+          NOTES="${NOTES//$'\n'/'%0A'}"
+          NOTES="${NOTES//$'\r'/'%0D'}"
+          
+          echo "notes=$NOTES" >> $GITHUB_OUTPUT
+      
+      - name: Build Solution
+        run: dotnet build Source~/NhemDangFugBixs.Tooling.sln -c Release
+      
+      - name: Run Tests
+        run: dotnet test Source~/NhemDangFugBixs.Tooling.sln -c Release --no-build --logger "console;verbosity=minimal"
+      
+      - name: Pack CLI Tool
+        run: |
+          mkdir -p nupkg
+          dotnet pack Source~/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj -c Release -o nupkg --no-build
+      
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ steps.get_tag.outputs.tag }} \
+            --title "${{ steps.get_tag.outputs.tag }}" \
+            --notes "${{ steps.release_notes.outputs.notes }}" \
+            --generate-notes \
+            nupkg/*.nupkg
+      
+      - name: Upload Release Assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload ${{ steps.get_tag.outputs.tag }} nupkg/*.nupkg --clobber
