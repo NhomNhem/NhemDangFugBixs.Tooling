@@ -6,6 +6,7 @@
 |---------|----------|----------|-------|
 | ND111 | Design | Warning | Missing contract registration (interfaces not registered). |
 | ND112 | Design | Warning | Duplicate contract registration (same interface registered multiple times). |
+| ND113 | Design | Error | Scene view binding mismatch (Presenter injects unregistered View interface). |
 
 ## Release 5.1.0
 
