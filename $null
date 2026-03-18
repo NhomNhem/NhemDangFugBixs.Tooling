@@ -1,8 +1,6 @@
-Unrecognized command or argument ';'.
-Unrecognized command or argument 'dotnet'.
-Unrecognized command or argument 'tool'.
-Unrecognized command or argument 'install'.
-Unrecognized command or argument '--add-source'.
-Unrecognized command or argument 'nupkg'.
-Unrecognized command or argument 'DangFugBixs.Cli'.
-
+error: unable to delete ';': remote ref does not exist
+error: unable to delete 'git': remote ref does not exist
+error: unable to delete 'push': remote ref does not exist
+error: unable to delete 'origin': remote ref does not exist
+error: dst ref refs/tags/v5.2.0-test receives from more than one src
+error: failed to push some refs to 'github.com:NhomNhem/NhemDangFugBixs.Tooling.git'
