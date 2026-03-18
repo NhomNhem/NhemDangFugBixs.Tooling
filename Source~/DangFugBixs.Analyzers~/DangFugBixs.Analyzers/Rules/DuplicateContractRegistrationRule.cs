@@ -36,7 +36,7 @@ public class DuplicateContractRegistrationRule : DiagnosticAnalyzer {
             var root = syntaxTree.GetRoot();
 
             foreach (var classDecl in root.DescendantNodes().OfType<Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax>()) {
-                var classSymbol = semanticModel.GetDeclaredSymbol(classDecl);
+                var classSymbol = semanticModel.GetDeclaredSymbol(classDecl) as INamedTypeSymbol;
                 if (classSymbol == null) continue;
 
                 var attr = classSymbol.GetAttributes()
@@ -57,7 +57,7 @@ public class DuplicateContractRegistrationRule : DiagnosticAnalyzer {
                     if (!contractRegistrations.ContainsKey(key)) {
                         contractRegistrations[key] = new List<(string, string, Location)>();
                     }
-                    contractRegistrations[key].Add((classSymbol.Name, scopeName ?? "Unknown", classSymbol.Locations[0]));
+                    contractRegistrations[key].Add((classSymbol.Name, scopeName, classSymbol.Locations[0]));
                 }
             }
         }
