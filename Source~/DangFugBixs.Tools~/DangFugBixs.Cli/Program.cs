@@ -37,6 +37,7 @@ public class Program {
         var outputIndex = Array.IndexOf(args, "--output");
         var outputPath = outputIndex >= 0 && outputIndex < args.Length - 1 ? args[outputIndex + 1] : null;
         var clean = args.Contains("--clean");
+        var resolveSmoke = args.Contains("--resolve-smoke");
 
         if (string.IsNullOrEmpty(projectPath) && string.IsNullOrEmpty(assemblyPath)) {
             Console.Error.WriteLine("Error: Please provide a .csproj or .dll file");
@@ -91,6 +92,21 @@ public class Program {
         Console.WriteLine();
         if (result.IsSuccess) {
             Console.WriteLine("✅ Preflight validation PASSED");
+
+            // Optional: Runtime resolve smoke test
+            if (resolveSmoke) {
+                Console.WriteLine();
+                Console.WriteLine("🔍 Running runtime resolve smoke test...");
+                var resolveValidator = new ResolveSmokeValidator();
+                var resolveOptions = new ResolveSmokeOptions { Verbose = true };
+                var resolveResult = resolveValidator.Validate(assemblyPath, resolveOptions);
+                Console.WriteLine(resolveResult.ToHumanReadableText());
+
+                if (!resolveResult.IsSuccess) {
+                    return 1;
+                }
+            }
+
             return 0;
         }
 
@@ -212,6 +228,7 @@ Options:
   --format <text|json>    Output format (default: text)
   --output <file>         Save report to file
   --clean                 Clean generated files before build
+  --resolve-smoke         Run runtime resolve smoke test (Phase 1)
   --help, -h              Show this help message
 
 Examples:
