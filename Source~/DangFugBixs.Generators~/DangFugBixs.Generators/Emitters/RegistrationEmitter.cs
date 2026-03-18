@@ -231,8 +231,8 @@ internal static class RegistrationEmitter {
             s.Namespace, s.ClassName, s.Lifetime, s.ScopeName,
             s.InterfaceNames, s.IsComponent, s.AsImplementedInterfaces,
             s.AsSelf, s.RegisterInHierarchy, s.AsTypes, s.IsEntryPoint,
-            s.IsFactory, targetScopeName, true, s.IsExceptionHandler, s.IsBuildCallback, 
-            s.IsInstaller, s.InstallerOrder, s.IsMessagePipeBroker, s.MessageType, s.Metadata);
+            s.IsFactory, targetScopeName, true, s.IsExceptionHandler, s.IsBuildCallback,
+            s.IsInstaller, s.InstallerOrder, s.IsMessagePipeBroker, s.MessageType, s.MessagePipeKind, s.Metadata);
     }
 
     private static string GetScopeKey(ServiceInfo service) {
