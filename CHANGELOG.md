@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.1.0] - 2026-03-18
+
+### ⭐ Added - Developer Experience & Runtime Validation
+
+**Code Fix Providers (IDE Auto-Fix):**
+- **ND008**: MessagePipe Broker registration - offers snippet to create broker class or manual registration
+- **ND009**: ILogger Root infrastructure - offers LoggerFactory registration snippet or navigation to root scope
+- **ND110**: View Component registration - offers `[AutoRegisterIn]` attribute or `RegisterComponentInHierarchy()` snippet
+
+**Preflight CLI (`dotnet di-smoke`):**
+- New `DangFugBixs.Cli` project with dotnet global tool support
+- `preflight` command: clean + build + validate orchestration
+- `validate` command: direct assembly validation
+- Options: `--format`, `--output`, `--clean`, `--resolve-smoke`
+- Usage:
+  ```bash
+  dotnet di-smoke preflight MyProject.csproj
+  dotnet di-smoke preflight MyProject.csproj --resolve-smoke
+  dotnet di-smoke validate bin/Debug/MyProject.dll
+  ```
+
+**Runtime Resolve Smoke (Phase 1):**
+- `ResolveSmokeValidator` validates DI container resolution via reflection
+- Headless validation (no Unity Editor required)
+- EntryPoint resolution validation (ITickable, IInitializable, etc.)
+- Coverage statistics (Total, Resolved, Skipped)
+- Reports resolution errors with detailed messages
+
+### 🔧 Changed
+
+- `DiSmokeValidation` uses reflection for VContainer resolution (no direct dependency)
+- `ResolveValidationResult` provides detailed human-readable output
+
+### 📊 Statistics
+
+- **Total Tests**: 46 (all passing)
+- **Diagnostic Codes**: ND001-ND110 (16 active diagnostics)
+- **CLI Tools**: 1 (`dotnet di-smoke`)
+- **Code Fix Providers**: 3 (ND008, ND009, ND110)
+
 ## [5.0.0] - 2026-03-18
 
 ### ⭐ Added - Cysharp Integration & DI Visualizer

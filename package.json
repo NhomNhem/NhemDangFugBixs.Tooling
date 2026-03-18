@@ -1,6 +1,6 @@
 {
   "name": "com.nhemdangfugbixs.tooling",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "displayName": "Nhem Dang Fug Bixs Tooling",
   "description": "VContainer Auto-Registration Source Generator and Roslyn Analyzers with Type-Safe Scopes.",
   "unity": "2021.3",
@@ -13,6 +13,7 @@
     "source-generator",
     "analyzer",
     "dependency-injection",
-    "messagepipe"
+    "messagepipe",
+    "di-smoke"
   ]
 }
