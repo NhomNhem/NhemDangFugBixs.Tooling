@@ -5,6 +5,7 @@
 | Rule ID | Category | Severity | Notes |
 |---------|----------|----------|-------|
 | ND108 | Design | Warning | EntryPoint type must use .AsSelf() or implement an interface. |
+| ND110 | Design | Error | View interface injection requires Component registration (MonoBehaviour). |
 
 ## Release 1.1.0
 

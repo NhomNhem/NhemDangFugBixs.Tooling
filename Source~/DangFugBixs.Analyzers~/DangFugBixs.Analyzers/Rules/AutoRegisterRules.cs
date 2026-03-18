@@ -63,7 +63,7 @@ public class AutoRegisterRules : DiagnosticAnalyzer {
         isEnabledByDefault: true);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-        => ImmutableArray.Create(ND001, ND002, ND003, ND105, ND106, ND107, EntryPointAsSelfRule.ND108, ConflictCheckRule.ND005);
+        => ImmutableArray.Create(ND001, ND002, ND003, ND105, ND106, ND107, EntryPointAsSelfRule.ND108, ViewComponentRegistrationRule.ND110, ConflictCheckRule.ND005);
 
     public override void Initialize(AnalysisContext context) {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
