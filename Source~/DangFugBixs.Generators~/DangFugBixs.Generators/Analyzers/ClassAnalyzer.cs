@@ -1,6 +1,7 @@
 using NhemDangFugBixs.Common.Models;
 using NhemDangFugBixs.Common.Utils;
 using NhemDangFugBixs.Generators.Utils;
+using NhemDangFugBixs.Attributes;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -184,12 +185,36 @@ internal class ClassAnalyzer {
         // Extract lifetime
         string lifetime = ExtractLifetime(context, attr, cancellationToken);
 
+        // Detect MessagePipe kind from implemented interfaces
+        var messagePipeKind = MessagePipeType.Publisher; // Default
+        var messageType = typeDecl.Identifier.Text; // Default to type name
+
+        var typeSymbol = context.SemanticModel.GetDeclaredSymbol(typeDecl, cancellationToken) as INamedTypeSymbol;
+        if (typeSymbol != null) {
+            foreach (var iface in typeSymbol.AllInterfaces) {
+                if (iface.IsGenericType && iface.OriginalDefinition.ToDisplayString() == "MessagePipe.IPublisher<T>") {
+                    messagePipeKind = MessagePipeType.Publisher;
+                    if (iface.TypeArguments.Length > 0) {
+                        messageType = iface.TypeArguments[0].ToDisplayString();
+                    }
+                    break;
+                }
+                else if (iface.IsGenericType && iface.OriginalDefinition.ToDisplayString() == "MessagePipe.ISubscriber<T>") {
+                    messagePipeKind = MessagePipeType.Subscriber;
+                    if (iface.TypeArguments.Length > 0) {
+                        messageType = iface.TypeArguments[0].ToDisplayString();
+                    }
+                    break;
+                }
+            }
+        }
+
         return new ServiceInfo(
             ns, typeDecl.Identifier.Text, lifetime, "Global",
             new string[0], false, false, false,
             false, new string[0], false, false,
             scopeTypeName, usesTypeSafeScope, false, false, false, 0,
-            true, typeDecl.Identifier.Text);
+            true, messageType, messagePipeKind);
     }
 
     private static string ExtractLifetime(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken) {
@@ -278,7 +303,7 @@ internal class ClassAnalyzer {
             interfaceNames.ToArray(), isComponent, asImplementedInterfaces, asSelf,
             registerInHierarchy, asTypes, isEntryPoint, false,
             scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder,
-            false, null, metadata);
+            false, null, MessagePipeType.Publisher, metadata);
     }
 
     private static (List<string> interfaceNames, bool isComponent, bool isEntryPoint, bool isExceptionHandler, bool isBuildCallback, bool isInstaller, int installerOrder) ExtractClassInfo(
@@ -380,9 +405,9 @@ internal class ClassAnalyzer {
 
         foreach (var ctor in typeSymbol.InstanceConstructors.Where(c => c.DeclaredAccessibility == Accessibility.Public)) {
             foreach (var parameter in ctor.Parameters) {
-                if (SemanticScopeUtils.TryGetMessagePipeDependency(parameter.Type, out var messageType, out var role) &&
+                if (SemanticScopeUtils.TryGetMessagePipeDependency(parameter.Type, out var messageType, out var messagePipeType) &&
                     messageType != null) {
-                    consumers.Add($"{role}:{messageType.ToDisplayString()}");
+                    consumers.Add($"{messagePipeType}:{messageType.ToDisplayString()}");
                 }
             }
         }

@@ -56,7 +56,7 @@ namespace VContainer {
 
 namespace UnityEngine {
     public class Object {
-        public static T FindFirstObjectByType<T>() where T : class => null;
+        public static T? FindFirstObjectByType<T>() where T : class => null;
     }
     public class MonoBehaviour : Object { }
     public class Component : Object { }
