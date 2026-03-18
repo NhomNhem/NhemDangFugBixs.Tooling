@@ -52,9 +52,15 @@ public class ILoggerRootGuardRule : DiagnosticAnalyzer {
                     SemanticScopeUtils.IsScopeReachable(serviceScope, root.Scope));
 
                 if (!hasReachableRoot && parameter.Locations.Length > 0) {
+                    var properties = ImmutableDictionary.Create<string, string>()
+                        .Add("TypeName", typeSymbol.Name)
+                        .Add("ScopeName", serviceScope.Name)
+                        .Add("CategoryType", categoryType.ToDisplayString());
+
                     context.ReportDiagnostic(Diagnostic.Create(
                         ND009,
                         parameter.Locations[0],
+                        properties,
                         typeSymbol.Name,
                         serviceScope.Name,
                         categoryType.ToDisplayString()));
