@@ -55,9 +55,15 @@ public class ViewComponentRegistrationRule : DiagnosticAnalyzer {
                     var viewScope = SemanticScopeUtils.GetScopeSymbol(viewImpl);
                     
                     if (viewScope == null || !IsScopeReachable(currentScope, viewScope)) {
+                        var properties = ImmutableDictionary.Create<string, string>()
+                            .Add("TypeName", typeSymbol.Name)
+                            .Add("ViewInterface", paramType.Name)
+                            .Add("ViewImplementation", viewImpl.Name);
+
                         context.ReportDiagnostic(Diagnostic.Create(
                             ND110,
                             parameter.Locations[0],
+                            properties,
                             typeSymbol.Name,
                             paramType.Name,
                             viewImpl.Name));
