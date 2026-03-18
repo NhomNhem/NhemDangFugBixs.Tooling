@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.DiSmokeValidati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.DiSmokeValidation.Tests", "DangFugBixs.Tools~\DangFugBixs.DiSmokeValidation.Tests\DangFugBixs.DiSmokeValidation.Tests.csproj", "{7DB50F42-4542-4C66-AA72-5512B1063565}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DangFugBixs.Tools~", "DangFugBixs.Tools~", "{03482651-6BED-94EC-D04D-F3B54FB24F5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangFugBixs.Cli", "DangFugBixs.Tools~\DangFugBixs.Cli\DangFugBixs.Cli.csproj", "{771324FF-DC06-4FFA-816E-0D24EF479A71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,8 +138,23 @@ Global
 		{7DB50F42-4542-4C66-AA72-5512B1063565}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DB50F42-4542-4C66-AA72-5512B1063565}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DB50F42-4542-4C66-AA72-5512B1063565}.Release|Any CPU.Build.0 = Release|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Debug|x64.Build.0 = Debug|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Debug|x86.Build.0 = Debug|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Release|x64.ActiveCfg = Release|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Release|x64.Build.0 = Release|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Release|x86.ActiveCfg = Release|Any CPU
+		{771324FF-DC06-4FFA-816E-0D24EF479A71}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{771324FF-DC06-4FFA-816E-0D24EF479A71} = {03482651-6BED-94EC-D04D-F3B54FB24F5C}
 	EndGlobalSection
 EndGlobal
