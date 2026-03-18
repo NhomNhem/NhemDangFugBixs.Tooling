@@ -11,6 +11,9 @@
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <RootNamespace>DangFugBixs.Cli</RootNamespace>
         <AssemblyName>DangFugBixs.Cli</AssemblyName>
+        <Version>5.1.0</Version>
+        <Authors>NhomNhem</Authors>
+        <Description>DI Validation Tool for VContainer - Preflight validation, smoke tests, and resolve validation</Description>
     </PropertyGroup>
 
     <ItemGroup>
