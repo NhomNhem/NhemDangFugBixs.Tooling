@@ -414,4 +414,12 @@ FodyWeavers.xsd
 # Local build configuration
 LocalBuild.props
 
+# AI Agent files (OpenSpec, Qwen, etc.)
 openspec/
+.agent/
+AGENTS.md
+QWEN.md
+QWEN.md.meta
+GEMINI.md
+GEMINI.md.meta
+.openspec.yaml
