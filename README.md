@@ -9,7 +9,10 @@ A powerful C# Source Generator for **VContainer** that automates dependency regi
 - **Type-Safe Scopes** (v3.0): Register services to specific `LifetimeScope` types using `[AutoRegisterIn(typeof(TScope))]` - full IntelliSense support!
 - **Unified Master Registration**: Single `VContainerRegistration.RegisterAll(builder)` call in your `LifetimeScope` registers every discovered service across all layers.
 - **Robust Code Emission**: Generated code uses `partial` classes and `global::` prefixes, ensuring compatibility with complex multi-assembly projects.
-- **Compile-Time Validation**: Roslyn analyzers catch scope and installer errors before runtime (ND001-ND107).
+- **Compile-Time Validation**: Roslyn analyzers catch scope and installer errors before runtime (ND001-ND110).
+- **Code Fix Providers** (v5.1.0): IDE auto-fix for common DI mistakes (ND008, ND009, ND110).
+- **Preflight CLI** (v5.1.0): `dotnet di-smoke` command for validation before Unity Play Mode.
+- **Runtime Resolve Smoke** (v5.1.0): Headless validation of DI container resolution.
 
 ---
 
@@ -123,16 +126,96 @@ v4.0 is a major breaking change that removes legacy attributes and introduces st
 
 ---
 
+## 🛠️ Preflight CLI (v5.1.0)
+
+Validate your DI setup before entering Unity Play Mode with the `dotnet di-smoke` CLI tool.
+
+### Installation
+```bash
+dotnet tool install -g DangFugBixs.Cli
+```
+
+### Commands
+
+**Preflight Validation** (clean + build + validate):
+```bash
+dotnet di-smoke preflight MyGame.csproj
+dotnet di-smoke preflight MyGame.csproj --clean
+dotnet di-smoke preflight MyGame.csproj --resolve-smoke
+dotnet di-smoke preflight MyGame.csproj --format json --output report.json
+```
+
+**Direct Validation** (existing assembly):
+```bash
+dotnet di-smoke validate bin/Debug/net10.0/MyGame.dll
+dotnet di-smoke validate bin/Debug/net10.0/MyGame.dll --format json
+```
+
+### Options
+| Option | Description |
+|--------|-------------|
+| `--format <text|json>` | Output format (default: text) |
+| `--output <file>` | Save report to file |
+| `--clean` | Clean generated files before build |
+| `--resolve-smoke` | Run runtime resolve smoke test |
+
+---
+
+## 💡 Code Fix Providers (v5.1.0)
+
+Auto-fix common DI mistakes directly in Visual Studio / Rider.
+
+### ND008: MessagePipe Broker Registration
+**When:** Type injects `IPublisher<T>` or `ISubscriber<T>` but no broker registered
+
+**Fix Options:**
+1. Create broker class with `[AutoRegisterMessageBrokerIn]`
+2. Add manual registration to scope
+
+### ND009: ILogger Root Infrastructure
+**When:** Type injects `ILogger<T>` but root scope missing LoggerFactory
+
+**Fix Options:**
+1. Add LoggerFactory registration snippet
+2. Navigate to root scope
+
+### ND110: View Component Registration
+**When:** Type injects `I*View` interface but view not registered as Component
+
+**Fix Options:**
+1. Add `[AutoRegisterIn]` to View class
+2. Register with `RegisterComponentInHierarchy()` in Installer
+
+---
+
 ## 📋 Diagnostic Codes
+
+### Analyzer Rules
 
 | Code | Severity | Description |
 |------|----------|-------------|
 | ND001 | Error | Invalid AutoRegisterIn target (Static/Abstract) |
 | ND002 | Warning | Missing interface implementation |
 | ND003 | Warning | Invalid constructor for VContainer |
+| ND005 | Error | Manual registration of auto-registered type (double registration) |
+| ND006 | Warning | Inaccessible dependency scope (cross-scope violation) |
+| ND008 | Warning | Missing MessagePipe broker registration |
+| ND009 | Warning | Missing ILogger root infrastructure |
+| ND103 | Warning | Unused scope registration |
+| ND104 | Warning | Assembly scan failure (resilience) |
 | ND105 | Error | Installer missing public parameterless constructor |
 | ND106 | Error | Installer must be public |
 | ND107 | Error | Installer cannot be a Component (MonoBehaviour) |
+| ND108 | Warning | EntryPoint must use .AsSelf() or implement interface |
+| ND110 | Error | View interface injection requires Component registration |
+
+### Code Fix Providers
+
+| Code | Fix Available | Description |
+|------|---------------|-------------|
+| ND008 | ✅ Yes | MessagePipe Broker registration snippet |
+| ND009 | ✅ Yes | ILogger Factory registration snippet |
+| ND110 | ✅ Yes | View Component registration snippet |
 
 ---
 
