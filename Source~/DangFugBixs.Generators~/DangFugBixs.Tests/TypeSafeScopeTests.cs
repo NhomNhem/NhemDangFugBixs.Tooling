@@ -4,6 +4,7 @@ using NhemDangFugBixs.Generators;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using MessagePipe;
 
 namespace DangFugBixs.Tests;
 
@@ -14,6 +15,9 @@ public class TypeSafeScopeTests {
 
     private static readonly MetadataReference VContainerAssembly = MetadataReference.CreateFromFile(
         typeof(VContainer.Lifetime).Assembly.Location);
+
+    private static readonly MetadataReference MessagePipeAssembly = MetadataReference.CreateFromFile(
+        typeof(IPublisher<>).Assembly.Location);
 
     [Test]
     public void AutoRegisterIn_GenericAttribute_GeneratesRegistration() {
@@ -201,6 +205,32 @@ public class CameraController : MonoBehaviour { }
     }
 
     [Test]
+    public void AutoRegisterIn_WithMonoBehaviourEntryPoint_BindsImplementedInterfaces() {
+        // Arrange
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+using UnityEngine;
+
+public class GameLifetimeScope : LifetimeScope { }
+
+[AutoRegisterIn(typeof(GameLifetimeScope), AsImplementedInterfaces = false)]
+public class InfiniteChunkManager : MonoBehaviour, ITickable {
+    public void Tick() { }
+}
+";
+
+        // Act
+        var result = RunGenerator(source);
+
+        // Assert
+        var generatedCode = result.GeneratedTrees[0].ToString();
+        Assert.That(generatedCode, Does.Contain("RegisterComponentOnNewGameObject<global::InfiniteChunkManager>"));
+        Assert.That(generatedCode, Does.Not.Contain("RegisterEntryPoint<global::InfiniteChunkManager>"));
+        Assert.That(generatedCode, Does.Contain(".AsImplementedInterfaces()"));
+    }
+
+    [Test]
     public void AutoRegisterIn_WithRegisterInHierarchy_GeneratesHierarchyRegistration() {
         // Arrange
         var source = @"
@@ -263,6 +293,85 @@ public class UIService { }
             .ToList();
 
         references.Add(RuntimeAssembly);
+
+        var compilation = CSharpCompilation.Create(
+            "TestAssembly",
+            new[] { syntaxTree },
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+        var generator = new VContainerAutoRegisterGenerator();
+
+        var driver = CSharpGeneratorDriver.Create(generator);
+        var runDriver = driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+
+        return runDriver.GetRunResult();
+    }
+
+    [Test]
+    public void AutoRegisterMessageBrokerIn_GeneratesRegisterMessageBroker() {
+        // Arrange
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+using MessagePipe;
+
+public class GameLifetimeScope : LifetimeScope { }
+
+[AutoRegisterMessageBrokerIn(typeof(GameLifetimeScope))]
+public class PlayerJoined : IMessage<PlayerJoined> { }
+
+public interface IMessage<T> { }
+";
+
+        // Act
+        var result = RunGenerator(source, includeMessagePipe: true);
+
+        // Assert
+        Assert.That(result.GeneratedTrees.Length, Is.GreaterThan(0));
+        var generatedCode = result.GeneratedTrees[0].ToString();
+        Assert.That(generatedCode, Does.Contain("RegisterMessageBroker"));
+        Assert.That(generatedCode, Does.Contain("PlayerJoined"));
+    }
+
+    [Test]
+    public void AutoRegisterMessageBrokerIn_MultipleScopes_GeneratesMultipleRegistrations() {
+        // Arrange
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+using MessagePipe;
+
+public class GameLifetimeScope : LifetimeScope { }
+public class UiLifetimeScope : LifetimeScope { }
+
+[AutoRegisterMessageBrokerIn(typeof(GameLifetimeScope))]
+[AutoRegisterMessageBrokerIn(typeof(UiLifetimeScope))]
+public class PlayerJoined { }
+";
+
+        // Act
+        var result = RunGenerator(source, includeMessagePipe: true);
+
+        // Assert
+        var generatedCode = string.Join("\n", result.GeneratedTrees.Select(t => t.ToString()));
+        Assert.That(generatedCode, Does.Contain("RegisterMessageBroker<global::PlayerJoined>"));
+    }
+
+    private static GeneratorDriverRunResult RunGenerator(string source, bool includeMessagePipe = false) {
+        var syntaxTree = CSharpSyntaxTree.ParseText(source);
+        var references = AppDomain.CurrentDomain.GetAssemblies()
+            .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
+            .Select(x => MetadataReference.CreateFromFile(x.Location))
+            .Cast<MetadataReference>()
+            .ToList();
+
+        references.Add(RuntimeAssembly);
+        references.Add(VContainerAssembly);
+        
+        if (includeMessagePipe) {
+            references.Add(MessagePipeAssembly);
+        }
 
         var compilation = CSharpCompilation.Create(
             "TestAssembly",

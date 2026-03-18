@@ -16,6 +16,7 @@
         <PackageReference Include="NUnit3TestAdapter" Version="5.0.0"/>
 
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+        <PackageReference Include="MessagePipe" Version="1.8.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,8 +25,16 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DangFugBixs.Generators\DangFugBixs.Generators.csproj"/>
-        <ProjectReference Include="..\DangFugBixs.Sandbox\DangFugBixs.Sandbox.csproj"/>
-        <ProjectReference Include="..\..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\..\DangFugBixs.Runtime~\**\*.cs"
+                 Exclude="..\..\DangFugBixs.Runtime~\bin\**\*.cs;..\..\DangFugBixs.Runtime~\obj\**\*.cs"
+                 Link="Runtime\%(RecursiveDir)%(FileName)%(Extension)" />
+        <Compile Include="..\DangFugBixs.Sandbox\HeroStats.cs" Link="Sandbox\HeroStats.cs" />
+        <Compile Include="..\DangFugBixs.Sandbox\Mocks.cs" Link="Sandbox\Mocks.cs" />
+        <Compile Include="..\DangFugBixs.Sandbox\Generated\NhemDangFugBixs.Generators\NhemDangFugBixs.Generators.StatGenerator\HeroStats_Stats.g.cs"
+                 Link="Sandbox\Generated\HeroStats_Stats.g.cs" />
     </ItemGroup>
 
 </Project>

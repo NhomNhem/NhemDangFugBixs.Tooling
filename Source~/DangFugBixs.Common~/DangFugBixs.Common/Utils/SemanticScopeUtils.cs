@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using NhemDangFugBixs.Attributes;
 
 namespace NhemDangFugBixs.Common.Utils;
 
@@ -69,9 +70,9 @@ internal static class SemanticScopeUtils {
     public static bool TryGetMessagePipeDependency(
         ITypeSymbol typeSymbol,
         out INamedTypeSymbol? messageType,
-        out string role) {
-        role = string.Empty;
+        out MessagePipeType messagePipeType) {
         messageType = null;
+        messagePipeType = MessagePipeType.Publisher;
 
         if (typeSymbol is not INamedTypeSymbol namedType ||
             !namedType.IsGenericType ||
@@ -82,7 +83,7 @@ internal static class SemanticScopeUtils {
         var fullName = namedType.OriginalDefinition.ToDisplayString();
         if (fullName is "MessagePipe.IPublisher<T>" or "MessagePipe.ISubscriber<T>") {
             messageType = namedType.TypeArguments[0] as INamedTypeSymbol;
-            role = namedType.Name == "IPublisher" ? "Publisher" : "Subscriber";
+            messagePipeType = namedType.Name == "IPublisher" ? MessagePipeType.Publisher : MessagePipeType.Subscriber;
             return messageType != null;
         }
 

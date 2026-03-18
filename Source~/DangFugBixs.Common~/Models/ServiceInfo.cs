@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NhemDangFugBixs.Attributes;
 
 namespace NhemDangFugBixs.Common.Models;
 
@@ -24,6 +25,7 @@ internal readonly struct ServiceInfo {
 
     public bool IsMessagePipeBroker { get; }
     public string? MessageType { get; }
+    public MessagePipeType MessagePipeKind { get; }
     public Dictionary<string, string> Metadata { get; }
 
     public string FullName => string.IsNullOrEmpty(Namespace) ? ClassName : $"{Namespace}.{ClassName}";
@@ -49,7 +51,8 @@ internal readonly struct ServiceInfo {
         int installerOrder = 0,
         bool isMessagePipeBroker = false,
         string? messageType = null,
+        MessagePipeType messagePipeKind = MessagePipeType.Publisher,
         Dictionary<string, string>? metadata = null)
-        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope, IsExceptionHandler, IsBuildCallback, IsInstaller, InstallerOrder, IsMessagePipeBroker, MessageType, Metadata) =
-           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder, isMessagePipeBroker, messageType, metadata ?? new Dictionary<string, string>());
+        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope, IsExceptionHandler, IsBuildCallback, IsInstaller, InstallerOrder, IsMessagePipeBroker, MessageType, MessagePipeKind, Metadata) =
+           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder, isMessagePipeBroker, messageType, messagePipeKind, metadata ?? new Dictionary<string, string>());
 }

@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.0.0] - 2026-03-18
+
+### ⭐ Added - Cysharp Integration & DI Visualizer
+
+**MessagePipe Support:**
+- Generator now emits `builder.RegisterMessageBroker<T>()` for types marked with `[AutoRegisterMessageBrokerIn(typeof(TScope))]`
+- `MessagePipeType` enum (Publisher, Subscriber, Handler) for broker classification
+- Symbol-based MessagePipe detection using Roslyn semantic analysis
+- Multiple broker attributes supported on same type
+
+**DI Visualizer Report:**
+- Generated `RegistrationReport.g.cs` with metadata fields: `ServiceCount`, `ScopeCount`, `Scopes[]`, `Entries[]`, `Consumers[]`, `LoggerRoots[]`, `LoggerConsumers[]`
+- Markdown report generation for human-readable inspection
+- Report includes MessagePipe broker metadata and logger consumer tracking
+
+**Cross-Scope Analyzer (ND006):**
+- New diagnostic ND006 "Inaccessible Dependency Scope" for invalid cross-scope dependencies
+- Scope graph analysis from `[AutoRegisterIn]` and `[LifetimeScopeFor]` attributes
+- Parent→child scope validity detection (VContainer hierarchy)
+- Identity mapping suppression via `[LifetimeScopeFor]` bridge
+
+### 🔧 Changed
+
+- `SemanticScopeUtils.TryGetMessagePipeDependency()` now returns `MessagePipeType` enum instead of string role
+- `ServiceInfo` struct extended with `MessagePipeKind` field
+- Common project updated to netstandard2.1 for Runtime compatibility
+- Generator and Analyzers projects include Runtime source files for shared types
+
+### 📊 Statistics
+
+- **Total Tests**: 46 (all passing)
+- **Diagnostic Codes**: ND001-ND107 (14 active diagnostics including ND006)
+- **CLI Tools**: 1 (DI Smoke Validation)
+
 ## [4.2.0] - 2026-03-18
 
 ### ⭐ Added - DI Guardrails & Smoke Testing
