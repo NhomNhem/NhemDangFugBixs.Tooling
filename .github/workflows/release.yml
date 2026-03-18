@@ -1,0 +1,57 @@
+name: Release CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x' # Adjust as needed
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Determine Version
+        id: get_version
+        run: |
+          VERSION=$(git describe --tags --abbrev=0 || echo "0.0.0")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Create Git Tag
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # To create a release
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'YOUR_GITHUB_USERNAME_OR_ORG' && github.event.head_commit.message !='dry-run' # Add your own logic for dry-run
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+        with:
+          tag_name: v${{ needs.build.outputs.version }}
+          files: |
+            # Add release assets here, e.g., build outputs
+            # ./path/to/my-app.zip
+          prerelease: contains(github.ref, '-beta') || contains(github.ref, '-rc')
+          generate_release_notes: true # Or provide a custom body
+
+
+
