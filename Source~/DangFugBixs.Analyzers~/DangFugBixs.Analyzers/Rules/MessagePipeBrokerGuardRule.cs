@@ -51,9 +51,15 @@ public class MessagePipeBrokerGuardRule : DiagnosticAnalyzer {
                     SemanticScopeUtils.IsScopeReachable(serviceScope, broker.Scope));
 
                 if (!isSatisfied && parameter.Locations.Length > 0) {
+                    var properties = ImmutableDictionary.Create<string, string>()
+                        .Add("TypeName", typeSymbol.Name)
+                        .Add("ScopeName", serviceScope.Name)
+                        .Add("MessageType", messageType.ToDisplayString());
+
                     context.ReportDiagnostic(Diagnostic.Create(
                         ND008,
                         parameter.Locations[0],
+                        properties,
                         typeSymbol.Name,
                         serviceScope.Name,
                         role,
