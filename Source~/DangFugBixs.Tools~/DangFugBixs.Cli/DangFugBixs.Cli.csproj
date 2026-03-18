@@ -14,7 +14,17 @@
         <Version>5.1.0</Version>
         <Authors>NhomNhem</Authors>
         <Description>DI Validation Tool for VContainer - Preflight validation, smoke tests, and resolve validation</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/NhomNhem/NhemDangFugBixs.Tooling</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>vcontainer;unity;dependency-injection;source-generator;analyzer;cli</PackageTags>
+        <RepositoryUrl>https://github.com/NhomNhem/NhemDangFugBixs.Tooling</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\DangFugBixs.DiSmokeValidation\DangFugBixs.DiSmokeValidation.csproj" />
