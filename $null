@@ -1,6 +1,6 @@
-error: unable to delete ';': remote ref does not exist
-error: unable to delete 'git': remote ref does not exist
-error: unable to delete 'push': remote ref does not exist
-error: unable to delete 'origin': remote ref does not exist
-error: dst ref refs/tags/v5.2.0-test receives from more than one src
-error: failed to push some refs to 'github.com:NhomNhem/NhemDangFugBixs.Tooling.git'
+A subdirectory or file openspec\changes\archive already exists.
+Error occurred while processing: openspec\changes\archive.
+A subdirectory or file openspec\changes\v5-cysharp-integration already exists.
+Error occurred while processing: openspec\changes\v5-cysharp-integration.
+A subdirectory or file openspec\changes\archive\2026-03-18-v5-cysharp-integration already exists.
+Error occurred while processing: openspec\changes\archive\2026-03-18-v5-cysharp-integration.
