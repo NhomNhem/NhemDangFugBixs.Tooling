@@ -1,23 +1,23 @@
 # Capability: di-visualizer-report
 
-## Requirement
+## Purpose
+Provide a human-readable and machine-readable registration report that reflects the exact generated DI graph.
 
-- **Goal**: Generate a registration report derived from the same semantic graph used for code generation.
-- **Outputs**:
-  - Produce a Markdown report describing discovered registrations, scopes, lifetimes, installers, and special callbacks.
-  - Optionally produce CSV output with the same underlying data.
-- **Consistency**:
-  - The report must match the generated registration graph exactly.
-  - Scope grouping, lifetimes, installer ordering, and special registration flags must not drift from emitted code.
+## Requirements
+### Requirement: Generate registration report artifacts
+The system SHALL generate report output from the same semantic graph used for code generation.
 
-## Verification
+#### Scenario: Markdown report output
+- **WHEN** generation succeeds
+- **THEN** the system SHALL produce a Markdown report that lists registrations, scopes, lifetimes, installers, and special callback markers
 
-- **Markdown Report**:
-  - Given a successful generator run.
-  - Expect a Markdown registration report to be produced.
-- **CSV Export**:
-  - Given structured export is enabled.
-  - Expect CSV output with the same rows and scope grouping as the Markdown report.
-- **Graph Match**:
-  - Given services grouped into scopes during emission.
-  - Expect the report to reflect the same scope graph and registration properties.
+#### Scenario: CSV report output
+- **WHEN** structured export is enabled
+- **THEN** the system SHALL produce CSV output for the same registration dataset
+
+### Requirement: Keep report and emitted registration graph in sync
+Report content SHALL match emitted registration behavior without drift.
+
+#### Scenario: Scope grouping and properties are consistent
+- **WHEN** services are grouped and emitted by scope
+- **THEN** Markdown and CSV rows SHALL preserve the same scope grouping, lifetimes, installer order, and registration flags

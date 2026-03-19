@@ -1,24 +1,23 @@
 # Capability: smart-lifecycle-filtering
 
-## Requirement
+## Purpose
+Avoid redundant or unsafe interface exposure when generating `RegisterEntryPoint<T>()` registrations.
 
-- **Goal**: Prevent redundant lifecycle registrations when using `RegisterEntryPoint<T>()`.
-- **Logic**:
-  - Identify all interfaces implemented by the target class `T`.
-  - Filter out interfaces that are natively managed by VContainer's `RegisterEntryPoint`.
-- **Managed Interfaces**:
-  - `IInitializable`, `IPostInitializable`
-  - `IStartable`, `IPostStartable`, `IAsyncStartable`
-  - `ITickable`, `IPostTickable`, `IFixedTickable`, `IPostFixedTickable`, `ILateTickable`, `IPostLateTickable`
-  - `IDisposable`
-- **Output**:
-  - If a class only implements these managed interfaces, emit: `builder.RegisterEntryPoint<T>(lifetime).AsSelf();`.
-  - If a class implements additional interfaces (e.g., `IBullet`), emit: `builder.RegisterEntryPoint<T>(lifetime).As<global::IBullet>().AsSelf();`.
-  - NEVER emit `.AsImplementedInterfaces()` alongside `RegisterEntryPoint` unless all interfaces are explicitly filtered.
+## Requirements
+### Requirement: Filter VContainer-managed lifecycle interfaces from entry point exposure
+The generator SHALL exclude interfaces that are already managed by `RegisterEntryPoint<T>()` from `.As<...>()` emission.
 
-## Verification
+#### Scenario: Entry point implements lifecycle and domain interfaces
+- **WHEN** `T` implements both lifecycle interfaces (for example `ITickable`) and domain interfaces (for example `IBullet`)
+- **THEN** generated registration SHALL expose only non-lifecycle interfaces, for example `.As<global::IBullet>().AsSelf()`
 
-- **Case A**: `BulletPresenter : ITickable, IBullet`.
-  - Expected output: `builder.RegisterEntryPoint<global::BulletPresenter>(...).As<global::IBullet>().AsSelf();`.
-- **Case B**: `SimpleService : IInitializable`.
-  - Expected output: `builder.RegisterEntryPoint<global::SimpleService>(...).AsSelf();`.
+#### Scenario: Entry point implements lifecycle interfaces only
+- **WHEN** `T` implements only lifecycle interfaces managed by VContainer
+- **THEN** generated registration SHALL be `RegisterEntryPoint<T>(...).AsSelf()` without extra `.As<...>()`
+
+### Requirement: Do not emit broad interface exposure for entry points
+The generator SHALL avoid `.AsImplementedInterfaces()` for `RegisterEntryPoint<T>()` paths.
+
+#### Scenario: Entry point code generation
+- **WHEN** generating registration for an entry point
+- **THEN** output SHALL NOT use `.AsImplementedInterfaces()` and SHALL use explicit filtered interface emission instead

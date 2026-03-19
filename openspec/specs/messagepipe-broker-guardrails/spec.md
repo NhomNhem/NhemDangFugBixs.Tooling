@@ -1,28 +1,30 @@
 # Capability: messagepipe-broker-guardrails
 
-## Requirement
+## Purpose
+Detect missing reachable MessagePipe brokers for `IPublisher<T>` and `ISubscriber<T>` dependencies.
 
-- **Goal**: Detect when generated services inject `IPublisher<T>` or `ISubscriber<T>` without a reachable broker registration.
-- **Scope Resolution**:
-  - Treat a broker in the same scope as valid.
-  - Treat a broker in an allowed parent or root scope as valid.
-  - Report a finding when no reachable broker exists for the message type.
-- **Alignment**:
-  - The analyzer and DI smoke validator must surface the same structural broker-missing issue.
-  - Findings must identify the consumer type, message type, and effective scope.
-- **Metadata**:
-  - Generated registration metadata must preserve broker message types, consumer message types, and owning scope.
+## Requirements
+### Requirement: Enforce reachable broker registration for message dependencies
+The system SHALL report a broker-missing issue when no reachable broker exists for the injected message type.
 
-## Verification
+#### Scenario: Broker exists in same scope
+- **WHEN** a service injects `IPublisher<T>` or `ISubscriber<T>`
+- **AND** broker for `T` is registered in the same scope
+- **THEN** analyzer and smoke validation SHALL report no broker-missing issue
 
-- **Same Scope**:
-  - Given a service injecting `IPublisher<PlayerJoined>` in `GameLifetimeScope`.
-  - Given a MessagePipe broker for `PlayerJoined` in `GameLifetimeScope`.
-  - Expect no diagnostic and no smoke-validation failure.
-- **Parent or Root Scope**:
-  - Given a service injecting `ISubscriber<PlayerJoined>` in a child scope.
-  - Given a broker for `PlayerJoined` in a reachable root scope.
-  - Expect no diagnostic and no smoke-validation failure.
-- **Missing Broker**:
-  - Given a service injecting `IPublisher<PlayerJoined>` or `ISubscriber<PlayerJoined>` with no reachable broker.
-  - Expect a missing-broker analyzer finding and a smoke-validation failure.
+#### Scenario: Broker exists in reachable parent or root scope
+- **WHEN** a service injects `IPublisher<T>` or `ISubscriber<T>` in a child scope
+- **AND** broker for `T` is registered in a reachable parent or root scope
+- **THEN** analyzer and smoke validation SHALL report no broker-missing issue
+
+#### Scenario: No reachable broker exists
+- **WHEN** a service injects `IPublisher<T>` or `ISubscriber<T>`
+- **AND** no reachable broker registration exists for `T`
+- **THEN** analyzer and smoke validation SHALL report a broker-missing issue
+
+### Requirement: Preserve broker metadata for finding details
+Generated registration metadata SHALL include broker message type, consumer message type, and owning scope.
+
+#### Scenario: Broker-missing finding details
+- **WHEN** a broker-missing issue is reported
+- **THEN** finding output SHALL identify consumer type, message type, and effective scope
