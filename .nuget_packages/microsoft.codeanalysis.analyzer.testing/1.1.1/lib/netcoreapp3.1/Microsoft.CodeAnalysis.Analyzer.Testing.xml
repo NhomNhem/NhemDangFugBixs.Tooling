@@ -1,0 +1,1204 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.CodeAnalysis.Analyzer.Testing</name>
+    </assembly>
+    <members>
+        <member name="F:Microsoft.CodeAnalysis.Testing.AnalyzerInfo.AttributeBaseClassCtor">
+            <summary>
+            The <see cref="M:System.Attribute.#ctor"/> constructor.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.AnalyzerInfo.AttributeUsageCtor">
+            <summary>
+            The <see cref="M:System.AttributeUsageAttribute.#ctor(System.AttributeTargets)"/> constructor.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.AnalyzerInfo.AttributeUsageAllowMultipleProperty">
+            <summary>
+            The <see cref="P:System.AttributeUsageAttribute.AllowMultiple"/> property.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.Verify">
+            <summary>
+            Gets the default verifier for the test.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.DefaultFilePathPrefix">
+            <summary>
+            Gets the prefix to apply to source files added without an explicit name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.DefaultTestProjectName">
+            <summary>
+            Gets the name of the default project created for testing.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.DefaultFilePath">
+            <summary>
+            Gets the default full name of the first source file added for a test.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.DefaultFileExt">
+            <summary>
+            Gets the default file extension to use for files added to the test without an explicit name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.Language">
+            <summary>
+            Gets the language name used for the test.
+            </summary>
+            <value>
+            The language name used for the test.
+            </value>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.TestCode">
+            <summary>
+            Sets the input source file for analyzer or code fix testing.
+            </summary>
+            <seealso cref="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.TestState"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.ExpectedDiagnostics">
+            <summary>
+            Gets the list of diagnostics expected in the source(s) and/or additonal files.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.CompilerDiagnostics">
+            <summary>
+            Gets or sets the behavior of compiler diagnostics in validation scenarios. The default value is
+            <see cref="F:Microsoft.CodeAnalysis.Testing.CompilerDiagnostics.Errors"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.MarkupOptions">
+            <summary>
+            Gets or sets options for the markup processor when markup is used for diagnostics. The default value is
+            <see cref="F:Microsoft.CodeAnalysis.Testing.MarkupOptions.None"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.XmlReferences">
+            <summary>
+            Gets the collection of inputs to provide to the XML documentation resolver.
+            </summary>
+            <remarks>
+            <para>Files in this collection may be referenced via <c>&lt;include&gt;</c> elements in documentation
+            comments.</para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.TestBehaviors">
+            <summary>
+            Gets or sets the test behaviors applying to this analyzer. The default value is
+            <see cref="F:Microsoft.CodeAnalysis.Testing.TestBehaviors.None"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.DisabledDiagnostics">
+            <summary>
+            Gets a collection of diagnostics to explicitly disable in the <see cref="T:Microsoft.CodeAnalysis.CompilationOptions"/> for projects.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.ReferenceAssemblies">
+            <summary>
+            Gets or sets the default reference assemblies to use.
+            </summary>
+            <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.ReferenceAssemblies"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.DiagnosticVerifier">
+            <summary>
+            Gets or sets an additional verifier for a diagnostic.
+            The action compares actual <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/> and the expected
+            <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> based on custom test requirements not yet supported by the test framework.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.OptionsTransforms">
+            <summary>
+            Gets a collection of transformation functions to apply to <see cref="P:Microsoft.CodeAnalysis.Workspace.Options"/> during diagnostic
+            or code fix test setup.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.SolutionTransforms">
+            <summary>
+            Gets a collection of transformation functions to apply to a <see cref="T:Microsoft.CodeAnalysis.Solution"/> during diagnostic or code
+            fix test setup.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.MatchDiagnosticsTimeout">
+            <summary>
+            Gets or sets the timeout to use when matching expected and actual diagnostics. The default value is 2
+            seconds.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.RunAsync(System.Threading.CancellationToken)">
+            <summary>
+            Runs the test.
+            </summary>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the operation will observe.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.RunImplAsync(System.Threading.CancellationToken)">
+            <summary>
+            Runs the test.
+            </summary>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the operation will observe.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetDefaultDiagnostic(Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer[])">
+            <summary>
+            Gets the default diagnostic to use during markup processing. By default, the <em>single</em> diagnostic of
+            the first analyzer is used, and no default diagonostic is available if multiple diagnostics are provided by
+            the analyzer. If <see cref="F:Microsoft.CodeAnalysis.Testing.MarkupOptions.UseFirstDescriptor"/> is used, the first available diagnostic
+            is used.
+            </summary>
+            <param name="analyzers">The analyzers to consider.</param>
+            <returns>The default diagnostic to use during markup processing.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.VerifyDiagnosticsAsync(Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState},Microsoft.CodeAnalysis.Testing.DiagnosticResult[],Microsoft.CodeAnalysis.Testing.IVerifier,System.Threading.CancellationToken)">
+            <summary>
+            General method that gets a collection of actual <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s found in the source after the
+            analyzer is run, then verifies each of them.
+            </summary>
+            <param name="primaryProject">The primary project.</param>
+            <param name="additionalProjects">Additional projects to include in the solution.</param>
+            <param name="expected">A collection of <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/>s that should appear after the analyzer
+            is run on the sources.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.VerifyDiagnosticResults(System.Collections.Generic.IEnumerable{System.ValueTuple{Microsoft.CodeAnalysis.Project,Microsoft.CodeAnalysis.Diagnostic}},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},Microsoft.CodeAnalysis.Testing.DiagnosticResult[],Microsoft.CodeAnalysis.Testing.IVerifier)">
+            <summary>
+            Checks each of the actual <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s found and compares them with the corresponding
+            <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> in the array of expected results. <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s are considered
+            equal only if the <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Spans"/>, <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Id"/>,
+            <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Severity"/>, and <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Message"/> of the
+            <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> match the actual <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>.
+            </summary>
+            <param name="actualResults">The <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s found by the compiler after running the analyzer
+            on the source code.</param>
+            <param name="analyzers">The analyzers that have been run on the sources.</param>
+            <param name="expectedResults">A collection of <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/>s describing the expected
+            diagnostics for the sources.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.MatchDiagnostics(System.ValueTuple{Microsoft.CodeAnalysis.Project,Microsoft.CodeAnalysis.Diagnostic}[],Microsoft.CodeAnalysis.Testing.DiagnosticResult[])">
+             <summary>
+             Match actual diagnostics with expected diagnostics.
+             </summary>
+             <remarks>
+             <para>While each actual diagnostic contains complete information about the diagnostic (location, severity,
+             message, etc.), the expected diagnostics sometimes contain partial information. It is therefore possible for
+             an expected diagnostic to match more than one actual diagnostic, while another expected diagnostic with more
+             complete information only matches a single specific actual diagnostic.</para>
+            
+             <para>This method attempts to find a best matching of actual and expected diagnostics.</para>
+             </remarks>
+             <param name="actualResults">The actual diagnostics reported by analysis.</param>
+             <param name="expectedResults">The expected diagnostics.</param>
+             <returns>
+             <para>A collection of matched diagnostics, with the following characteristics:</para>
+            
+             <list type="bullet">
+             <item><description>Every element of <paramref name="actualResults"/> will appear exactly once as the first element of an item in the result.</description></item>
+             <item><description>Every element of <paramref name="expectedResults"/> will appear exactly once as the second element of an item in the result.</description></item>
+             <item><description>An item in the result which specifies both a <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/> and a <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> indicates a matched pair, i.e. the actual and expected results are believed to refer to the same diagnostic.</description></item>
+             <item><description>An item in the result which specifies only a <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/> indicates an actual diagnostic for which no matching expected diagnostic was found.</description></item>
+             <item><description>An item in the result which specifies only a <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> indicates an expected diagnostic for which no matching actual diagnostic was found.</description></item>
+            
+             <para>If no exact match is found (all actual diagnostics are matched to an expected diagnostic without
+             errors), this method is <em>allowed</em> to attempt fall-back matching using a strategy intended to minimize
+             the total number of mismatched pairs.</para>
+             </list>
+             </returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.VerifyDiagnosticLocation(System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},Microsoft.CodeAnalysis.Diagnostic,Microsoft.CodeAnalysis.Testing.DiagnosticResult,Microsoft.CodeAnalysis.Location,Microsoft.CodeAnalysis.Testing.DiagnosticLocation,Microsoft.CodeAnalysis.Testing.IVerifier)">
+            <summary>
+            Helper method to <see cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.VerifyDiagnosticResults(System.Collections.Generic.IEnumerable{System.ValueTuple{Microsoft.CodeAnalysis.Project,Microsoft.CodeAnalysis.Diagnostic}},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},Microsoft.CodeAnalysis.Testing.DiagnosticResult[],Microsoft.CodeAnalysis.Testing.IVerifier)"/> that checks the location of a
+            <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/> and compares it with the location described by a
+            <see cref="T:Microsoft.CodeAnalysis.FileLinePositionSpan"/>.
+            </summary>
+            <param name="analyzers">The analyzer that have been run on the sources.</param>
+            <param name="diagnostic">The diagnostic that was found in the code.</param>
+            <param name="expectedDiagnostic">The expected diagnostic.</param>
+            <param name="actual">The location of the diagnostic found in the code.</param>
+            <param name="expected">The <see cref="T:Microsoft.CodeAnalysis.FileLinePositionSpan"/> describing the expected location of the
+            diagnostic.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.FormatDiagnostics(System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},System.String,Microsoft.CodeAnalysis.Diagnostic[])">
+            <summary>
+            Helper method to format a <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/> into an easily readable string.
+            </summary>
+            <param name="analyzers">The analyzers that this verifier tests.</param>
+            <param name="defaultFilePath">The default file path for diagnostics.</param>
+            <param name="diagnostics">A collection of <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s to be formatted.</param>
+            <returns>The <paramref name="diagnostics"/> formatted as a string.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.FormatDiagnostics(System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},System.String,Microsoft.CodeAnalysis.Testing.DiagnosticResult[])">
+            <summary>
+            Helper method to format a <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/> into an easily readable string.
+            </summary>
+            <param name="analyzers">The analyzers that this verifier tests.</param>
+            <param name="defaultFilePath">The default file path for diagnostics.</param>
+            <param name="diagnostics">A collection of <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/>s to be formatted.</param>
+            <returns>The <paramref name="diagnostics"/> formatted as a string.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetSortedDiagnosticsAsync(Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},Microsoft.CodeAnalysis.Testing.IVerifier,System.Threading.CancellationToken)">
+            <summary>
+            Given classes in the form of strings, their language, and an <see cref="T:Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer"/> to apply to
+            it, return the <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s found in the string after converting it to a
+            <see cref="T:Microsoft.CodeAnalysis.Document"/>.
+            </summary>
+            <param name="primaryProject">The primary project.</param>
+            <param name="additionalProjects">Additional projects to include in the solution.</param>
+            <param name="analyzers">The analyzers to be run on the sources.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A collection of <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s that surfaced in the source code, sorted by
+            <see cref="P:Microsoft.CodeAnalysis.Diagnostic.Location"/>.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetSortedDiagnosticsAsync(Microsoft.CodeAnalysis.Solution,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},System.Collections.Immutable.ImmutableArray{System.ValueTuple{Microsoft.CodeAnalysis.Project,Microsoft.CodeAnalysis.Diagnostic}},Microsoft.CodeAnalysis.Testing.CompilerDiagnostics,Microsoft.CodeAnalysis.Testing.IVerifier,System.Threading.CancellationToken)">
+            <summary>
+            Given an analyzer and a collection of documents to apply it to, run the analyzer and gather an array of
+            diagnostics found. The returned diagnostics are then ordered by location in the source documents.
+            </summary>
+            <param name="solution">The <see cref="T:Microsoft.CodeAnalysis.Solution"/> that the analyzer(s) will be run on.</param>
+            <param name="analyzers">The analyzer to run on the documents.</param>
+            <param name="additionalDiagnostics">Additional diagnostics reported for the solution, which need to be verified.</param>
+            <param name="compilerDiagnostics">The behavior of compiler diagnostics in validation scenarios.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A collection of <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s that surfaced in the source code, sorted by
+            <see cref="P:Microsoft.CodeAnalysis.Diagnostic.Location"/>.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.IsCompilerDiagnosticIncluded(Microsoft.CodeAnalysis.Diagnostic,Microsoft.CodeAnalysis.Testing.CompilerDiagnostics)">
+            <summary>
+            Determines if a compiler diagnostic should be included for diagnostic validation. The default implementation includes all diagnostics at a severity level indicated by <paramref name="compilerDiagnostics"/>.
+            </summary>
+            <param name="diagnostic">The compiler diagnostic.</param>
+            <param name="compilerDiagnostics">The compiler diagnostic level in effect for the test.</param>
+            <returns><see langword="true"/> to include the diagnostic for validation; otherwise, <see langword="false"/> to exclude a diagnostic.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetAnalyzerOptions(Microsoft.CodeAnalysis.Project)">
+            <summary>
+            Gets the effective analyzer options for a project. The default implementation returns
+            <see cref="P:Microsoft.CodeAnalysis.Project.AnalyzerOptions"/>.
+            </summary>
+            <param name="project">The project.</param>
+            <returns>The effective <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerOptions"/> for the project.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.CreateCompilationWithAnalyzers(Microsoft.CodeAnalysis.Compilation,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},Microsoft.CodeAnalysis.Diagnostics.AnalyzerOptions,System.Threading.CancellationToken)">
+            <summary>
+            Combine a compilation with analyzers and options.
+            </summary>
+            <param name="compilation">The compilation the analyzers will be run on.</param>
+            <param name="analyzers">The analyzer to run on the documents.</param>
+            <param name="options">The <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerOptions"/> for the project.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Diagnostics.CompilationWithAnalyzers"/> object representing the provided compilation, analyzers, and options.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetSolutionAsync(Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState},Microsoft.CodeAnalysis.Testing.IVerifier,System.Threading.CancellationToken)">
+            <summary>
+            Given an array of strings as sources and a language, turn them into a <see cref="T:Microsoft.CodeAnalysis.Project"/> and return the
+            solution.
+            </summary>
+            <param name="primaryProject">The primary project.</param>
+            <param name="additionalProjects">Additional projects to include in the solution.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A solution containing a project with the specified sources and additional files.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.CreateProjectAsync(Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState},System.Threading.CancellationToken)">
+            <summary>
+            Create a project using the input strings as sources.
+            </summary>
+            <remarks>
+            <para>This method first creates a <see cref="T:Microsoft.CodeAnalysis.Project"/> by calling <see cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.CreateProjectImplAsync(Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState},System.Threading.CancellationToken)"/>, and then
+            applies compilation options to the project by calling <see cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.ApplyCompilationOptions(Microsoft.CodeAnalysis.Project)"/>.</para>
+            </remarks>
+            <param name="primaryProject">The primary project.</param>
+            <param name="additionalProjects">Additional projects to include in the solution.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Project"/> created out of the <see cref="T:Microsoft.CodeAnalysis.Document"/>s created from the source
+            strings.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.CreateProjectImplAsync(Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState},System.Threading.CancellationToken)">
+            <summary>
+            Create a project using the input strings as sources.
+            </summary>
+            <param name="primaryProject">The primary project.</param>
+            <param name="additionalProjects">Additional projects to include in the solution.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Project"/> created out of the <see cref="T:Microsoft.CodeAnalysis.Document"/>s created from the source
+            strings.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.CreateSolutionAsync(Microsoft.CodeAnalysis.ProjectId,Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState,System.Threading.CancellationToken)">
+            <summary>
+            Creates a solution that will be used as parent for the sources that need to be checked.
+            </summary>
+            <param name="projectId">The project identifier to use.</param>
+            <param name="projectState">The primary project.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>The created solution.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.ApplyCompilationOptions(Microsoft.CodeAnalysis.Project)">
+            <summary>
+            Applies compilation options to a project.
+            </summary>
+            <remarks>
+            <para>The default implementation configures the project by enabling all supported diagnostics of analyzers
+            included in <see cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetDiagnosticAnalyzers"/> as well as <c>AD0001</c>. After configuring these
+            diagnostics, any diagnostic IDs indicated in <see cref="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.DisabledDiagnostics"/> are explicitly suppressed
+            using <see cref="F:Microsoft.CodeAnalysis.ReportDiagnostic.Suppress"/>.</para>
+            </remarks>
+            <param name="project">The project.</param>
+            <returns>The modified project.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.SortDistinctDiagnostics(System.Collections.Generic.IEnumerable{System.ValueTuple{Microsoft.CodeAnalysis.Project,Microsoft.CodeAnalysis.Diagnostic}})">
+            <summary>
+            Sort <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s by location in source document.
+            </summary>
+            <param name="diagnostics">A collection of <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>s to be sorted.</param>
+            <returns>A collection containing the input <paramref name="diagnostics"/>, sorted by
+            <see cref="P:Microsoft.CodeAnalysis.Diagnostic.Location"/> and <see cref="P:Microsoft.CodeAnalysis.Diagnostic.Id"/>.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetDiagnosticAnalyzers">
+            <summary>
+            Gets the analyzers being tested.
+            </summary>
+            <returns>
+            New instances of all the analyzers being tested.
+            </returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3">
+            <summary>
+            A default verifier for diagnostic analyzers.
+            </summary>
+            <typeparam name="TAnalyzer">The <see cref="T:Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer"/> to test.</typeparam>
+            <typeparam name="TTest">The test implementation to use.</typeparam>
+            <typeparam name="TVerifier">The type of verifier to use.</typeparam>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3.Diagnostic">
+            <summary>
+            Creates a <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> representing an expected diagnostic for the <em>single</em>
+            <see cref="T:Microsoft.CodeAnalysis.DiagnosticDescriptor"/> supported by the analyzer.
+            </summary>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> initialized using the single descriptor supported by the analyzer.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            <para>If the analyzer declares support for more than one diagnostic descriptor.</para>
+            <para>-or-</para>
+            <para>If the analyzer does not declare support for any diagnostic descriptors.</para>
+            </exception>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3.Diagnostic(System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> representing an expected diagnostic for the <em>single</em>
+            <see cref="T:Microsoft.CodeAnalysis.DiagnosticDescriptor"/> with the specified ID supported by the analyzer.
+            </summary>
+            <param name="diagnosticId">The expected diagnostic ID.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> initialized using the single descriptor with the specified ID supported by the analyzer.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            <para>If the analyzer declares support for more than one diagnostic descriptor with the specified ID.</para>
+            <para>-or-</para>
+            <para>If the analyzer does not declare support for any diagnostic descriptors with the specified ID.</para>
+            </exception>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3.Diagnostic(Microsoft.CodeAnalysis.DiagnosticDescriptor)">
+            <summary>
+            Creates a <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> representing an expected diagnostic for the specified
+            <paramref name="descriptor"/>.
+            </summary>
+            <param name="descriptor">The diagnostic descriptor.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> initialed using the specified <paramref name="descriptor"/>.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3.VerifyAnalyzerAsync(System.String,Microsoft.CodeAnalysis.Testing.DiagnosticResult[])">
+            <summary>
+            Verifies the analyzer produces the specified diagnostics for the given source text.
+            </summary>
+            <param name="source">The source text to test, which may include markup syntax.</param>
+            <param name="expected">The expected diagnostics. These diagnostics are in addition to any diagnostics
+            defined in markup.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionIndex">
+            <summary>
+            Gets or sets the index of the code action to apply.
+            </summary>
+            <remarks>
+            <para>If <see cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionIndex"/> and <see cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionEquivalenceKey"/> are both specified, the
+            test will further verify that the two properties refer to the same code action.</para>
+            </remarks>
+            <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionEquivalenceKey"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionEquivalenceKey">
+            <summary>
+            Gets or sets the <see cref="P:Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey"/> of the code action to apply.
+            </summary>
+            <remarks>
+            <para>If <see cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionIndex"/> and <see cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionEquivalenceKey"/> are both specified, the
+            test will further verify that the two properties refer to the same code action.</para>
+            </remarks>
+            <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionIndex"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionVerifier">
+            <summary>
+            Gets or sets an additional verifier for a <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction"/>. After the code action is selected, it is
+            passed to this verification method to test any other properties of the code action.
+            </summary>
+            <remarks>
+            <para>For a successful test, the verification action is expected to complete without throwing an
+            exception.</para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionValidationMode">
+            <summary>
+            Gets or sets the validation mode for code actions. The default is
+            <see cref="F:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode.SemanticStructure"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.SyntaxKindType">
+            <summary>
+            Gets the syntax kind enumeration type for the current code action test.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.ApplyCodeActionAsync(Microsoft.CodeAnalysis.Project,Microsoft.CodeAnalysis.CodeActions.CodeAction,Microsoft.CodeAnalysis.Testing.IVerifier,System.Threading.CancellationToken)">
+            <summary>
+            Apply the inputted <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction"/> to the inputted document.
+            Meant to be used to apply code fixes.
+            </summary>
+            <param name="project">The <see cref="T:Microsoft.CodeAnalysis.Project"/> to apply the code action on.</param>
+            <param name="codeAction">A <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction"/> that will be applied to the
+            <paramref name="project"/>.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Project"/> with the changes from the <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction"/>.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.RecreateProjectDocumentsAsync(Microsoft.CodeAnalysis.Project,Microsoft.CodeAnalysis.Testing.IVerifier,System.Threading.CancellationToken)">
+            <summary>
+            Implements a workaround for issue #936, force re-parsing to get the same sort of syntax tree as the original document.
+            </summary>
+            <param name="project">The project to update.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>The updated <see cref="T:Microsoft.CodeAnalysis.Project"/>.</returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode">
+            <summary>
+            Specifies the validation mode for code actions.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode.None">
+            <summary>
+            Code action verification is limited to the raw text produced by the action.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode.SemanticStructure">
+            <summary>
+            Code action verification ensures that semantic structure of the tree produced by the code action matches the
+            form produced by the compiler when parsing the text form of the document. Differences in trivia nodes, in
+            particular the associativity of <see cref="T:Microsoft.CodeAnalysis.SyntaxTrivia"/> to leading or trailing trivia lists, is ignored.
+            </summary>
+            <remarks>
+            <para>Code actions are generally expected to adhere to this validation mode.</para>
+            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode.Full">
+            <summary>
+            Code action verification ensures that the tree produced by a code action exactly matches the form of the
+            tree produced by the compiler when parsing the text representation of the tree.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.CompilerDiagnostics">
+            <summary>
+            Specifies the behavior of compiler diagnostics in validation scenarios.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CompilerDiagnostics.None">
+            <summary>
+            All compiler diagnostics are ignored.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CompilerDiagnostics.Errors">
+            <summary>
+            Compiler errors are included in verification.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CompilerDiagnostics.Warnings">
+            <summary>
+            Compiler errors and warnings are included in verification.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CompilerDiagnostics.Suggestions">
+            <summary>
+            Compiler errors, warnings, and suggestions are included in verification.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CompilerDiagnostics.All">
+            <summary>
+            All compiler diagnostics are included in verification.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.DefaultVerifier">
+            <summary>
+            Provides a default implementation of <see cref="T:Microsoft.CodeAnalysis.Testing.IVerifier"/>.
+            </summary>
+            <remarks>
+            This verifier is not dependent on any particular test framework. Each verification method throws
+            <see cref="T:System.InvalidOperationException"/> on failure.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.Testing.DefaultVerifier"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.#ctor(System.Collections.Immutable.ImmutableStack{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.Testing.DefaultVerifier"/> class with the specified context.
+            </summary>
+            <param name="context">The verification context, with the innermost verification context label at the top of
+            the stack.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="context"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DefaultVerifier.Context">
+            <summary>
+            Gets the current verification context. The innermost verification context label is the top item on the
+            stack.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.Empty``1(System.String,System.Collections.Generic.IEnumerable{``0})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.NotEmpty``1(System.String,System.Collections.Generic.IEnumerable{``0})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.LanguageIsSupported(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.Equal``1(``0,``0,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.True(System.Boolean,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.False(System.Boolean,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.Fail(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.SequenceEqual``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.PushContext(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DefaultVerifier.CreateMessage(System.String)">
+            <summary>
+            Creates a full message for a verifier failure combining the current verification <see cref="P:Microsoft.CodeAnalysis.Testing.DefaultVerifier.Context"/> with
+            the <paramref name="message"/> for the current verification.
+            </summary>
+            <param name="message">The failure message to report.</param>
+            <returns>A full failure message containing both the verification context and the failure message for the current test.</returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.DiagnosticLocation">
+            <summary>
+            Represents an expected <see cref="T:Microsoft.CodeAnalysis.Location"/> appearing in <see cref="P:Microsoft.CodeAnalysis.Diagnostic.Location"/> or
+            <see cref="P:Microsoft.CodeAnalysis.Diagnostic.AdditionalLocations"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DiagnosticLocation.#ctor(Microsoft.CodeAnalysis.FileLinePositionSpan,Microsoft.CodeAnalysis.Testing.DiagnosticLocationOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticLocation"/> structure with the specified location and
+            options.
+            </summary>
+            <param name="span">The location of the diagnostic.</param>
+            <param name="options">The options to consider when validating this location.</param>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticLocation.Span">
+            <summary>
+            Gets the file and span of the location.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticLocation.Options">
+            <summary>
+            Gets the options for validating the location.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.DiagnosticLocationOptions">
+            <summary>
+            Defines options for interpreting <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticLocation"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.DiagnosticLocationOptions.None">
+            <summary>
+            The diagnostic location is a simple <see cref="T:Microsoft.CodeAnalysis.FileLinePositionSpan"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.DiagnosticLocationOptions.IgnoreLength">
+            <summary>
+            The diagnostic location is defined as a position instead of a span. The length of the actual diagnostic span
+            should be ignored when comparing results.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.DiagnosticLocationOptions.InterpretAsMarkupKey">
+             <summary>
+             The diagnostic location is defined in markup. The associated <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticLocation"/> has the
+             following characteristics:
+            
+             <list type="bullet">
+             <item><description>The <see cref="P:Microsoft.CodeAnalysis.FileLinePositionSpan.Path"/> is an empty string.</description></item>
+             <item><description>The <see cref="P:Microsoft.CodeAnalysis.Text.LinePosition.Line"/> is 0.</description></item>
+             <item><description>The <see cref="P:Microsoft.CodeAnalysis.Text.LinePosition.Character"/> is the index of the markup span which defines
+             the location. For example, an index of <c>5</c> would appear using the markup syntax <c>{|#5:...|}</c> or
+             <c>{|#5:...|#5}</c>.</description></item>
+             </list>
+             </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.DiagnosticOptions">
+            <summary>
+            Defines options for interpreting <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.DiagnosticOptions.None">
+            <summary>
+            The result should be interpreted using the default settings.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.DiagnosticOptions.IgnoreAdditionalLocations">
+            <summary>
+            The primary diagnostic location is defined, but additional locations have not been provided. Disables
+            validation of additional locations reported for the corresponding diagnostics.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.DiagnosticOptions.IgnoreSeverity">
+            <summary>
+            Ignore the diagnostic severity when verifying this diagnostic result.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult">
+            <summary>
+            Structure that stores information about a <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/> appearing in a source.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DiagnosticResult.#ctor(System.String,Microsoft.CodeAnalysis.DiagnosticSeverity)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> structure with the specified
+            <paramref name="id"/> and <paramref name="severity"/>.
+            </summary>
+            <param name="id">The diagnostic ID.</param>
+            <param name="severity">The diagnostic severity.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DiagnosticResult.#ctor(Microsoft.CodeAnalysis.DiagnosticDescriptor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> structure with the <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Id"/>,
+            <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Severity"/>, and <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.MessageFormat"/> taken from the specified
+            <paramref name="descriptor"/>.
+            </summary>
+            <param name="descriptor">The diagnostic descriptor.</param>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Spans">
+            <summary>
+            Gets the locations where the expected diagnostic is reported.
+            <list type="bullet">
+            <item><description>An empty array is returned for no-location diagnostics.</description></item>
+            <item><description>The first location corresponds to <see cref="P:Microsoft.CodeAnalysis.Diagnostic.Location"/>.</description></item>
+            <item><description>Remaining locations correspond to <see cref="P:Microsoft.CodeAnalysis.Diagnostic.AdditionalLocations"/>. These
+            locations are not validated if the diagnostic has the
+            <see cref="F:Microsoft.CodeAnalysis.Testing.DiagnosticOptions.IgnoreAdditionalLocations"/> flag set.</description></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Severity">
+            <summary>
+            Gets the expected severity of the diagnostic.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Options">
+            <summary>
+            Gets the options to consider during validation of the expected diagnostic. The default value is
+            <see cref="F:Microsoft.CodeAnalysis.Testing.DiagnosticOptions.None"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Id">
+            <summary>
+            Gets the expected ID of the diagnostic.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Message">
+            <summary>
+            Gets the expected message of the diagnostic, if any.
+            </summary>
+            <value>
+            The expected message for the diagnostic; otherwise, <see langword="null"/> if the message should not be
+            validated.
+            </value>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.MessageFormat">
+            <summary>
+            Gets the expected message format for the diagnostic.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.MessageArguments">
+            <summary>
+            Gets the expected message arguments for the diagnostic. These arguments are used for formatting
+            <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.MessageFormat"/> when <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Message"/> has not be set directly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.HasLocation">
+            <summary>
+            Gets a value indicating whether the diagnostic is expected to have a location.
+            </summary>
+            <value>
+            <see langword="true"/> if the diagnostic is expected to have a location; otherwise, <see langword="false"/>
+            if a no-location diagnostic is expected.
+            </value>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.IsSuppressed">
+            <summary>
+            Gets a value indicating whether the diagnostic is expected to be suppressed.
+            </summary>
+            <value>
+            <see langword="true"/> if the diagnostic is expected to be suppressed;
+            <see langword="false"/> if the diagnostic is expected to be not suppressed;
+            <see langword="null"/> if the suppression state should not be tested;
+            </value>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DiagnosticResult.CompilerError(System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> for a compiler error with the specified ID.
+            </summary>
+            <param name="identifier">The compiler error ID.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> for a compiler error with the specified ID.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DiagnosticResult.CompilerWarning(System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> for a compiler warning with the specified ID.
+            </summary>
+            <param name="identifier">The compiler warning ID.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> for a compiler warning with the specified ID.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DiagnosticResult.WithSeverity(Microsoft.CodeAnalysis.DiagnosticSeverity)">
+            <summary>
+            Transforms the current <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> to have the specified <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Severity"/>.
+            </summary>
+            <param name="severity">The expected diagnostic severity.</param>
+            <returns>A new <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> copied from the current instance with the specified
+            <paramref name="severity"/> applied.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.DiagnosticResult.WithOptions(Microsoft.CodeAnalysis.Testing.DiagnosticOptions)">
+            <summary>
+            Transforms the current <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> to have the specified <see cref="P:Microsoft.CodeAnalysis.Testing.DiagnosticResult.Options"/>.
+            </summary>
+            <param name="options">The options to consider during validation of the expected diagnostic.</param>
+            <returns>A new <see cref="T:Microsoft.CodeAnalysis.Testing.DiagnosticResult"/> copied from the current instance with the specified
+            <paramref name="options"/> applied.</returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.EmptyDiagnosticAnalyzer">
+            <summary>
+            Defines a <see cref="T:Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer"/> which does not report any diagnostics.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.IVerifierExtensions">
+            <summary>
+            Extensions on the <see cref="T:Microsoft.CodeAnalysis.Testing.IVerifier"/> interface.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifierExtensions.EqualOrDiff(Microsoft.CodeAnalysis.Testing.IVerifier,System.String,System.String,System.String)">
+            <summary>
+            Asserts that two strings are equal, and prints a diff between the two if they are not.
+            </summary>
+            <param name="verifier">The verifier instance.</param>
+            <param name="expected">The expected string. This is presented as the "baseline/before" side in the diff.</param>
+            <param name="actual">The actual string. This is presented as the changed or "after" side in the diff.</param>
+            <param name="message">The message to precede the diff, if the values are not equal.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.Empty``1(System.String,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Verify that a specified <paramref name="collection"/> is empty.
+            </summary>
+            <typeparam name="T">The type of elements in the collection.</typeparam>
+            <param name="collectionName">The name of the collection.</param>
+            <param name="collection">The collection.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.Equal``1(``0,``0,System.String)">
+            <summary>
+            Verify that two items are equal.
+            </summary>
+            <typeparam name="T">The type of item to compare.</typeparam>
+            <param name="expected">The expected item.</param>
+            <param name="actual">The actual item.</param>
+            <param name="message">The message to report if the items are not equal, or <see langword="null"/> to use a default message.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.True(System.Boolean,System.String)">
+            <summary>
+            Verify that a value is <see langword="true"/>.
+            </summary>
+            <param name="assert">The value.</param>
+            <param name="message">The message to report if the value is not <see langword="true"/>, or <see langword="null"/> to use a default message.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.False(System.Boolean,System.String)">
+            <summary>
+            Verify that a value is <see langword="false"/>.
+            </summary>
+            <param name="assert">The value.</param>
+            <param name="message">The message to report if the value is not <see langword="false"/>, or <see langword="null"/> to use a default message.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.Fail(System.String)">
+            <summary>
+            Called to indicate validation has failed.
+            </summary>
+            <param name="message">The failure message to report, or <see langword="null"/> to use a default message.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.LanguageIsSupported(System.String)">
+            <summary>
+            Verifies that a specific language is supported by this verifier.
+            </summary>
+            <param name="language">The language.</param>
+            <seealso cref="T:Microsoft.CodeAnalysis.LanguageNames"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.NotEmpty``1(System.String,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Verify that a specified <paramref name="collection"/> is not empty.
+            </summary>
+            <typeparam name="T">The type of elements in the collection.</typeparam>
+            <param name="collectionName">The name of the collection.</param>
+            <param name="collection">The collection.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.SequenceEqual``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},System.String)">
+            <summary>
+            Verify that two collections are equal.
+            </summary>
+            <typeparam name="T">The type of elements in the collection.</typeparam>
+            <param name="expected">The expected collection.</param>
+            <param name="actual">The actual collection.</param>
+            <param name="equalityComparer">The comparer to use for elements in the collection, or <see langword="null"/> to use the default comparer.</param>
+            <param name="message">The message to report if the collections are not equal, or <see langword="null"/> to use a default message.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.IVerifier.PushContext(System.String)">
+            <summary>
+            Creates a new verifier for validation within a specific context.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A new <see cref="T:Microsoft.CodeAnalysis.Testing.IVerifier"/> which includes the specified <paramref name="context"/> in failure messages.</returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.MarkupMode">
+            <summary>
+            Indicates the manner in which markup syntax is treated within test inputs and outputs.
+            </summary>
+            <seealso cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.MarkupHandling"/>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.MarkupMode.None">
+            <summary>
+            Markup syntax is disabled, and any syntax which could be treated as markup is preserved in the contents of
+            sources and additional files.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.MarkupMode.Ignore">
+            <summary>
+            Markup syntax is allowed, but diagnostics suggested by markup syntax is ignored.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.MarkupMode.IgnoreFixable">
+            <summary>
+            Markup syntax is allowed, but fixable diagnostics suggested by markup syntax are ignored.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.MarkupMode.Allow">
+            <summary>
+            Markup syntax is allowed, and all diagnostics indicated by markup syntax are preserved.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.MarkupOptions">
+            <summary>
+            Specifies additional options for the markup parser.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.MarkupOptions.None">
+            <summary>
+            No additional markup options are specified.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.MarkupOptions.UseFirstDescriptor">
+            <summary>
+            Use the first matching diagnostic descriptor when multiple diagnostics match the syntax. By default, this
+            option is not specified and the markup parser will fail when the syntax does not represent a <em>unique</em>
+            descriptor.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.MetadataReferences">
+            <summary>
+            Metadata references used to create test projects.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.Model.EvaluatedProjectState">
+            <summary>
+            Represents an evaluated <see cref="T:Microsoft.CodeAnalysis.Testing.ProjectState"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.PackageIdentity">
+            <summary>
+            Represents the core identity of a NuGet package.
+            </summary>
+            <seealso cref="T:NuGet.Packaging.Core.PackageIdentity"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.PackageIdentity.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.Testing.PackageIdentity"/> class with the specified name and version.
+            </summary>
+            <param name="id">The package name.</param>
+            <param name="version">The package version.</param>
+            <exception cref="T:System.ArgumentNullException">
+            <para>If <paramref name="id"/> is <see langword="null"/>.</para>
+            <para>-or-</para>
+            <para>If <paramref name="version"/> is <see langword="null"/>.</para>
+            </exception>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.PackageIdentity.Id">
+            <summary>
+            Gets the package name.
+            </summary>
+            <seealso cref="P:NuGet.Packaging.Core.PackageIdentity.Id"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.PackageIdentity.Version">
+            <summary>
+            Gets the package version.
+            </summary>
+            <seealso cref="P:NuGet.Packaging.Core.PackageIdentity.Version"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.ProjectState.ReferenceAssemblies">
+            <summary>
+            Gets or sets the reference assemblies to use for the project.
+            </summary>
+            <value>
+            A <see cref="T:Microsoft.CodeAnalysis.Testing.ReferenceAssemblies"/> instance to use specific reference assemblies; otherwise,
+            <see langword="null"/> to inherit the reference assemblies from
+            <see cref="P:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.ReferenceAssemblies"/>.
+            </value>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.ProjectState.Sources">
+            <summary>
+            Gets the set of source files for analyzer or code fix testing. Files may be added to this list using one of
+            the <see cref="M:Microsoft.CodeAnalysis.Testing.SourceFileList.Add(System.String)"/> methods.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.ReferenceAssemblies.ResolveCoreAsync(System.String,System.Threading.CancellationToken)">
+            <seealso href="https://martinbjorkstrom.com/posts/2018-09-19-revisiting-nuget-client-libraries"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.RoslynDebug.Assert(System.Boolean)">
+            <inheritdoc cref="M:System.Diagnostics.Debug.Assert(System.Boolean)"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.RoslynDebug.Assert(System.Boolean,System.String)">
+            <inheritdoc cref="M:System.Diagnostics.Debug.Assert(System.Boolean,System.String)"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.SolutionState.InheritanceMode">
+            <summary>
+            Gets or sets a value indicating the manner in which properties are inherited from base test states. When
+            this property is not set to a specific value, the default varies according to the type of test state:
+            <list type="bullet">
+            <item><description>For original (input) sources, the default value is <see cref="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.Explicit"/>.</description></item>
+            <item><description>For fixed (output) sources, the default value is <see cref="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.AutoInherit"/>.</description></item>
+            <item><description>For uncorrected (output) sources, the default value is <see cref="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.AutoInheritAll"/>.</description></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.SolutionState.AdditionalProjects">
+            <summary>
+            Gets a collection of additional projects to include in the solution.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.SolutionState.ExpectedDiagnostics">
+            <summary>
+            Gets the list of diagnostics expected in the source(s) and/or additonal files.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.SolutionState.MarkupHandling">
+             <summary>
+             Gets or sets a value indicating the manner in which markup syntax is treated within test inputs and outputs.
+             When this property is not set to a specific value, the default varies according to the type of test state:
+             <list type="bullet">
+             <item><description>For original (input) sources, the default value is <see cref="F:Microsoft.CodeAnalysis.Testing.MarkupMode.Allow"/>.</description></item>
+             <item><description>For fixed (output) sources, the default value is <see cref="F:Microsoft.CodeAnalysis.Testing.MarkupMode.IgnoreFixable"/>.</description></item>
+             <item><description>For uncorrected (output) sources, the default value is <see cref="F:Microsoft.CodeAnalysis.Testing.MarkupMode.Allow"/>.</description></item>
+             </list>
+             </summary>
+             <remarks>
+             <para>Diagnostics expressed using markup are combined with explicitly-specified expected diagnostics.</para>
+            
+             <para>Supported markup syntax includes the following:</para>
+            
+             <list type="bullet">
+             <item><description><c>[|text|]</c>: indicates that a diagnostic is reported for <c>text</c>. The diagnostic
+             descriptor is located via <see cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetDiagnosticAnalyzers"/>. This syntax may only
+             be used when the first analyzer provided by <see cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetDiagnosticAnalyzers"/>
+             supports a single diagnostic.</description></item>
+             <item><description><c>{|ID1:text|}</c>: indicates that a diagnostic with ID <c>ID1</c> is reported for
+             <c>text</c>. The diagnostic descriptor for <c>ID1</c> is located via
+             <see cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerTest`1.GetDiagnosticAnalyzers"/>. If no matching descriptor is found, the
+             diagnostic is assumed to be a compiler-reported diagnostic with the specified ID and severity
+             <see cref="F:Microsoft.CodeAnalysis.DiagnosticSeverity.Error"/>.</description></item>
+             </list>
+             </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.SolutionState.WithInheritedValuesApplied(Microsoft.CodeAnalysis.Testing.SolutionState,System.Collections.Immutable.ImmutableArray{System.String})">
+            <summary>
+            Applies the <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.InheritanceMode"/> using a specified base state.
+            </summary>
+            <remarks>
+            <para>This method evaluates <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.AdditionalFilesFactories"/>, and places the resulting
+            additional files in the <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.AdditionalFiles"/> collection of the result before
+            returning.</para>
+            </remarks>
+            <param name="baseState">The base state to inherit from, or <see langword="null"/> if the current state is
+            the root state.</param>
+            <param name="fixableDiagnostics">The set of diagnostic IDs to treat as fixable. Fixable diagnostics present
+            in the <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.ExpectedDiagnostics"/> collection of the base state are only inherited for
+            <see cref="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.AutoInheritAll"/>.</param>
+            <returns>A new <see cref="T:Microsoft.CodeAnalysis.Testing.SolutionState"/> representing the current state with inherited values applied
+            where appropriate. The <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.InheritanceMode"/> of the result is
+            <see cref="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.Explicit"/>.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.SolutionState.WithProcessedMarkup(Microsoft.CodeAnalysis.Testing.MarkupOptions,Microsoft.CodeAnalysis.DiagnosticDescriptor,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.DiagnosticDescriptor},System.Collections.Immutable.ImmutableArray{System.String},System.String)">
+            <summary>
+            Processes the markup syntax for this <see cref="T:Microsoft.CodeAnalysis.Testing.SolutionState"/> according to the current
+            <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.MarkupHandling"/>, and returns a new <see cref="T:Microsoft.CodeAnalysis.Testing.SolutionState"/> with the
+            <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.Sources"/>, <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.GeneratedSources"/>,
+            <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.AdditionalFiles"/>, <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.AnalyzerConfigFiles"/>, and
+            <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.ExpectedDiagnostics"/> updated accordingly.
+            </summary>
+            <param name="markupOptions">Additional options to apply during markup processing.</param>
+            <param name="defaultDiagnostic">The diagnostic descriptor to use for markup spans without an explicit name,
+            or <see langword="null"/> if no such default exists.</param>
+            <param name="supportedDiagnostics">The diagnostics supported by analyzers used by the test.</param>
+            <param name="fixableDiagnostics">The set of diagnostic IDs to treat as fixable. This value is only used when
+            <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.MarkupHandling"/> is <see cref="F:Microsoft.CodeAnalysis.Testing.MarkupMode.IgnoreFixable"/>.</param>
+            <param name="defaultPath">The default file path for diagnostics reported in source code.</param>
+            <returns>A new <see cref="T:Microsoft.CodeAnalysis.Testing.SolutionState"/> with all markup processing completed according to the current
+            <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.MarkupHandling"/>. The <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.MarkupHandling"/> of the returned instance is
+            <see cref="F:Microsoft.CodeAnalysis.Testing.MarkupMode.None"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">If <see cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.InheritanceMode"/> is not
+            <see cref="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.Explicit"/>.</exception>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.StateInheritanceMode">
+            <summary>
+            Indicates the manner in which properties are inherited from base test states.
+            </summary>
+            <seealso cref="P:Microsoft.CodeAnalysis.Testing.SolutionState.InheritanceMode"/>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.AutoInherit">
+            <summary>
+            The contents of the <see cref="T:Microsoft.CodeAnalysis.Testing.SolutionState"/> may be explicitly specified, but unspecified elements of
+            partially-specified state instances are inherited from another source. Fixable diagnostics are not
+            inherited.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.Explicit">
+            <summary>
+            The contents of the <see cref="T:Microsoft.CodeAnalysis.Testing.SolutionState"/> are fully and explicitly specified.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.StateInheritanceMode.AutoInheritAll">
+            <summary>
+            The contents of the <see cref="T:Microsoft.CodeAnalysis.Testing.SolutionState"/> may be explicitly specified, but unspecified elements of
+            partially-specified state instances are inherited from another source. All diagnostics, including fixable
+            diagnostics, are inherited.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.TestBehaviors">
+            <summary>
+            Specifies non-standard analyzer behaviors which impact testing.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.TestBehaviors.None">
+            <summary>
+            No special behaviors apply.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.TestBehaviors.SkipGeneratedCodeCheck">
+             <summary>
+             Skip the generated code exclusion check.
+             </summary>
+             <remarks>
+             <para>This flag is only used in cases where one or more analyzers does not explicitly configure generated
+             code analysis via the <see cref="M:Microsoft.CodeAnalysis.Diagnostics.AnalysisContext.ConfigureGeneratedCodeAnalysis(Microsoft.CodeAnalysis.Diagnostics.GeneratedCodeAnalysisFlags)"/>
+             API.</para>
+            
+             <para>By default, the analyzer test framework verifies that analyzer which report diagnostics do not report
+             diagnostics in generated code. While some analyzers, e.g. security analyzers, are expected to report
+             diagnostics in all code, most analyzers are expected to only report diagnostics in user-created code.</para>
+             </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.TestBehaviors.SkipSuppressionCheck">
+            <summary>
+            Skip a verification check that diagnostics will not be reported if a <c>#pragma warning disable</c> appears
+            at the beginning of the file.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.TestBehaviors.SkipGeneratedSourcesCheck">
+            <summary>
+            Skip a verification check that the contents of <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.GeneratedSources"/> match the sources
+            produced by the active source generators (if any).
+            </summary>
+            <remarks>
+            When this flag is set, the <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.GeneratedSources"/> property is completely ignored; tests
+            are encouraged to leave it empty for optimal readability.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.TestFileMarkupParser">
+             <summary>
+             <para>To aid with testing, we define a special type of text file that can encode additional
+             information in it.  This prevents a test writer from having to carry around multiple sources
+             of information that must be reconstituted.  For example, instead of having to keep around the
+             contents of a file <em>and</em> and the location of the cursor, the tester can just provide a
+             string with the <c>$$</c> character in it.  This allows for easy creation of "FIT" tests where all
+             that needs to be provided are strings that encode every bit of state necessary in the string
+             itself.</para>
+            
+             <para>The current set of encoded features we support are:</para>
+            
+             <list type="bullet">
+               <item>
+                 <term><c>$$</c></term>
+                 <description>A position in the file. The number of times this is allowed to appear varies depending on the
+                 specific call.</description>
+               </item>
+               <item>
+                 <term><c>[|</c> ... <c>|]</c></term>
+                 <description>A span of text in the file. There can be many of these and they can be nested and/or overlap
+                 the <c>$$</c> position.</description>
+               </item>
+               <item>
+                 <term><c>{|Name:</c> ... <c>|}</c></term>
+                 <description>A span of text in the file annotated with an identifier. There can be many of these, including
+                 ones with the same name.</description>
+               </item>
+             </list>
+            
+             <para>Additional encoded features can be added on a case by case basis.</para>
+             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.TestFileMarkupParser.Parse(System.String,System.String@,System.Collections.Immutable.ImmutableArray{System.Int32}@,System.Collections.Immutable.ImmutableArray{System.ValueTuple{System.Int32,System.Int32,System.String}}@,System.Collections.Immutable.ImmutableArray{System.ValueTuple{System.Int32,System.Int32,System.String}}@)">
+            <summary>
+            Parses the input markup to find standalone positions and the start and end positions of text spans.
+            </summary>
+            <param name="input">The input markup.</param>
+            <param name="output">The output content with markup syntax removed from <paramref name="input"/>.</param>
+            <param name="positions">A list of positions defined in markup (<c>$$</c>).</param>
+            <param name="startPositions">A list of starting positions of spans in markup. The key of the element is a
+            position (the location of the <c>[|</c> or <c>{|</c>). The value of the element is the <c>text</c> content
+            of a <c>{|text:</c> starting syntax, or <see langword="null"/> if the <c>[|</c> syntax was used. This list
+            preserves the original order of starting markup tags in the input.</param>
+            <param name="endPositions">A list of ending positions of spans in markup. The key of the element is a
+            position (the location of the <c>|]</c> or <c>|}</c>). The value of the element is the <c>#id</c> content of
+            a <c>|#id}</c> ending syntax, or <see langword="null"/> if the <c>|]</c> or <c>|}</c> syntax was used. This
+            list preserves the original order of the ending markup tags in the input.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.TestFileMarkupParser.GetPosition(System.String,System.String@,System.Int32@)">
+            <summary>
+            Process markup containing exactly one position.
+            </summary>
+            <param name="input">The input markup.</param>
+            <param name="output">The output, with markup syntax removed.</param>
+            <param name="cursorPosition">The location of the <c>$$</c> position in <paramref name="input"/>.</param>
+            <exception cref="T:System.ArgumentException">If <paramref name="input"/> does not contain exactly one position,
+            indicated by <c>$$</c>.</exception>
+        </member>
+    </members>
+</doc>

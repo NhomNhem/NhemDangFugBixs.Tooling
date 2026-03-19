@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>DiffPlex</id>
+    <version>1.5.0</version>
+    <authors>Matthew Manela</authors>
+    <owners>Matthew Manela</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/mmanela/diffplex/blob/master/License.txt</licenseUrl>
+    <projectUrl>https://github.com/mmanela/diffplex/</projectUrl>
+    <description>DiffPlex is a diffing library that allows you to programatically create text diffs. DiffPlex is a fast and tested library.</description>
+    <releaseNotes>* Add new chunkers for more flexible text splitting</releaseNotes>
+    <tags>diff</tags>
+    <repository type="git" url="https://github.com/mmanela/diffplex.git" />
+    <dependencies>
+      <group targetFramework=".NETFramework3.5" />
+      <group targetFramework=".NETFramework4.0" />
+      <group targetFramework=".NETStandard1.0">
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
