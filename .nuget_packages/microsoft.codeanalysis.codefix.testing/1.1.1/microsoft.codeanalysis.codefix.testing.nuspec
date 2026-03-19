@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.CodeAnalysis.CodeFix.Testing</id>
+    <version>1.1.1</version>
+    <authors>Microsoft</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>Icon.png</icon>
+    <projectUrl>https://github.com/dotnet/roslyn-sdk</projectUrl>
+    <description>Roslyn Code Fix Test Framework Common Types.</description>
+    <releaseNotes>Roslyn Code Fix Test Framework Common Types</releaseNotes>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>Roslyn Code Fix Test Framework Common</tags>
+    <serviceable>true</serviceable>
+    <repository type="git" url="https://github.com/dotnet/roslyn-sdk" commit="6064bf03a5a6d211aed05f243c39cfff9e1ee3f7" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.5.2">
+        <dependency id="Microsoft.CodeAnalysis.Analyzer.Testing" version="[1.1.1, 1.1.1]" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Analyzers" version="2.6.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.0.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.6">
+        <dependency id="Microsoft.CodeAnalysis.Analyzer.Testing" version="[1.1.1, 1.1.1]" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Analyzers" version="2.6.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.0.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="Microsoft.CodeAnalysis.Analyzer.Testing" version="[1.1.1, 1.1.1]" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Analyzers" version="2.6.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.0.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="Microsoft.CodeAnalysis.Analyzer.Testing" version="[1.1.1, 1.1.1]" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Analyzers" version="2.6.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.0.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.5">
+        <dependency id="Microsoft.CodeAnalysis.Analyzer.Testing" version="[1.1.1, 1.1.1]" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Analyzers" version="2.6.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.0.1" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.CodeAnalysis.Analyzer.Testing" version="[1.1.1, 1.1.1]" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Analyzers" version="2.6.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.0.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
