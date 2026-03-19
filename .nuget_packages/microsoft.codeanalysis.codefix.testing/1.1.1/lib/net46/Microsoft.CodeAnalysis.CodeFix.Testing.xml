@@ -1,0 +1,291 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.CodeAnalysis.CodeFix.Testing</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors">
+            <summary>
+            Options for customizing code fix test behaviors.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors.None">
+            <summary>
+            No special behaviors apply.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors.SkipFixAllInDocumentCheck">
+            <summary>
+            Skip the Fix All in Document check.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors.SkipFixAllInProjectCheck">
+            <summary>
+            Skip the Fix All in Project check.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors.SkipFixAllInSolutionCheck">
+            <summary>
+            Skip the Fix All in Solution check.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors.SkipFixAllCheck">
+            <summary>
+            Skip all Fix All checks.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors.FixOne">
+            <summary>
+            One run one code fix iteration.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.CodeFixIndex">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionIndex"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.CodeFixEquivalenceKey">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionEquivalenceKey"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.FixedCode">
+            <summary>
+            Sets the expected output source file for code fix testing.
+            </summary>
+            <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.FixedState"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.BatchFixedCode">
+            <summary>
+            Sets the expected output source file after a Fix All operation is applied.
+            </summary>
+            <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.BatchFixedState"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfIncrementalIterations">
+             <summary>
+             Gets or sets the number of code fix iterations expected during code fix testing.
+             </summary>
+             <remarks>
+             <para>Code fixes are applied until one of the following conditions are met:</para>
+            
+             <list type="bullet">
+             <item><description>No diagnostics are reported in the input.</description></item>
+             <item><description>No code fixes are provided for the diagnostics reported in the input.</description></item>
+             <item><description>The code fix applied for the diagnostics does not produce a change in the source file(s).</description></item>
+             <item><description>The maximum number of allowed iterations is exceeded.</description></item>
+             </list>
+            
+             <para>If the number of iterations is positive, it represents an exact number of iterations: code fix tests
+             will fail if the code fix required more or fewer iterations to complete. If the number of iterations is
+             negative, the negation of the number of iterations is treated as an upper bound on the number of allowed
+             iterations: code fix tests will fail only if the code fix required more iterations to complete. If the
+             number of iterations is zero, the code fix test will validate that no code fixes are offered for the set of
+             diagnostics reported in the original input.</para>
+            
+             <para>When the number of iterations is not specified, the value is automatically selected according to the
+             current test configuration:</para>
+            
+             <list type="bullet">
+             <item><description>If the expected code fix output equals the input sources, the default value is treated as <c>0</c>.</description></item>
+             <item><description>Otherwise, the default value is treated as the negative of the number of fixable diagnostics appearing in the input source file(s).</description></item>
+             </list>
+            
+             <note>
+             <para>The default value for this property can be interpreted as "Iterative code fix operations are expected
+             to complete after at most one operation for each fixable diagnostic in the input source has been applied.
+             Completing in fewer iterations is acceptable."</para>
+             </note>
+             </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfFixAllIterations">
+             <summary>
+             Gets or sets the number of code fix iterations expected during code fix testing for Fix All scenarios.
+             </summary>
+             <remarks>
+             <para>See the <see cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfIncrementalIterations"/> property for an overview of the behavior of this
+             property. If the number of Fix All iterations is not specified, the value is automatically selected
+             according to the current test configuration:</para>
+            
+             <list type="bullet">
+             <item><description>If the expected Fix All output equals the input sources, the default value is treated as <c>0</c>.</description></item>
+             <item><description>If all projects in the solution have the same <see cref="P:Microsoft.CodeAnalysis.Testing.ProjectState.Language"/>, the default value is treated as <c>1</c>.</description></item>
+             <item><description>Otherwise, the default value is treated as new negative of the number of languages represented by projects in the solution.</description></item>
+             </list>
+            
+             <note>
+             <para>The default value for this property can be interpreted as "Fix All operations are expected to complete
+             in the minimum number of iterations possible unless otherwise specified."</para>
+             </note>
+             </remarks>
+             <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfIncrementalIterations"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfFixAllInDocumentIterations">
+             <summary>
+             Gets or sets the number of code fix iterations expected during code fix testing for Fix All in Document
+             scenarios.
+             </summary>
+             <remarks>
+             <para>See the <see cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfIncrementalIterations"/> property for an overview of the behavior of this
+             property. If the number of Fix All in Document iterations is not specified, the value is automatically
+             selected according to the current test configuration:</para>
+            
+             <list type="bullet">
+             <item><description>If a value has been explicitly provided for <see cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfFixAllIterations"/>, the value is used as-is.</description></item>
+             <item><description>If the expected Fix All output equals the input sources, the default value is treated as <c>0</c>.</description></item>
+             <item><description>Otherwise, the default value is treated as the negative of the number of distinct documents containing fixable diagnostics (typically <c>-1</c>).</description></item>
+             </list>
+            
+             <note>
+             <para>The default value for this property can be interpreted as "Fix All in Document operations are expected
+             to complete after at most one operation for each fixable document in the input source has been applied.
+             Completing in fewer iterations is acceptable."</para>
+             </note>
+             </remarks>
+             <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfIncrementalIterations"/>
+             <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfFixAllIterations"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfFixAllInProjectIterations">
+             <summary>
+             Gets or sets the number of code fix iterations expected during code fix testing for Fix All in Project
+             scenarios.
+             </summary>
+             <remarks>
+             <para>See the <see cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfIncrementalIterations"/> property for an overview of the behavior of this
+             property. If the number of Fix All in Project iterations is not specified, the value is automatically
+             selected according to the current test configuration:</para>
+            
+             <list type="bullet">
+             <item><description>If a value has been explicitly provided for <see cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfFixAllIterations"/>, the value is used as-is.</description></item>
+             <item><description>If the expected Fix All output equals the input sources, the default value is treated as <c>0</c>.</description></item>
+             <item><description>Otherwise, the default value is treated as the negative of the number of distinct projects containing fixable diagnostics (typically <c>-1</c>).</description></item>
+             </list>
+            
+             <note>
+             <para>The default value for this property can be interpreted as "Fix All in Project operations are expected
+             to complete after at most one operation for each fixable project in the input source has been applied.
+             Completing in fewer iterations is acceptable."</para>
+             </note>
+             </remarks>
+             <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfIncrementalIterations"/>
+             <seealso cref="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.NumberOfFixAllIterations"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.CodeFixTestBehaviors">
+            <summary>
+            Gets or sets the code fix test behaviors applying to this test. The default value is
+            <see cref="F:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors.None"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.CodeFixValidationMode">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.Testing.CodeActionTest`1.CodeActionValidationMode"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.GetCodeFixProviders">
+            <summary>
+            Returns the code fixes being tested - to be implemented in non-abstract class.
+            </summary>
+            <returns>The <see cref="T:Microsoft.CodeAnalysis.CodeFixes.CodeFixProvider"/> to be used.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.IsCompilerDiagnosticIncluded(Microsoft.CodeAnalysis.Diagnostic,Microsoft.CodeAnalysis.Testing.CompilerDiagnostics)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.VerifyFixAsync(Microsoft.CodeAnalysis.Testing.SolutionState,Microsoft.CodeAnalysis.Testing.SolutionState,Microsoft.CodeAnalysis.Testing.SolutionState,Microsoft.CodeAnalysis.Testing.IVerifier,System.Threading.CancellationToken)">
+            <summary>
+            Called to test a C# code fix when applied on the input source as a string.
+            </summary>
+            <param name="testState">The effective input test state.</param>
+            <param name="fixedState">The effective test state after incremental code fixes are applied.</param>
+            <param name="batchFixedState">The effective test state after batch code fixes are applied.</param>
+            <param name="verifier">The verifier to use for test assertions.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.TrySelectDiagnosticToFix(System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostic})">
+            <summary>
+            Selects the diagnostic to fix when <see cref="F:Microsoft.CodeAnalysis.Testing.CodeFixTestBehaviors.FixOne"/> is used.
+            </summary>
+            <param name="fixableDiagnostics">The diagnostics available for fixing.</param>
+            <returns>The diagnostic to fix; otherwise, <see langword="null"/> if no diagnostics should be fixed.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.GetCompilerDiagnosticsAsync(Microsoft.CodeAnalysis.Project,System.Threading.CancellationToken)">
+            <summary>
+            Get the existing compiler diagnostics on the input document.
+            </summary>
+            <param name="project">The <see cref="T:Microsoft.CodeAnalysis.Project"/> to run the compiler diagnostic analyzers on.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>The compiler diagnostics that were found in the code.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixTest`1.GetSourceTextFromDocumentAsync(Microsoft.CodeAnalysis.Document,System.Threading.CancellationToken)">
+            <summary>
+            Given a document, turn it into a string based on the syntax root.
+            </summary>
+            <param name="document">The <see cref="T:Microsoft.CodeAnalysis.Document"/> to be converted to a string.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> that the task will observe.</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.Text.SourceText"/> containing the syntax of the <see cref="T:Microsoft.CodeAnalysis.Document"/> after formatting.</returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.CodeFixValidationMode">
+            <inheritdoc cref="T:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode"/>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixValidationMode.None">
+            <inheritdoc cref="F:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode.None"/>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixValidationMode.SemanticStructure">
+            <inheritdoc cref="F:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode.SemanticStructure"/>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.Testing.CodeFixValidationMode.Full">
+            <inheritdoc cref="F:Microsoft.CodeAnalysis.Testing.CodeActionValidationMode.Full"/>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.CodeFixVerifier`4">
+            <summary>
+            A default verifier for diagnostic analyzers with code fixes.
+            </summary>
+            <typeparam name="TAnalyzer">The <see cref="T:Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer"/> to test.</typeparam>
+            <typeparam name="TCodeFix">The <see cref="T:Microsoft.CodeAnalysis.CodeFixes.CodeFixProvider"/> to test.</typeparam>
+            <typeparam name="TTest">The test implementation to use.</typeparam>
+            <typeparam name="TVerifier">The type of verifier to use.</typeparam>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixVerifier`4.Diagnostic">
+            <inheritdoc cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3.Diagnostic"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixVerifier`4.Diagnostic(System.String)">
+            <inheritdoc cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3.Diagnostic(System.String)"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixVerifier`4.Diagnostic(Microsoft.CodeAnalysis.DiagnosticDescriptor)">
+            <inheritdoc cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3.Diagnostic(Microsoft.CodeAnalysis.DiagnosticDescriptor)"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixVerifier`4.VerifyAnalyzerAsync(System.String,Microsoft.CodeAnalysis.Testing.DiagnosticResult[])">
+            <inheritdoc cref="M:Microsoft.CodeAnalysis.Testing.AnalyzerVerifier`3.VerifyAnalyzerAsync(System.String,Microsoft.CodeAnalysis.Testing.DiagnosticResult[])"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixVerifier`4.VerifyCodeFixAsync(System.String,System.String)">
+            <summary>
+            Verifies the analyzer provides diagnostics which, in combination with the code fix, produce the expected
+            fixed code.
+            </summary>
+            <param name="source">The source text to test. Any diagnostics are defined in markup.</param>
+            <param name="fixedSource">The expected fixed source text. Any remaining diagnostics are defined in markup.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixVerifier`4.VerifyCodeFixAsync(System.String,Microsoft.CodeAnalysis.Testing.DiagnosticResult,System.String)">
+            <summary>
+            Verifies the analyzer provides diagnostics which, in combination with the code fix, produce the expected
+            fixed code.
+            </summary>
+            <param name="source">The source text to test, which may include markup syntax.</param>
+            <param name="expected">The expected diagnostic. This diagnostic is in addition to any diagnostics defined in
+            markup.</param>
+            <param name="fixedSource">The expected fixed source text. Any remaining diagnostics are defined in markup.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Testing.CodeFixVerifier`4.VerifyCodeFixAsync(System.String,Microsoft.CodeAnalysis.Testing.DiagnosticResult[],System.String)">
+            <summary>
+            Verifies the analyzer provides diagnostics which, in combination with the code fix, produce the expected
+            fixed code.
+            </summary>
+            <param name="source">The source text to test, which may include markup syntax.</param>
+            <param name="expected">The expected diagnostics. These diagnostics are in addition to any diagnostics
+            defined in markup.</param>
+            <param name="fixedSource">The expected fixed source text. Any remaining diagnostics are defined in markup.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Testing.EmptyCodeFixProvider">
+            <summary>
+            Defines a <see cref="T:Microsoft.CodeAnalysis.CodeFixes.CodeFixProvider"/> which does not support any diagnostic IDs or register code fixes for any
+            diagnostics.
+            </summary>
+        </member>
+    </members>
+</doc>
