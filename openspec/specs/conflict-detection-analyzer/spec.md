@@ -1,25 +1,25 @@
 # Capability: conflict-detection-analyzer (ND005)
 
-## Requirement
+## Purpose
+Prevent ambiguous DI registration by rejecting manual VContainer registration for types already marked with `[AutoRegisterIn]`.
 
-- **Goal**: Prevent types from being registered both automatically (via `[AutoRegisterIn]`) and manually (via `builder.Register<T>`).
-- **Detection**:
-  - Scan all `InvocationExpression` nodes in C# files.
-  - Target methods: `Register`, `RegisterEntryPoint`, `RegisterComponent`, `RegisterFactory`, `RegisterComponentOnNewGameObject`, `RegisterComponentInHierarchy`.
-  - Check the generic argument `T` of these methods.
-  - If `T` is decorated with `[AutoRegisterIn]`, report a diagnostic error.
-- **Diagnostics**:
-  - **ID**: ND005
-  - **Severity**: Error
-  - **Message**: "Conflict! Type '{0}' is already marked for auto-registration via [AutoRegisterIn]. Remove the manual registration in '{1}' or remove the attribute from '{0}' to resolve this ambiguity."
+## Requirements
+### Requirement: Detect manual registration conflicts with auto-registration
+The analyzer SHALL report `ND005` when a manually registered type is already decorated with `[AutoRegisterIn]`.
 
-## Verification
+#### Scenario: Auto-registered type is manually registered
+- **WHEN** a `LifetimeScope` calls a supported registration API such as `Register<T>`, `RegisterEntryPoint<T>`, `RegisterComponent<T>`, `RegisterFactory<T>`, `RegisterComponentOnNewGameObject<T>`, or `RegisterComponentInHierarchy<T>`
+- **AND** generic argument `T` is decorated with `[AutoRegisterIn]`
+- **THEN** the analyzer SHALL report `ND005` as an error on the manual registration call
 
-- **Unit Test**:
-  - Given a class `MyService` with `[AutoRegisterIn]`.
-  - Given a `LifetimeScope` calling `builder.Register<MyService>()`.
-  - Expect a compile-time error `ND005`.
-- **Positive Test**:
-  - Given a class `ManualService` WITHOUT `[AutoRegisterIn]`.
-  - Given a `LifetimeScope` calling `builder.Register<ManualService>()`.
-  - Expect no errors.
+#### Scenario: Manually registered type has no auto-registration attribute
+- **WHEN** a `LifetimeScope` calls a supported manual registration API for type `T`
+- **AND** `T` is not decorated with `[AutoRegisterIn]`
+- **THEN** the analyzer SHALL NOT report `ND005`
+
+### Requirement: Provide actionable conflict diagnostic content
+The analyzer SHALL include enough context in `ND005` for users to resolve ambiguity.
+
+#### Scenario: Conflict message points to both resolution paths
+- **WHEN** `ND005` is reported
+- **THEN** the message SHALL identify the conflicting type and advise either removing manual registration or removing `[AutoRegisterIn]`
