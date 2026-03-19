@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.VisualStudio.Composition.NetFxAttributes</id>
+    <version>16.1.8</version>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/Microsoft/vs-mef</projectUrl>
+    <iconUrl>https://aka.ms/VsExtensibilityIcon</iconUrl>
+    <description>The MEF attributes and runtime classes in the .NET Managed Extensibility Framework (MEF) that are used for imports and exports, and exception types, in a .NET Standard compliant NuGet package form, as found in the System.ComponentModel.Composition namespace.</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>Mef Composition Extensibility</tags>
+    <repository type="git" url="https://github.com/Microsoft/vs-mef" commit="5b8dd796b4e2d922706cf5164878f51a43f1d177" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.0" />
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="System.ComponentModel.Composition" version="4.5.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.0">
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="System.ComponentModel.Composition" version="4.5.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework=".NETFramework4.0" />
+    </frameworkAssemblies>
+  </metadata>
+</package>
