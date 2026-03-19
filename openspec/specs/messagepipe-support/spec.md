@@ -1,27 +1,34 @@
 # Capability: messagepipe-support
 
-## Requirement
+## Purpose
+Provide symbol-safe discovery and scope-aware generation for MessagePipe broker registration.
 
-- **Goal**: Discover MessagePipe-related registrations and emit scope-aware VContainer wiring for them.
-- **Registration**:
-  - Support MessagePipe broker metadata and emit broker registration in the matching scope registration method.
-  - Preserve registration when a type targets multiple scopes.
-  - Preserve broker metadata when services are remapped into type-safe scopes.
-- **Symbol Safety**:
-  - Resolve supported APIs by symbol, not by method name alone.
-  - Ignore unrelated APIs that happen to share MessagePipe-like names.
-- **Discovery Consistency**:
-  - Attribute targets must match actual discovery support.
-  - If `struct` is allowed by the attribute, the discovery pipeline must scan structs too; otherwise the attribute should not advertise `struct`.
+## Requirements
+### Requirement: Generate MessagePipe broker wiring by declared scope
+The generator SHALL emit MessagePipe broker registration in scope methods matching declared broker targets.
 
-## Verification
+#### Scenario: Broker registration in target scope
+- **WHEN** a broker-marked type targets a specific scope
+- **THEN** generated code SHALL emit broker registration in that scope registration method
 
-- **Broker Registration**:
-  - Given a broker-marked type in a scope.
-  - Expect generated code to emit MessagePipe registration in that scope method.
-- **Multi-Scope Attribute**:
-  - Given a type annotated for more than one MessagePipe target scope.
-  - Expect generated registration in every declared target scope.
-- **False Positive Guard**:
-  - Given a non-MessagePipe API with the same method name as a supported registration method.
-  - Expect no MessagePipe-specific behavior.
+#### Scenario: Multiple declared target scopes
+- **WHEN** a broker-marked type declares multiple target scopes
+- **THEN** generated code SHALL preserve and emit registration in each declared target scope
+
+#### Scenario: Type-safe scope remapping
+- **WHEN** services are remapped into type-safe scopes
+- **THEN** broker metadata and effective target scope SHALL remain consistent after remapping
+
+### Requirement: Use symbol identity for MessagePipe API detection
+The discovery pipeline SHALL resolve supported APIs by symbol identity, not by name only.
+
+#### Scenario: Name-collision false positive guard
+- **WHEN** an unrelated API has MessagePipe-like method names
+- **THEN** MessagePipe behavior SHALL NOT be triggered unless supported symbols are matched
+
+### Requirement: Keep attribute target contract consistent with discovery behavior
+Declared attribute target types SHALL match implemented discovery support.
+
+#### Scenario: Struct target consistency
+- **WHEN** attribute declaration allows `struct` targets
+- **THEN** discovery SHALL scan structs; otherwise the attribute contract SHALL NOT advertise `struct`

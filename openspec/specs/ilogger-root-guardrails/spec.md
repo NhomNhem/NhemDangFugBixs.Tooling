@@ -1,29 +1,30 @@
 # Capability: ilogger-root-guardrails
 
-## Requirement
+## Purpose
+Detect logger infrastructure gaps for services injecting `ILogger<T>` and align analyzer and smoke-validation outcomes.
 
-- **Goal**: Detect when generated services inject `ILogger<T>` without reachable root logging infrastructure.
-- **Root Requirements**:
-  - Treat a logger dependency as valid only when reachable root setup includes `ILoggerFactory`.
-  - Treat a logger dependency as valid only when reachable root setup also includes a resolvable `ILogger<>` binding or adapter.
-  - Report a finding when either part of the root logging setup is missing.
-- **Alignment**:
-  - The analyzer and DI smoke validator must surface the same structural logger-root issue.
-  - Findings must identify the consumer service and effective scope.
-- **Metadata**:
-  - Generated metadata must preserve logger consumer services, target logger type arguments, and effective scope.
+## Requirements
+### Requirement: Require complete reachable logger root infrastructure
+A logger dependency SHALL be considered valid only when reachable root setup includes both `ILoggerFactory` and a resolvable `ILogger<>` binding or adapter.
 
-## Verification
+#### Scenario: Valid root logging setup
+- **WHEN** a generated service injects `ILogger<T>`
+- **AND** reachable root setup includes both `ILoggerFactory` and valid `ILogger<>` resolution
+- **THEN** analyzer and smoke validation SHALL report no logger-root issue
 
-- **Valid Root Setup**:
-  - Given a generated service injecting `ILogger<PlayerService>`.
-  - Given reachable root setup containing both `ILoggerFactory` and a valid `ILogger<>` adapter or binding.
-  - Expect no analyzer diagnostic and no smoke-validation failure.
-- **Missing Factory**:
-  - Given a generated service injecting `ILogger<PlayerService>`.
-  - Given no reachable `ILoggerFactory`.
-  - Expect a logger-root finding.
-- **Missing Adapter**:
-  - Given a generated service injecting `ILogger<PlayerService>`.
-  - Given `ILoggerFactory` exists but no valid `ILogger<>` adapter or binding exists.
-  - Expect a logger-root finding.
+#### Scenario: Missing logger factory
+- **WHEN** a generated service injects `ILogger<T>`
+- **AND** no reachable `ILoggerFactory` exists
+- **THEN** analyzer and smoke validation SHALL report a logger-root issue
+
+#### Scenario: Missing logger adapter or binding
+- **WHEN** a generated service injects `ILogger<T>`
+- **AND** `ILoggerFactory` exists but no reachable `ILogger<>` adapter or binding exists
+- **THEN** analyzer and smoke validation SHALL report a logger-root issue
+
+### Requirement: Preserve logger metadata for diagnostics
+Generated metadata SHALL include logger consumer type, logger category type argument, and effective scope.
+
+#### Scenario: Logger-root finding details
+- **WHEN** a logger-root issue is reported
+- **THEN** the finding SHALL identify consumer service and effective scope using generated metadata
