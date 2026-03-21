@@ -15,10 +15,13 @@ public class ConflictCheckRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND005 = new(
         ND005Id,
         "Registration Conflict Detected",
-        "Conflict! Type '{0}' is already marked for auto-registration via [AutoRegisterIn]. Remove the manual registration in '{1}' or remove the attribute from '{0}' to resolve this ambiguity.",
+        "Conflict! Type '{0}' is already marked for auto-registration via [AutoRegisterIn]. " +
+        "Remove the manual registration in '{1}' or remove the attribute from '{0}' to resolve this ambiguity. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND005",
         "Usage",
         DiagnosticSeverity.Error,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "Detects when a type is both manually registered and marked with [AutoRegisterIn], which causes duplicate registration errors at runtime.");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ND005);
 
@@ -54,7 +57,11 @@ public class ConflictCheckRule : DiagnosticAnalyzer {
         if (HasAutoRegisterAttribute(typeSymbol)) {
             var location = invocation.GetLocation();
             var containingClass = invocation.FirstAncestorOrSelf<ClassDeclarationSyntax>()?.Identifier.Text ?? "Unknown Scope";
-            context.ReportDiagnostic(Diagnostic.Create(ND005, location, typeSymbol.Name, containingClass));
+            var properties = ImmutableDictionary<string, string>.Empty
+                .Add("TypeName", typeSymbol.Name)
+                .Add("ContainingScope", containingClass);
+
+            context.ReportDiagnostic(Diagnostic.Create(ND005, location, properties, typeSymbol.Name, containingClass));
         }
     }
 

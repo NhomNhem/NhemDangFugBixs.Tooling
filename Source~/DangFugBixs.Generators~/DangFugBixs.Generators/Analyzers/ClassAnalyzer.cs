@@ -123,34 +123,30 @@ internal class ClassAnalyzer {
     public static ImmutableArray<ServiceInfo> ExtractInfos(GeneratorSyntaxContext context, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var results = new List<ServiceInfo>();
         try {
             var typeDecl = (TypeDeclarationSyntax)context.Node;
 
             // 1. Process [AutoRegisterIn] attributes
-            var typeSafeAttrs = typeDecl.AttributeLists
+            IEnumerable<ServiceInfo> typeSafeInfos = typeDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
-                .Where(x => IsAttributeMatch(x, "AutoRegisterIn"));
-
-            foreach (var attr in typeSafeAttrs) {
-                var info = ExtractInfoFromTypeSafeAttribute(context, typeDecl, attr, cancellationToken);
-                if (info != null) results.Add(info.Value);
-            }
+                .Where(x => IsAttributeMatch(x, "AutoRegisterIn"))
+                .Select(attr => ExtractInfoFromTypeSafeAttribute(context, typeDecl, attr, cancellationToken))
+                .Where(info => info.HasValue)
+                .Select(info => info.Value);
 
             // 2. Process [AutoRegisterMessageBrokerIn] attributes
-            var brokerAttrs = typeDecl.AttributeLists
+            IEnumerable<ServiceInfo> brokerInfos = typeDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
-                .Where(x => IsAttributeMatch(x, "AutoRegisterMessageBrokerIn"));
+                .Where(x => IsAttributeMatch(x, "AutoRegisterMessageBrokerIn"))
+                .Select(attr => ExtractMessageBrokerInfo(context, typeDecl, attr, cancellationToken))
+                .Where(info => info.HasValue)
+                .Select(info => info.Value);
 
-            foreach (var attr in brokerAttrs) {
-                var info = ExtractMessageBrokerInfo(context, typeDecl, attr, cancellationToken);
-                if (info != null) results.Add(info.Value);
-            }
-
+            return typeSafeInfos.Concat(brokerInfos).ToImmutableArray();
         } catch {
             // Log error if needed
+            return ImmutableArray<ServiceInfo>.Empty;
         }
-        return results.ToImmutableArray();
     }
 
     private static ServiceInfo? ExtractMessageBrokerInfo(
@@ -413,7 +409,12 @@ internal class ClassAnalyzer {
         }
 
         if (consumers.Count > 0) {
-            metadata["MessagePipeConsumers"] = string.Join(";", consumers.Distinct());
+            if (consumers.Count == 1) {
+                metadata["MessagePipeConsumers"] = consumers[0];
+            } else {
+                var set = new HashSet<string>(consumers);
+                metadata["MessagePipeConsumers"] = string.Join(";", set);
+            }
         }
 
         return metadata;
@@ -439,7 +440,12 @@ internal class ClassAnalyzer {
         }
 
         if (consumers.Count > 0) {
-            metadata["LoggerConsumers"] = string.Join(";", consumers.Distinct());
+            if (consumers.Count == 1) {
+                metadata["LoggerConsumers"] = consumers[0];
+            } else {
+                var set = new HashSet<string>(consumers);
+                metadata["LoggerConsumers"] = string.Join(";", set);
+            }
         }
 
         return metadata;

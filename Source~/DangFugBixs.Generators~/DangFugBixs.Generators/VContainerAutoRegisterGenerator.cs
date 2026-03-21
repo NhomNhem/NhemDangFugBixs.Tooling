@@ -99,13 +99,12 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
                 .Select(group => new RootLoggingInfo(
                     group.Key,
                     group.Any(i => i.HasLoggerFactory),
-                    group.Any(i => i.HasLoggerAdapter)))
-                .ToList();
+                    group.Any(i => i.HasLoggerAdapter)));
 
-            List<ServiceInfo> discoveredServices = new List<ServiceInfo>();
-            if (scopeMappings.Count > 0) {
+            IEnumerable<ServiceInfo> discoveredServices = Enumerable.Empty<ServiceInfo>();
+            if (scopeMappings.Any()) {
                 var scanResult = ReferencedAssemblyScanner.Scan(input.Compilation);
-                discoveredServices = scanResult.Services;
+                discoveredServices = scanResult.Services ?? Enumerable.Empty<ServiceInfo>();
 
                 // Report warnings as diagnostics
                 foreach (var warning in scanResult.Warnings) {
@@ -118,30 +117,28 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             }
 
             // Filter valid local services
-            var validServices = input.LoggingData.Data.BaseData.Services.ToList();
+            IEnumerable<ServiceInfo> validServices = input.LoggingData.Data.BaseData.Services;
 
             // Combine local and discovered services
-            var allServices = validServices.Concat(discoveredServices).ToList();
+            IEnumerable<ServiceInfo> allServices = validServices.Concat(discoveredServices);
 
             // v4.1: Deduplication pass - ensure each unique class is registered only once globally
             // We group by FullName to prevent duplicates from multiple assemblies
             allServices = allServices
                 .GroupBy(s => s.FullName)
-                .Select(g => g.First())
-                .ToList();
+                .Select(g => g.First());
 
-            stats.ServiceCount = allServices.Count;
+            stats.ServiceCount = allServices.Any() ? allServices.Count() : 0;
 
             // Guard: only emit for allowed assemblies OR if we found services (opt-in via attribute)
             bool assemblyAllowed = AllowedAssemblies.Contains(assemblyName);
-            if (!assemblyAllowed && allServices.Count == 0) return;
+            if (!assemblyAllowed && !allServices.Any()) return;
 
             var validSceneServices = input.LoggingData.Data.BaseData.SceneServices
                 .Where(s => s.HasValue)
-                .Select(s => s!.Value)
-                .ToList();
+                .Select(s => s!.Value);
 
-            if (allServices.Count == 0 && validSceneServices.Count == 0) return;
+            if (!allServices.Any() && !validSceneServices.Any()) return;
 
             var sourceCode = RegistrationEmitter.GenerateSource(allServices, validSceneServices, assemblyName, scopeMappings, stats);
             var reportCode = ReportEmitter.GenerateSource(allServices, rootLogging, assemblyName);

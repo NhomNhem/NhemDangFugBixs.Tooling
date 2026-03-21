@@ -13,7 +13,9 @@ public class ScopeReachabilityRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND006 = new(
         ND006Id,
         "Inaccessible Dependency Scope",
-        "Type '{0}' (in scope '{1}') depends on '{2}' (in scope '{3}'), but '{3}' is not reachable from '{1}'",
+        "Type '{0}' (scope '{1}') depends on '{2}' (scope '{3}'), but '{3}' is not reachable from '{1}'. " +
+        "Fix: add a bridge scope mapping with [LifetimeScopeFor(typeof(...))] or move registration to a reachable scope. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND006",
         "Design",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
@@ -41,8 +43,20 @@ public class ScopeReachabilityRule : DiagnosticAnalyzer {
 
                 if (dependencyScope != null) {
                     if (!SemanticScopeUtils.IsScopeReachable(currentScope, dependencyScope)) {
-                        context.ReportDiagnostic(Diagnostic.Create(ND006, param.Locations[0], 
-                            typeSymbol.Name, currentScope.Name, dependencyType.Name, dependencyScope.Name));
+                        var properties = ImmutableDictionary<string, string>.Empty
+                            .Add("TypeName", typeSymbol.Name)
+                            .Add("CurrentScope", currentScope.Name)
+                            .Add("DependencyType", dependencyType.Name)
+                            .Add("DependencyScope", dependencyScope.Name);
+
+                        context.ReportDiagnostic(Diagnostic.Create(
+                            ND006,
+                            param.Locations[0],
+                            properties,
+                            typeSymbol.Name,
+                            currentScope.Name,
+                            dependencyType.Name,
+                            dependencyScope.Name));
                     }
                 }
             }

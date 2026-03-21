@@ -12,7 +12,9 @@ public class MissingContractRegistrationRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND111 = new(
         ND111Id,
         "Missing contract registration",
-        "Type '{0}' implements interface '{1}' but it won't be registered. Use AsImplementedInterfaces=true or add explicit contract registration.",
+        "Type '{0}' implements interface '{1}' but it will not be registered. " +
+        "Fix: set AsImplementedInterfaces = true or add explicit AsTypes contracts. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND111",
         "Design",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
@@ -73,9 +75,14 @@ public class MissingContractRegistrationRule : DiagnosticAnalyzer {
         if (implementedInterfaces.Count > 0 && !asImplementedInterfaces && asTypesCount == 0) {
             // User has interfaces but disabled auto-detection without specifying explicit contracts
             foreach (var iface in implementedInterfaces.Take(3)) { // Report up to 3 interfaces
+                var properties = ImmutableDictionary<string, string>.Empty
+                    .Add("TypeName", typeSymbol.Name)
+                    .Add("InterfaceName", iface.Name);
+
                 context.ReportDiagnostic(Diagnostic.Create(
                     ND111,
                     typeSymbol.Locations[0],
+                    properties,
                     typeSymbol.Name,
                     iface.Name));
             }

@@ -14,10 +14,13 @@ public class ViewComponentRegistrationRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND110 = new(
         ND110Id,
         "View interface injection requires Component registration",
-        "Type '{0}' injects view interface '{1}' but the view implementation '{2}' is not registered as a Component. Use [AutoRegisterIn] on the MonoBehaviour view or register with RegisterComponentInHierarchy().",
+        "Type '{0}' injects view interface '{1}' but the view implementation '{2}' is not registered as a Component. " +
+        "Fix: use [AutoRegisterIn] with RegisterInHierarchy = true on the MonoBehaviour view or register with RegisterComponentInHierarchy(). " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND110",
         "Design",
         DiagnosticSeverity.Error,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "MonoBehaviour views must be registered as Components in the scene hierarchy to be injectable.");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ND110);
 

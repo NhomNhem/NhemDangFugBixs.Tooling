@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.0] - 2026-03-21
+
+### ⭐ Added - Performance & Developer Experience
+
+**Enhanced Diagnostics:**
+- All 15 diagnostic messages now include documentation links (https://docs.nhemdangfugbixs.com/diagnostics/NDXXX)
+- Enhanced error messages with concrete remediation hints and "Fix:" instructions
+- Added detailed descriptions to all diagnostics for better IDE integration
+- Improved message clarity for ND001, ND002, ND003, ND005, ND008, ND009, ND105, ND106, ND107, ND108, ND110
+
+**Additional Code Fix Providers:**
+- **ND005**: Conflict detection - removes duplicate manual registration
+- **ND006**: Cross-scope dependency - adds bridge scope or moves registration
+- **ND111**: Missing contract - enables AsImplementedInterfaces
+- **ND112**: Duplicate contract - removes duplicate registration
+- **ND113**: Scene view binding - adds [AutoRegisterIn] or manual registration
+- Total: 9 Code Fix Providers (up from 3 in v5.1.0)
+
+**Developer Documentation:**
+- **CONTRIBUTING.md**: Complete guide for analyzer + generator contributions
+- **GitHub Issue Templates**: Bug report, performance regression, false positive, feature request
+- Improved development workflow documentation
+
+### 🔧 Changed
+
+- Diagnostic messages follow consistent format: Problem + Fix + Docs + Description
+- All diagnostics now have `description` parameter for IDE tooltip integration
+
+### 📊 Statistics
+
+- **Total Tests**: 46 (all passing)
+- **Diagnostic Codes**: ND001-ND113 (15 active diagnostics, all with docs links)
+- **Code Fix Providers**: 9 (ND001, ND005, ND006, ND008, ND009, ND110, ND111, ND112, ND113)
+- **CLI Tools**: 1 (`dotnet di-smoke`)
+
+### ⚠️ BREAKING: None
+
+v6.0.0 is fully backward compatible with v5.x. No code changes required.
+
 ## [5.1.0] - 2026-03-18
 
 ### ⭐ Added - Developer Experience & Runtime Validation
