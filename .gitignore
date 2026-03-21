@@ -410,6 +410,7 @@ FodyWeavers.xsd
 # GitHub configuration
 .github/*
 !.github/ISSUE_TEMPLATE/
+!.github/workflows/
 
 # Local build configuration
 LocalBuild.props
