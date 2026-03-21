@@ -14,10 +14,13 @@ public class MessagePipeBrokerGuardRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND008 = new(
         ND008Id,
         "Missing MessagePipe broker registration",
-        "Type '{0}' in scope '{1}' depends on MessagePipe {2}<{3}>, but no reachable broker registration exists",
+        "Type '{0}' in scope '{1}' depends on MessagePipe {2}<{3}>, but no reachable broker registration exists. " +
+        "Fix: add [AutoRegisterMessageBrokerIn] to a type in this scope or a parent scope. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND008",
         "Design",
         DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "MessagePipe IPublisher<T> and ISubscriber<T> require RegisterMessageBroker<T>() registration in a reachable scope.");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ND008);
 

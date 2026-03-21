@@ -12,10 +12,13 @@ public class EntryPointAsSelfRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND108 = new(
         ND108Id,
         "EntryPoint must use AsSelf for concrete injection",
-        "EntryPoint type '{0}' injects concrete dependencies but does not implement any interface. Add .AsSelf() or implement an interface.",
+        "EntryPoint type '{0}' injects concrete dependencies but does not implement any interface. " +
+        "Fix: add .AsSelf() to registration or implement an interface. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND108",
         "Design",
         DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "VContainer EntryPoints registered without interfaces must use .AsSelf() for concrete type resolution.");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ND108);
 
