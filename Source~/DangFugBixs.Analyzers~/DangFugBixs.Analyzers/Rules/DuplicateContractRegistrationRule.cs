@@ -13,7 +13,9 @@ public class DuplicateContractRegistrationRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND112 = new(
         ND112Id,
         "Duplicate contract registration",
-        "Interface '{0}' is registered by multiple types in scope '{1}': {2}. This may cause ambiguous resolution.",
+        "Interface '{0}' is registered by multiple types in scope '{1}': {2}. " +
+        "Fix: remove one duplicate registration or narrow contracts with AsTypes. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND112",
         "Design",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
@@ -70,9 +72,15 @@ public class DuplicateContractRegistrationRule : DiagnosticAnalyzer {
             var types = string.Join(", ", kvp.Value.Select(x => x.Type));
 
             var location = kvp.Value[0].Location;
+            var properties = ImmutableDictionary<string, string>.Empty
+                .Add("InterfaceName", contract)
+                .Add("ScopeName", scope)
+                .Add("DuplicateTypes", types);
+
             context.ReportDiagnostic(Diagnostic.Create(
                 ND112,
                 location,
+                properties,
                 contract,
                 scope,
                 types));
@@ -95,7 +103,7 @@ public class DuplicateContractRegistrationRule : DiagnosticAnalyzer {
             .FirstOrDefault(kvp => kvp.Key == "AsTypes")
             .Value;
 
-        if (asTypesArg.Values != null && asTypesArg.Values.Length > 0) {
+        if (asTypesArg.Kind == TypedConstantKind.Array && !asTypesArg.IsNull && asTypesArg.Values.Length > 0) {
             // Explicit contracts specified
             foreach (var typedConstant in asTypesArg.Values) {
                 if (typedConstant.Kind == TypedConstantKind.Type && typedConstant.Value is ITypeSymbol type) {

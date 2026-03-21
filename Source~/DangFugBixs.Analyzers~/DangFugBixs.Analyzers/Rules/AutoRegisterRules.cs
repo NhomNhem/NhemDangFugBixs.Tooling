@@ -17,50 +17,68 @@ public class AutoRegisterRules : DiagnosticAnalyzer {
     private static readonly DiagnosticDescriptor ND001 = new(
         ND001Id,
         "Invalid AutoRegisterIn target",
-        "Class '{0}' must be non-static and non-abstract to use [AutoRegisterIn]",
+        "Class '{0}' must be non-static and non-abstract to use [AutoRegisterIn]. " +
+        "Fix: remove [AutoRegisterIn] or make the class non-static/non-abstract. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND001",
         "Usage",
         DiagnosticSeverity.Error,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "Static and abstract classes cannot be instantiated by VContainer and should not use [AutoRegisterIn].");
 
     private static readonly DiagnosticDescriptor ND002 = new(
         ND002Id,
         "Missing interface implementation",
-        "Class '{0}' with [AutoRegisterIn] should implement at least one interface or be a Component",
+        "Class '{0}' with [AutoRegisterIn] should implement at least one interface or be a Component. " +
+        "Fix: implement an interface or remove [AutoRegisterIn] if registration as concrete type is intended. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND002",
         "Design",
         DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "Services registered without interfaces can only be resolved by concrete type, which limits flexibility and testability.");
 
     private static readonly DiagnosticDescriptor ND003 = new(
         ND003Id,
         "Invalid constructor for VContainer",
-        "Class '{0}' should have exactly one public constructor or use [Inject]",
+        "Class '{0}' should have exactly one public constructor or use [Inject]. " +
+        "Fix: use a single public constructor or mark the preferred constructor with [Inject]. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND003",
         "Usage",
         DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "VContainer requires either a single public constructor or explicit [Inject] marking to determine which constructor to use for dependency injection.");
 
     private static readonly DiagnosticDescriptor ND105 = new(
         ND105Id,
         "Installer missing parameterless constructor",
-        "Installer class '{0}' must have a public parameterless constructor to be instantiated by the generator",
+        "Installer class '{0}' must have a public parameterless constructor to be instantiated by the generator. " +
+        "Fix: add a public parameterless constructor. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND105",
         "Usage",
         DiagnosticSeverity.Error,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "The generator instantiates installers with new() which requires a parameterless constructor.");
 
     private static readonly DiagnosticDescriptor ND106 = new(
         ND106Id,
         "Installer must be public",
-        "Installer class '{0}' must be public to be accessible by the generated registration code",
+        "Installer class '{0}' must be public to be accessible by the generated registration code. " +
+        "Fix: change class visibility to public. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND106",
         "Usage",
         DiagnosticSeverity.Error,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "Generated code must access installers from outside the defining assembly, requiring public visibility.");
 
     private static readonly DiagnosticDescriptor ND107 = new(
         ND107Id,
         "Installer cannot be a Component",
-        "Installer class '{0}' cannot inherit from Component or MonoBehaviour",
+        "Installer class '{0}' cannot inherit from Component or MonoBehaviour. " +
+        "Fix: remove Component/MonoBehaviour inheritance or use a different pattern for scene setup. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND107",
         "Usage",
         DiagnosticSeverity.Error,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "Installers are instantiated directly by the generator and cannot be Unity Components which require scene instantiation.");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         => ImmutableArray.Create(ND001, ND002, ND003, ND105, ND106, ND107, EntryPointAsSelfRule.ND108, ViewComponentRegistrationRule.ND110, MissingContractRegistrationRule.ND111, DuplicateContractRegistrationRule.ND112, SceneViewBindingMismatchRule.ND113, ConflictCheckRule.ND005);

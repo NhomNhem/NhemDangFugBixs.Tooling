@@ -13,7 +13,9 @@ public class SceneViewBindingMismatchRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND113 = new(
         ND113Id,
         "Scene view binding mismatch",
-        "Presenter '{0}' depends on view interface '{1}' but no MonoBehaviour implementing it is registered in scope '{2}'. Add [AutoRegisterIn] to the View or register it manually.",
+        "Presenter '{0}' depends on view interface '{1}' but no MonoBehaviour implementing it is registered in scope '{2}'. " +
+        "Fix: add [AutoRegisterIn(typeof({2}), RegisterInHierarchy = true)] to the view or register manually in installer. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND113",
         "Design",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -100,10 +102,17 @@ public class SceneViewBindingMismatchRule : DiagnosticAnalyzer {
                                 var isRegisteredInSameScope = registrations.Any(r => r.Scope == presenterScope);
 
                                 if (!isRegisteredInSameScope) {
-                                    var availableScopes = string.Join(", ", registrations.Select(r => $"{r.Item1} ({r.Item2})"));
+                                    var suggestedViewImplementation = registrations.FirstOrDefault().Item2 ?? string.Empty;
+                                    var properties = ImmutableDictionary<string, string>.Empty
+                                        .Add("PresenterName", classSymbol.Name)
+                                        .Add("ViewInterface", ifaceName)
+                                        .Add("ScopeName", presenterScope)
+                                        .Add("ViewImplementation", suggestedViewImplementation);
+
                                     context.ReportDiagnostic(Diagnostic.Create(
                                         ND113,
                                         param.Locations[0],
+                                        properties,
                                         classSymbol.Name,
                                         ifaceName,
                                         presenterScope));
