@@ -3,12 +3,8 @@ name: Deploy Docusaurus to GitHub Pages
 on:
   push:
     branches:
-<<<<<<< HEAD
-=======
       - main
->>>>>>> bbea119 (chore: local deploy-docs.yml changes (pre-pull))
       - master
-
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
