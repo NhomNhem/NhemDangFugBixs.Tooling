@@ -1,0 +1,45 @@
+name: Deploy Docusaurus to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: website
+
+      - name: Build Docusaurus site
+        run: npm run build
+        working-directory: website
+
+      - name: Remove sensitive files (if any)
+        run: |
+          rm -rf website/build/ai*
+          rm -rf website/build/AI*
+          rm -rf website/build/*huongdan*
+          rm -rf website/build/*guide*
+          rm -rf website/build/.agent
+          rm -rf website/build/openspec
+        shell: bash
+        working-directory: .
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: website/build
+          publish_branch: gh-pages
+          force_orphan: true
