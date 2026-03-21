@@ -15,10 +15,13 @@ public class ILoggerRootGuardRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor ND009 = new(
         ND009Id,
         "Missing ILogger root infrastructure",
-        "Type '{0}' in scope '{1}' depends on ILogger<{2}>, but no reachable root logging setup exists",
+        "Type '{0}' in scope '{1}' depends on ILogger<{2}>, but no reachable root logging setup exists. " +
+        "Fix: register ILoggerFactory and ILogger<> in root scope or use [AutoRegisterRootLogging]. " +
+        "Docs: https://docs.nhemdangfugbixs.com/diagnostics/ND009",
         "Design",
         DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        isEnabledByDefault: true,
+        description: "ILogger dependencies require ILoggerFactory and generic ILogger<> registrations in a root scope accessible to all consumers.");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ND009);
 
