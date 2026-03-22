@@ -10,6 +10,97 @@
   overflow: hidden;
 }
 
+.featureList {
+  list-style: none;
+  padding: 0;
+  font-size: 1.15rem;
+  color: #374151;
+  max-width: 600px;
+  margin: 0 auto 1.5rem auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+
+.featureActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 2.2rem;
+}
+
+.orText {
+  color: #a0aec0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: 0 0.5em;
+  vertical-align: middle;
+  user-select: none;
+  letter-spacing: 0.01em;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75em;
+  margin-bottom: 1.1em;
+}
+
+.iconCheck {
+  width: 1.5em;
+  height: 1.5em;
+  display: inline-block;
+  background: linear-gradient(135deg, #34d399 60%, #10b981 100%);
+  border-radius: 50%;
+  position: relative;
+}
+.iconCheck::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.4em;
+  height: 0.8em;
+  border: solid #fff;
+  border-width: 0 0.22em 0.22em 0;
+  border-radius: 0.1em;
+  transform: rotate(45deg);
+}
+
+.keyFeatureTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 2.2rem;
+  color: #2d3a4a;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.keyFeatureStar {
+  width: 1.5em;
+  height: 1.5em;
+  display: inline-block;
+  background: linear-gradient(135deg, #fbbf24 60%, #f59e42 100%);
+  border-radius: 50%;
+  position: relative;
+}
+.keyFeatureStar::after {
+  content: '';
+  position: absolute;
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.6em;
+  height: 0.6em;
+  background: #fffbe7;
+  border-radius: 50%;
+  box-shadow: 0 0 0.2em #fbbf24;
+}
+
+
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
