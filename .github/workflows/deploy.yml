@@ -1,0 +1,48 @@
+name: Deploy Unity Package
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build (optional)
+        run: |
+          dotnet build || true
+
+      - name: Prepare deploy directory
+        run: |
+          rm -rf deploy
+          mkdir deploy
+          cp -r Runtime deploy/
+          cp -r Analyzers deploy/
+          cp -r Editor deploy/
+          cp package.json deploy/
+          cp README.md deploy/
+          cp CHANGELOG.md deploy/
+
+      - name: Commit deploy branch
+        run: |
+          cd deploy
+          git init
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Deploy Unity package"
+          git branch -M deploy
+          git remote add origin "${{ github.repositoryUrl }}"
+          git push --force origin deploy
