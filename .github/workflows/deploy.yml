@@ -36,14 +36,10 @@ jobs:
           cp CHANGELOG.md deploy/
 # Do NOT copy website/ or docs/ into deploy branch
 
-      - name: Commit deploy branch
-        run: |
-          cd deploy
-          git init
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add .
-          git commit -m "Deploy Unity package"
-          git branch -M deploy
-          git remote add origin "${{ github.repositoryUrl }}"
-          git push --force origin deploy
+      - name: Deploy to deploy branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: deploy
+          publish_branch: deploy
+          force_orphan: true
