@@ -39,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # To create a release
+      # Only upload release assets relevant to the release (not docs or pkg unless intended)
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'YOUR_GITHUB_USERNAME_OR_ORG' && github.event.head_commit.message !='dry-run' # Add your own logic for dry-run
     steps:
       - uses: actions/checkout@v4
@@ -48,8 +49,8 @@ jobs:
         with:
           tag_name: v${{ needs.build.outputs.version }}
           files: |
-            # Add release assets here, e.g., build outputs
-            # ./path/to/my-app.zip
+            # Example: ./nupkg/*.nupkg
+            # Only include release assets, not docs or Unity pkg unless intended
           prerelease: contains(github.ref, '-beta') || contains(github.ref, '-rc')
           generate_release_notes: true # Or provide a custom body
 

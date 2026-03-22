@@ -34,6 +34,7 @@ jobs:
           cp package.json deploy/
           cp README.md deploy/
           cp CHANGELOG.md deploy/
+# Do NOT copy website/ or docs/ into deploy branch
 
       - name: Commit deploy branch
         run: |

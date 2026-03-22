@@ -25,6 +25,8 @@ jobs:
         run: npm run build
         working-directory: website
 
+      # Do NOT copy pkg files to docs branch
+
       - name: Remove sensitive files (if any)
         run: |
           rm -rf website/build/ai*
