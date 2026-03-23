@@ -41,7 +41,7 @@ jobs:
         run: |
           rm -rf deploy
           mkdir -p deploy/Runtime deploy/Analyzers deploy/Editor
-          cp -r Runtime deploy/Runtime
+          cp Runtime/* deploy/Runtime/
           cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
           cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
           cp Runtime/NhemDangFugBixs.Runtime.dll deploy/Analyzers/
