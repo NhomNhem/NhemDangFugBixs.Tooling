@@ -24,16 +24,22 @@ jobs:
         run: |
           dotnet build || true
 
+# Prepare runtime + tooling payload with Unity metadata and docs
       - name: Prepare deploy directory
         run: |
           rm -rf deploy
           mkdir deploy
-          cp -r Runtime deploy/
-          cp -r Analyzers deploy/
-          cp -r Editor deploy/
-          cp package.json deploy/
-          cp README.md deploy/
-          cp CHANGELOG.md deploy/
+          cp -r Runtime deploy/Runtime
+          cp -r Analyzers deploy/Analyzers
+          cp -r Editor deploy/Editor
+          cp package.json deploy/package.json
+          cp README.md deploy/README.md
+          # Include Unity meta files for tracked Unity assets
+          cp Runtime.meta deploy/Runtime.meta
+          cp Analyzers.meta deploy/Analyzers.meta
+          cp Editor.meta deploy/Editor.meta
+          cp package.json.meta deploy/package.json.meta
+          cp README.md.meta deploy/README.md.meta
 # Do NOT copy website/ or docs/ into deploy branch
 
       - name: Deploy to deploy branch
