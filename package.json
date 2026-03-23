@@ -25,13 +25,8 @@
     "url": "git+https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git"
   },
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling/issues"
   },
-  "homepage": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling#readme",
-  "dependencies": {
-    "docusaurus": "1.14.7"
-  }
+  "homepage": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling#readme"
 }
-
