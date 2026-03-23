@@ -8,6 +8,7 @@
     <ItemGroup>
         <ProjectReference Include="..\DangFugBixs.Analyzers\DangFugBixs.Analyzers.csproj"
                           OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj" />
     </ItemGroup>
 
 </Project>
