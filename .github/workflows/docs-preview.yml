@@ -1,20 +1,21 @@
-name: Deploy Docusaurus to GitHub Pages
+name: Docs Preview Deploy
 
 on:
-  push:
-    branches:
-      - main
-      - master
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build and deploy (default: main)'
+        required: false
+        default: 'main'
+
 jobs:
-  build-deploy:
+  preview:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,28 +37,13 @@ jobs:
         run: npm run build
         working-directory: website
 
-      - name: Verify build output
-        run: |
-          if [ ! -d website/build ]; then echo "Build output missing"; exit 1; fi
+      - name: Verify build
+        run: test -d website/build
 
-      # Do NOT copy pkg files to docs branch
-
-      - name: Remove sensitive files (if any)
-        run: |
-          rm -rf website/build/ai*
-          rm -rf website/build/AI*
-          rm -rf website/build/*huongdan*
-          rm -rf website/build/*guide*
-          rm -rf website/build/.agent
-          rm -rf website/build/openspec
-        shell: bash
-        working-directory: .
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy preview to gh-pages-preview
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: website/build
-          publish_branch: gh-pages
+          publish_branch: gh-pages-preview
           force_orphan: true
-          keep_files: false

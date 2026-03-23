@@ -63,17 +63,6 @@ internal static class RegistrationEmitter {
             // 2. Standard VContainer Registrations
             using (writer.Block("public static partial class VContainerRegistration")) {
 
-                // MASTER ENTRY POINT
-                if (scopeMappings != null && scopeMappings.Count > 0) {
-                    using (writer.Block("public static void RegisterAll(global::VContainer.IContainerBuilder builder)")) {
-                        foreach (var mapping in scopeMappings) {
-                            string methodName = GetRegistrationMethodName(mapping.ClassName);
-                            writer.WriteLine($"{methodName}(builder);");
-                        }
-                    }
-                    writer.WriteLine();
-                }
-
                 // Deduplicate services by full name
                 var distinctServices = services.GroupBy(s => $"{s.Namespace}.{s.ClassName}").Select(g => g.First());
 
@@ -100,7 +89,31 @@ internal static class RegistrationEmitter {
 
                 var groups = mappedServices.GroupBy(s => GetScopeKey(s)).ToDictionary(g => g.Key, g => g.ToList());
 
-                foreach (var group in groups) {
+                // Ensure a single service is emitted only once per generated file across all scope groups.
+                var assigned = new HashSet<string>();
+                var filteredGroups = new Dictionary<string, List<ServiceInfo>>();
+                foreach (var kv in groups.OrderBy(k => k.Key)) {
+                    var list = new List<ServiceInfo>();
+                    foreach (var svc in kv.Value) {
+                        if (assigned.Add(svc.FullName)) {
+                            list.Add(svc);
+                        }
+                    }
+                    if (list.Count > 0) filteredGroups[kv.Key] = list;
+                }
+
+                // MASTER ENTRY POINT: only include registration methods that will be emitted in this file
+                if (filteredGroups.Count > 0) {
+                    using (writer.Block("public static void RegisterAll(global::VContainer.IContainerBuilder builder)")) {
+                        foreach (var key in filteredGroups.Keys.OrderBy(k => k)) {
+                            string methodName = GetRegistrationMethodName(key);
+                            writer.WriteLine($"{methodName}(builder);");
+                        }
+                    }
+                    writer.WriteLine();
+                }
+
+                foreach (var group in filteredGroups) {
                     string methodName = GetRegistrationMethodName(group.Key);
 
                     using (writer.Block($"public static void {methodName}(global::VContainer.IContainerBuilder builder)")) {

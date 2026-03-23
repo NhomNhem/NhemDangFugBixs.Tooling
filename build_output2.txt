@@ -1,0 +1,31 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  DangFugBixs.Runtime -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Debug\netstandard2.1\NhemDangFugBixs.Runtime.dll
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  DangFugBixs.Analyzers -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Analyzers~\DangFugBixs.Analyzers\bin\Debug\netstandard2.0\NhemDangFugBixs.Analyzers.dll
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  DangFugBixs.Common -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Common~\bin\Debug\netstandard2.1\DangFugBixs.Common.dll
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  DangFugBixs.Analyzers.Sample -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Analyzers~\DangFugBixs.Analyzers.Sample\bin\Debug\net9.0\DangFugBixs.Analyzers.Sample.dll
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  DangFugBixs.Analyzers.Tests -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Analyzers~\DangFugBixs.Analyzers.Tests\bin\Debug\net9.0\DangFugBixs.Analyzers.Tests.dll
+  DangFugBixs.DiSmokeValidation -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Tools~\DangFugBixs.DiSmokeValidation\bin\Debug\net10.0\DangFugBixs.DiSmokeValidation.dll
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  DangFugBixs.Generators -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Generators\bin\Debug\netstandard2.0\NhemDangFugBixs.Generators.dll
+  [UPM-Package] Copying Generator DLL to Local: I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\../Analyzers/
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  DangFugBixs.Cli -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Tools~\DangFugBixs.Cli\bin\Debug\net10.0\DangFugBixs.Cli.dll
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  DangFugBixs.DiSmokeValidation.Tests -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Tools~\DangFugBixs.DiSmokeValidation.Tests\bin\Debug\net10.0\DangFugBixs.DiSmokeValidation.Tests.dll
+  DangFugBixs.Sandbox -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Sandbox\bin\Debug\net10.0\DangFugBixs.Sandbox.dll
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+  DangFugBixs.Tests -> I:\unityVers\NhemDangFugBixs\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Tests\bin\Debug\net10.0\DangFugBixs.Tests.dll
+  [UPM-Package] No Unity target found. Set NHEM_UNITY_PROJECT_ROOT env var, use LocalBuild.props, or place .nhem-deploy-target marker in your Unity project.
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.97
