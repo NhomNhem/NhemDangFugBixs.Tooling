@@ -33,13 +33,32 @@ jobs:
           # Get changed files
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             BASE="${{ github.event.pull_request.base.sha }}"
-            HEAD="${{ github.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+            DIFF_RANGE="$BASE...$HEAD"
           else
             BASE="${{ github.event.before }}"
             HEAD="${{ github.event.after }}"
+            
+            if [[ "$BASE" == "0000000000000000000000000000000000000000" ]] || ! git rev-parse --verify "$BASE" >/dev/null 2>&1; then
+              # Fallback for new branches or missing history
+              if git rev-parse --verify "HEAD^1" >/dev/null 2>&1; then
+                DIFF_RANGE="HEAD^1..HEAD"
+              else
+                # Very first commit in the repo
+                DIFF_RANGE=""
+              fi
+            else
+              DIFF_RANGE="$BASE..$HEAD"
+            fi
           fi
           
-          CHANGED_FILES=$(git diff --name-only $BASE..$HEAD)
+          if [[ -z "$DIFF_RANGE" ]]; then
+            echo "No diff range found (possibly first commit). Listing all files."
+            CHANGED_FILES=$(git ls-tree -r --name-only HEAD)
+          else
+            echo "Using diff range: $DIFF_RANGE"
+            CHANGED_FILES=$(git diff --name-only $DIFF_RANGE)
+          fi
           
           # Check which projects changed
           echo "generators=$(echo "$CHANGED_FILES" | grep -q "Source~/DangFugBixs.Generators~" && echo "true" || echo "false")" >> $GITHUB_OUTPUT
