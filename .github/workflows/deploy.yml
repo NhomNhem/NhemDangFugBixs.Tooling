@@ -24,7 +24,6 @@ jobs:
         run: |
           dotnet build || true
 
-# Prepare runtime + tooling payload with Unity metadata and docs
       - name: Prepare deploy directory
         run: |
           rm -rf deploy
@@ -32,7 +31,18 @@ jobs:
           cp -r Runtime deploy/Runtime
           cp -r Analyzers deploy/Analyzers
           cp -r Editor deploy/Editor
-          cp package.json deploy/package.json
+          python - <<'PY'
+          import json
+
+          with open('package.json', 'r', encoding='utf-8') as fp:
+              data = json.load(fp)
+
+          data.pop('dependencies', None)
+
+          with open('deploy/package.json', 'w', encoding='utf-8') as fp:
+              json.dump(data, fp, indent=2)
+              fp.write('\n')
+          PY
           cp README.md deploy/README.md
           # Include Unity meta files for tracked Unity assets
           cp Runtime.meta deploy/Runtime.meta
@@ -40,7 +50,7 @@ jobs:
           cp Editor.meta deploy/Editor.meta
           cp package.json.meta deploy/package.json.meta
           cp README.md.meta deploy/README.md.meta
-# Do NOT copy website/ or docs/ into deploy branch
+      # Do NOT copy website/ or docs/ into deploy branch
 
       - name: Deploy to deploy branch
         uses: peaceiris/actions-gh-pages@v4

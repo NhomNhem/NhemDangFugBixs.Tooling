@@ -31,6 +31,6 @@
   },
   "homepage": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling#readme",
   "dependencies": {
-    "docusaurus": "^1.14.7"
+    "docusaurus": "1.14.7"
   }
 }
