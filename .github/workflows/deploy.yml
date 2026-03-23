@@ -44,8 +44,8 @@ jobs:
           cp -r Runtime deploy/Runtime
           cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
           cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
-          rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.dll
-          rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.pdb
+          cp Runtime/NhemDangFugBixs.Runtime.dll deploy/Analyzers/
+          cp Runtime/NhemDangFugBixs.Runtime.dll.meta deploy/Analyzers/
           python - <<'PY'
           import json
 

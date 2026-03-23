@@ -45,4 +45,15 @@
         <Copy SourceFiles="$(PackageRoot)Source~/MetaTemplates/$(AssemblyName).dll.meta" DestinationFolder="$(FinalPluginsPath)" ContinueOnError="true" />
     </Target>
 
+    <Target Name="CopyRuntimeForGenerators" AfterTargets="PostBuild">
+        <Copy SourceFiles="$(SolutionDir)Runtime\NhemDangFugBixs.Runtime.dll"
+              DestinationFolder="$(OutputPath)"
+              ContinueOnError="true"
+              Condition="Exists('$(SolutionDir)Runtime\NhemDangFugBixs.Runtime.dll')" />
+        <Copy SourceFiles="$(SolutionDir)Runtime\NhemDangFugBixs.Runtime.dll.meta"
+              DestinationFolder="$(OutputPath)"
+              ContinueOnError="true"
+              Condition="Exists('$(SolutionDir)Runtime\NhemDangFugBixs.Runtime.dll.meta')" />
+    </Target>
+
 </Project>
