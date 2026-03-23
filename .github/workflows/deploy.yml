@@ -6,6 +6,10 @@ on:
       - main
       - master
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,17 +24,28 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Build (optional)
+      - name: Build runtime and tooling artifacts
         run: |
-          dotnet build || true
+          dotnet build Source~/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj -c Release
+          dotnet build Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.csproj -c Release
+          dotnet build Source~/DangFugBixs.Generators~/DangFugBixs.Generators.csproj -c Release
+
+      - name: Determine package version
+        id: version
+        run: |
+          VERSION=$(python -c "import json, pathlib; data = json.load(open(\"package.json\")); print(data.get(\"version\", \"unknown\"))")
+          echo "Determined version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Prepare deploy directory
         run: |
           rm -rf deploy
-          mkdir deploy
+          mkdir -p deploy/Runtime deploy/Analyzers deploy/Editor
           cp -r Runtime deploy/Runtime
-          cp -r Analyzers deploy/Analyzers
-          cp -r Editor deploy/Editor
+          cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
+          cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
+          rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.dll
+          rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.pdb
           python - <<'PY'
           import json
 

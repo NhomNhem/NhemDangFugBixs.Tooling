@@ -28,9 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\..\DangFugBixs.Runtime~\**\*.cs"
-                 Exclude="..\..\DangFugBixs.Runtime~\bin\**\*.cs;..\..\DangFugBixs.Runtime~\obj\**\*.cs"
-                 Link="Runtime\%(RecursiveDir)%(FileName)%(Extension)" />
         <Compile Include="..\DangFugBixs.Sandbox\HeroStats.cs" Link="Sandbox\HeroStats.cs" />
         <Compile Include="..\DangFugBixs.Sandbox\Mocks.cs" Link="Sandbox\Mocks.cs" />
         <Compile Include="..\DangFugBixs.Sandbox\Generated\NhemDangFugBixs.Generators\NhemDangFugBixs.Generators.StatGenerator\HeroStats_Stats.g.cs"
