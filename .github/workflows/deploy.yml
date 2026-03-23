@@ -27,8 +27,8 @@ jobs:
       - name: Build runtime and tooling artifacts
         run: |
           dotnet build Source~/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj -c Release
-          dotnet build Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.csproj -c Release
-          dotnet build Source~/DangFugBixs.Generators~/DangFugBixs.Generators.csproj -c Release
+          dotnet build Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/DangFugBixs.Analyzers.csproj -c Release
+          dotnet build Source~/DangFugBixs.Generators~/DangFugBixs.Generators/DangFugBixs.Generators.csproj -c Release
 
       - name: Determine package version
         id: version
