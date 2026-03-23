@@ -153,6 +153,14 @@ internal static class ReferencedAssemblyScanner {
             }
         }
 
+        var metadata = new Dictionary<string, string>();
+        try {
+            var asmName = type.ContainingAssembly?.Name ?? "";
+            metadata["DeclaringAssembly"] = asmName;
+        } catch {
+            // ignore
+        }
+
         return new ServiceInfo(
             type.ContainingNamespace?.ToDisplayString() ?? "",
             type.Name,
@@ -175,7 +183,7 @@ internal static class ReferencedAssemblyScanner {
             false, // isMessagePipeBroker
             null,  // messageType
             MessagePipeType.Publisher, // messagePipeKind
-            new Dictionary<string, string>() // metadata
+            metadata // metadata
         );
     }
 

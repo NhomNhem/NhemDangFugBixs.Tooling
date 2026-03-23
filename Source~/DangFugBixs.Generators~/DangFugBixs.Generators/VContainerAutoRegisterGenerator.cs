@@ -123,10 +123,15 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             IEnumerable<ServiceInfo> allServices = validServices.Concat(discoveredServices);
 
             // v4.1: Deduplication pass - ensure each unique class is registered only once globally
-            // We group by FullName to prevent duplicates from multiple assemblies
+            // Prefer services declared in the current assembly when duplicates exist
             allServices = allServices
                 .GroupBy(s => s.FullName)
-                .Select(g => g.First());
+                .Select(g => {
+                    var list = g.ToList();
+                    var local = list.FirstOrDefault(s => s.Metadata != null && s.Metadata.TryGetValue("DeclaringAssembly", out var asm) && asm == assemblyName);
+                    if (!string.IsNullOrEmpty(local.ClassName)) return local;
+                    return list.First();
+                });
 
             stats.ServiceCount = allServices.Any() ? allServices.Count() : 0;
 
