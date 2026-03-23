@@ -120,7 +120,11 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             IEnumerable<ServiceInfo> validServices = input.LoggingData.Data.BaseData.Services;
 
             // Combine local and discovered services
-            IEnumerable<ServiceInfo> allServices = validServices.Concat(discoveredServices);
+            // Only include discovered services that are declared in THIS assembly. This prevents emitting services
+            // from referenced assemblies into every compilation that references them, avoiding duplicated
+            // registrations across generated files.
+            var discoveredLocal = discoveredServices.Where(s => s.Metadata != null && s.Metadata.TryGetValue("DeclaringAssembly", out var asm) && asm == assemblyName);
+            IEnumerable<ServiceInfo> allServices = validServices.Concat(discoveredLocal);
 
             // v4.1: Deduplication pass - ensure each unique class is registered only once globally
             // Prefer services declared in the current assembly when duplicates exist
