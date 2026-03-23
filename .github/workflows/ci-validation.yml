@@ -109,7 +109,7 @@ jobs:
       - name: Run Tests - Generators
         if: needs.detect-changes.outputs.generators == 'true'
         run: |
-          dotnet test Source~/DangFugBixs.Generators~/DangFugBixs.Generators.Tests/DangFugBixs.Generators.Tests.csproj \
+          dotnet test Source~/DangFugBixs.Generators~/DangFugBixs.Tests/DangFugBixs.Tests.csproj \
             -c Release --no-build --logger "console;verbosity=minimal"
       
       - name: Run Tests - Analyzers
