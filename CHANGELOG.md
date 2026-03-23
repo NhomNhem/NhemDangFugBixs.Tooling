@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.1] - 2026-03-23
+
+### ⭐ Fixed - Generator duplicate emission & stability
+
+- Added DeclaringAssembly metadata to discovered services and filter discovered services by the target assembly to prevent cross-assembly leakage.
+- Deduplicated emission within a single generated file so each service is emitted only once (first-assigned wins).
+- Ensured RegisterAll() only calls registration methods that are actually emitted in the file to avoid dangling method calls and compile errors.
+- Removed legacy v3 generated files from the repository to prevent historical duplication and confusion.
+- Improved diagnostics and generation report for easier troubleshooting when building in Unity.
+
+### 🔧 Notes
+
+- The generator cannot automatically resolve cases where the same FullName exists in multiple assemblies (duplicate type definitions). Those must be fixed in source.
+- Building Unity projects to regenerate .g.cs typically requires running the Unity Editor or restoring NuGet packages for editor projects; see docs for guidance.
+
 ## [6.0.0] - 2026-03-21
 
 ### ⭐ Added - Performance & Developer Experience
