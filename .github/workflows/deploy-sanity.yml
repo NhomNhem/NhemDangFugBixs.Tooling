@@ -1,0 +1,36 @@
+name: Deploy package sanity check
+
+on:
+  push:
+    branches: [ deploy ]
+  pull_request:
+    branches: [ deploy ]
+
+jobs:
+  check-layout:
+    name: Verify package layout on deploy branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify package files exist
+        run: |
+          set -e
+          missing=0
+          for p in package.json Runtime Editor Analyzers; do
+            if [ ! -e "$p" ]; then
+              echo "ERROR: Missing required path: $p"
+              missing=1
+            else
+              echo "Found: $p"
+            fi
+          done
+          if [ $missing -ne 0 ]; then
+            echo "Package layout verification failed"
+            exit 1
+          fi
+
+      - name: Show package.json
+        run: cat package.json
