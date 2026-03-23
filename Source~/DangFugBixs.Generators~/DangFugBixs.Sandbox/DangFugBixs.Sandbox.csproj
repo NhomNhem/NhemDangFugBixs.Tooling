@@ -21,6 +21,8 @@
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
         </ProjectReference>
         <ProjectReference Include="..\..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj" />
+        <Analyzer Include="..\..\DangFugBixs.Runtime~\bin\$(Configuration)\netstandard2.0\NhemDangFugBixs.Runtime.dll"
+                  Condition="Exists('..\..\DangFugBixs.Runtime~\bin\$(Configuration)\netstandard2.0\NhemDangFugBixs.Runtime.dll')" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,14 +30,10 @@
     </ItemGroup>
 
     <Target Name="CopyRuntimeForSandbox" AfterTargets="Build">
-        <Copy SourceFiles="$(MSBuildProjectDirectory)/../../Runtime/bin/Release/netstandard2.1/NhemDangFugBixs.Runtime.dll"
+        <Copy SourceFiles="..\..\DangFugBixs.Runtime~\bin\$(Configuration)\netstandard2.0\NhemDangFugBixs.Runtime.dll"
               DestinationFolder="$(OutputPath)"
               ContinueOnError="true"
-              Condition="Exists('$(MSBuildProjectDirectory)/../../Runtime/bin/Release/netstandard2.1/NhemDangFugBixs.Runtime.dll')" />
-        <Copy SourceFiles="$(MSBuildProjectDirectory)/../../Runtime/bin/Release/netstandard2.1/NhemDangFugBixs.Runtime.dll.meta"
-              DestinationFolder="$(OutputPath)"
-              ContinueOnError="true"
-              Condition="Exists('$(MSBuildProjectDirectory)/../../Runtime/bin/Release/netstandard2.1/NhemDangFugBixs.Runtime.dll.meta')" />
+              Condition="Exists('..\..\DangFugBixs.Runtime~\bin\$(Configuration)\netstandard2.0\NhemDangFugBixs.Runtime.dll')" />
     </Target>
 
 </Project>
