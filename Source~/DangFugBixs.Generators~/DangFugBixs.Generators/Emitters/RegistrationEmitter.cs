@@ -100,7 +100,20 @@ internal static class RegistrationEmitter {
 
                 var groups = mappedServices.GroupBy(s => GetScopeKey(s)).ToDictionary(g => g.Key, g => g.ToList());
 
-                foreach (var group in groups) {
+                // Ensure a single service is emitted only once per generated file across all scope groups.
+                var assigned = new HashSet<string>();
+                var filteredGroups = new Dictionary<string, List<ServiceInfo>>();
+                foreach (var kv in groups.OrderBy(k => k.Key)) {
+                    var list = new List<ServiceInfo>();
+                    foreach (var svc in kv.Value) {
+                        if (assigned.Add(svc.FullName)) {
+                            list.Add(svc);
+                        }
+                    }
+                    if (list.Count > 0) filteredGroups[kv.Key] = list;
+                }
+
+                foreach (var group in filteredGroups) {
                     string methodName = GetRegistrationMethodName(group.Key);
 
                     using (writer.Block($"public static void {methodName}(global::VContainer.IContainerBuilder builder)")) {
