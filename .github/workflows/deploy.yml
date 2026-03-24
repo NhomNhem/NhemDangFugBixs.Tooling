@@ -42,10 +42,13 @@ jobs:
           rm -rf deploy
           mkdir -p deploy/Runtime deploy/Analyzers deploy/Editor
           cp Runtime/* deploy/Runtime/
+          cp Editor/* deploy/Editor/
           cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
           cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
           rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.dll
           rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.pdb
+          # Add Editor DLL to Editor folder (generator runs in editor context)
+          cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/*.dll deploy/Editor/ 2>/dev/null || true
           python - <<'PY'
           import hashlib
           import json
