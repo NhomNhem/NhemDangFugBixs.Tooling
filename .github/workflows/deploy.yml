@@ -139,7 +139,27 @@ jobs:
           with open('package.json', 'r', encoding='utf-8') as fp:
               data = json.load(fp)
 
-          data.pop('dependencies', None)
+          # Keep the Unity package manifest isolated from any docs or npm-only metadata.
+          allowed_keys = {
+              'name',
+              'version',
+              'displayName',
+              'description',
+              'unity',
+              'unityRelease',
+              'documentationUrl',
+              'changelogUrl',
+              'licensesUrl',
+              'dependencies',
+              'keywords',
+              'author',
+              'contributors',
+              'samples',
+              'type',
+              'hideInEditor',
+          }
+          data = {key: value for key, value in data.items() if key in allowed_keys}
+          data['dependencies'] = data.get('dependencies', {})
 
           with open('deploy/package.json', 'w', encoding='utf-8') as fp:
               json.dump(data, fp, indent=2)
