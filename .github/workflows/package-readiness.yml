@@ -58,13 +58,10 @@ jobs:
               "LICENSE",
               "CHANGELOG.md",
               "README.md",
-              "Runtime/Attributes/NhemDangFugBixs.Attributes.Package.asmdef",
               "Runtime/Attributes/NhemDangFugBixs.Attributes.dll",
-              "Runtime/NhemDangFugBixs.Runtime.Package.asmdef",
               "Runtime/NhemDangFugBixs.Runtime.dll",
               "Editor/NhemDangFugBixs.Editor.asmdef",
               "Editor/SceneInjectedProcessor.cs",
-              "Analyzers/NhemDangFugBixs.Analyzers.Package.asmdef",
               "Analyzers/NhemDangFugBixs.Analyzers.dll",
               "Analyzers/NhemDangFugBixs.Generators.dll",
           ]

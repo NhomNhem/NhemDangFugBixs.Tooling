@@ -42,15 +42,12 @@ jobs:
         run: |
           rm -rf deploy
           mkdir -p deploy/Runtime/Attributes deploy/Analyzers deploy/Editor
-          # Copy Runtime assemblies and asmdefs
+          # Copy Runtime assemblies
           cp Source~/DangFugBixs.Attributes~/bin/Release/netstandard2.0/NhemDangFugBixs.Attributes.dll deploy/Runtime/Attributes/
           cp Source~/DangFugBixs.Runtime~/bin/Release/netstandard2.0/NhemDangFugBixs.Runtime.dll deploy/Runtime/
-          cp Runtime/Attributes/NhemDangFugBixs.Attributes.Package.asmdef deploy/Runtime/Attributes/
-          cp Runtime/NhemDangFugBixs.Runtime.Package.asmdef deploy/Runtime/
           # Copy Analyzers and Generators
           cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/NhemDangFugBixs.Analyzers.dll deploy/Analyzers/
           cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/NhemDangFugBixs.Generators.dll deploy/Analyzers/
-          cp Analyzers/NhemDangFugBixs.Analyzers.Package.asmdef deploy/Analyzers/
           # Copy Editor files
           cp Editor/NhemDangFugBixs.Editor.asmdef deploy/Editor/
           cp Editor/SceneInjectedProcessor.cs deploy/Editor/

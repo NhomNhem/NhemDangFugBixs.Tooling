@@ -43,9 +43,6 @@ jobs:
           test -f package.json
           test -f Runtime/NhemDangFugBixs.Runtime.dll
           test -f Runtime/Attributes/NhemDangFugBixs.Attributes.dll
-          test -f Runtime/NhemDangFugBixs.Runtime.Package.asmdef
-          test -f Runtime/Attributes/NhemDangFugBixs.Attributes.Package.asmdef
           test -f Editor/NhemDangFugBixs.Editor.asmdef
           test -f Analyzers/NhemDangFugBixs.Analyzers.dll
           test -f Analyzers/NhemDangFugBixs.Generators.dll
-          test -f Analyzers/NhemDangFugBixs.Analyzers.Package.asmdef
