@@ -32,6 +32,15 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
     };
 
     public void Initialize(IncrementalGeneratorInitializationContext context) {
+        try {
+            InitializeCore(context);
+        } catch {
+            // Gracefully degrade: if initialization fails, generator silently does nothing
+            // This prevents hard failures when dependencies can't be loaded
+        }
+    }
+
+    private void InitializeCore(IncrementalGeneratorInitializationContext context) {
         // phase 1: Input Processing 
         var services = context.SyntaxProvider
             .CreateSyntaxProvider(
@@ -77,6 +86,14 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
         try {
             var assemblyName = input.Compilation.AssemblyName ?? "";
             
+            // Check for required attribute types to verify assembly availability
+            var attrCheck = input.Compilation.GetTypeByMetadataName("NhemDangFugBixs.Attributes.AutoRegisterInAttribute");
+            if (attrCheck == null) {
+                context.ReportDiagnostic(Diagnostic.Create(Diagnostics.RuntimeMissing, Location.None));
+                // We don't return here, we try to continue if it's just a resolution issue, 
+                // but discovery will naturally find nothing.
+            }
+
             // Initialize stats
             var stats = new GenerationStats {
                 Version = "v4.1.0",

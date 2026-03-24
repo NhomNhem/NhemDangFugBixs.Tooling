@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -13,7 +13,8 @@
     <ItemGroup>
         <Compile Remove="Generated\**" />
         <Compile Remove="obj\Generated\**" />
-    </ItemGroup>
+      <ProjectReference Include="..\..\DangFugBixs.Attributes~\NhemDangFugBixs.Attributes.csproj" />
+  </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\DangFugBixs.Generators\DangFugBixs.Generators.csproj">
@@ -26,11 +27,13 @@
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <SetTargetFramework>TargetFramework=netstandard2.0</SetTargetFramework>
         </ProjectReference>
-    </ItemGroup>
+      <ProjectReference Include="..\..\DangFugBixs.Attributes~\NhemDangFugBixs.Attributes.csproj" />
+  </ItemGroup>
 
     <ItemGroup>
       <!-- VContainer is mocked in Mocks.cs -->
-    </ItemGroup>
+      <ProjectReference Include="..\..\DangFugBixs.Attributes~\NhemDangFugBixs.Attributes.csproj" />
+  </ItemGroup>
 
     <Target Name="CopyRuntimeForSandbox" AfterTargets="Build">
         <Copy SourceFiles="..\..\DangFugBixs.Runtime~\bin\$(Configuration)\netstandard2.0\NhemDangFugBixs.Runtime.dll"

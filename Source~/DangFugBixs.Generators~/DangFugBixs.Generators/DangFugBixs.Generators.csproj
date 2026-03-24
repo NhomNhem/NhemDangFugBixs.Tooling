@@ -14,6 +14,7 @@
         <RootNamespace>NhemDangFugBixs.Generators</RootNamespace>
         <PackageId>NhemDangFugBixs.Generators</PackageId>
         <AssemblyName>NhemDangFugBixs.Generators</AssemblyName>
+        <DefineConstants>$(DefineConstants);NDF_INTERNAL_ATTRIBUTES</DefineConstants>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -26,13 +27,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Include="..\..\DangFugBixs.Attributes~\Attributes\**\*.cs" Link="Attributes\%(RecursiveDir)%(FileName)%(Extension)" />
         <Compile Include="..\..\DangFugBixs.Common~\Models\**\*.cs" Link="Common\Models\%(RecursiveDir)%(FileName)%(Extension)" />
         <Compile Include="..\..\DangFugBixs.Common~\DangFugBixs.Common\Utils\**\*.cs" Link="Common\Utils\%(RecursiveDir)%(FileName)%(Extension)" />
         <Compile Remove="GeneratorBenchmarks.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj" />
     </ItemGroup>
 
     <ItemGroup>

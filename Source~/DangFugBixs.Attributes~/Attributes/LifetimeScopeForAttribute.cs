@@ -17,7 +17,12 @@ namespace NhemDangFugBixs.Attributes {
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public sealed class LifetimeScopeForAttribute : Attribute {
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    sealed class LifetimeScopeForAttribute : Attribute {
         /// <summary>
         /// The Identity Type (marker class or interface) used for discovery.
         /// </summary>
@@ -27,4 +32,16 @@ namespace NhemDangFugBixs.Attributes {
             IdentityType = identityType;
         }
     }
+
+    /// <summary>
+    /// Generic version for C# 11.0+.
+    /// [LifetimeScopeFor<GameScope>]
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    sealed class LifetimeScopeForAttribute<TIdentity> : Attribute { }
 }

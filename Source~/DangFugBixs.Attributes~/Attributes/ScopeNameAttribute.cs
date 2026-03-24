@@ -14,7 +14,12 @@ namespace NhemDangFugBixs.Attributes {
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class ScopeNameAttribute : Attribute {
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    sealed class ScopeNameAttribute : Attribute {
         /// <summary>
         /// The custom name to use for the registration method.
         /// </summary>

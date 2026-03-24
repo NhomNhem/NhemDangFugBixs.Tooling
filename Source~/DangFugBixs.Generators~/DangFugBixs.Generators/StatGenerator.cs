@@ -29,14 +29,14 @@ public class StatGenerator : IIncrementalGenerator {
         if (classSymbol == null) return null;
 
         var hasAttr = classSymbol.GetAttributes().Any(a => 
-            a.AttributeClass?.ToDisplayString() == "NhemDangFugBixs.Runtime.Attributes.StatContainerAttribute");
+            a.AttributeClass?.ToDisplayString() == "NhemDangFugBixs.Attributes.StatContainerAttribute");
 
         if (!hasAttr) return null;
 
         var stats = new List<StatInfo>();
         foreach (var member in classSymbol.GetMembers()) {
             var statAttr = member.GetAttributes().FirstOrDefault(a => 
-                a.AttributeClass?.ToDisplayString() == "NhemDangFugBixs.Runtime.Attributes.StatAttribute");
+                a.AttributeClass?.ToDisplayString() == "NhemDangFugBixs.Attributes.StatAttribute");
 
             if (statAttr == null) continue;
 

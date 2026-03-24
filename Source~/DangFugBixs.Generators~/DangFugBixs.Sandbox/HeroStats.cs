@@ -1,4 +1,4 @@
-using NhemDangFugBixs.Runtime.Attributes;
+using NhemDangFugBixs.Attributes;
 
 namespace NhemDangFugBixs.Sandbox {
     [StatContainer]

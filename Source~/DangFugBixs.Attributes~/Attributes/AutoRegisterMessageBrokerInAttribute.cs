@@ -6,7 +6,12 @@ namespace NhemDangFugBixs.Attributes {
     /// The generator will emit builder.RegisterMessageBroker<T>().
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
-    public class AutoRegisterMessageBrokerInAttribute : Attribute {
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    class AutoRegisterMessageBrokerInAttribute : Attribute {
         public Type ScopeType { get; }
         public NhemLifetime Lifetime { get; set; } = NhemLifetime.Singleton;
 
@@ -20,7 +25,12 @@ namespace NhemDangFugBixs.Attributes {
     /// [AutoRegisterMessageBrokerIn<GameScope>]
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
-    public class AutoRegisterMessageBrokerInAttribute<TScope> : Attribute {
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    class AutoRegisterMessageBrokerInAttribute<TScope> : Attribute {
         public NhemLifetime Lifetime { get; set; } = NhemLifetime.Singleton;
     }
 }

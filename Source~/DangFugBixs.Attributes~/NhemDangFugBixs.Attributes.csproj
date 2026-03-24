@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <RootNamespace>NhemDangFugBixs.Attributes</RootNamespace>
+        <AssemblyName>NhemDangFugBixs.Attributes</AssemblyName>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(FinalAttributesPath)" />
+        <Copy SourceFiles="$(PackageRoot)Source~/MetaTemplates/$(AssemblyName).dll.meta" DestinationFolder="$(FinalAttributesPath)" ContinueOnError="true" />
+    </Target>
+
+</Project>

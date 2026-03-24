@@ -14,6 +14,7 @@
 
         <RootNamespace>DangFugBixs.Analyzers</RootNamespace>
         <AssemblyName>NhemDangFugBixs.Analyzers</AssemblyName>
+        <DefineConstants>$(DefineConstants);NDF_INTERNAL_ATTRIBUTES</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -41,12 +42,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Include="..\..\DangFugBixs.Attributes~\Attributes\**\*.cs" Link="Attributes\%(RecursiveDir)%(FileName)%(Extension)" />
         <Compile Include="..\..\DangFugBixs.Common~\Models\**\*.cs" Link="Common\Models\%(RecursiveDir)%(FileName)%(Extension)" />
         <Compile Include="..\..\DangFugBixs.Common~\DangFugBixs.Common\Utils\**\*.cs" Link="Common\Utils\%(RecursiveDir)%(FileName)%(Extension)" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj" />
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">

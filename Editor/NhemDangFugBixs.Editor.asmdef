@@ -3,7 +3,8 @@
     "rootNamespace": "NhemDangFugBixs.Editor",
     "references": [
         "VContainer",
-        "NhemDangFugBixs.Runtime"
+        "NhemDangFugBixs.Runtime",
+        "NhemDangFugBixs.Attributes"
     ],
     "includePlatforms": [
         "Editor"

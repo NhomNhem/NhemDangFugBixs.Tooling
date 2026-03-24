@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj" />
+        <ProjectReference Include="..\DangFugBixs.Attributes~\NhemDangFugBixs.Attributes.csproj" />
     </ItemGroup>
 
 </Project>

@@ -4,6 +4,11 @@ namespace NhemDangFugBixs.Attributes {
     /// Using this is not required, but it provides a clear intention that a type 
     /// is being used as a VContainer Scope Identity.
     /// </summary>
-    public interface ILifetimeScopeIdentity {
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    interface ILifetimeScopeIdentity {
     }
 }

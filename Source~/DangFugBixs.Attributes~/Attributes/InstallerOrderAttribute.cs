@@ -6,7 +6,12 @@ namespace NhemDangFugBixs.Attributes {
     /// Lower numbers are executed first (ascending order).
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class InstallerOrderAttribute : Attribute {
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    class InstallerOrderAttribute : Attribute {
         public int Order { get; }
 
         public InstallerOrderAttribute(int order = 0) {

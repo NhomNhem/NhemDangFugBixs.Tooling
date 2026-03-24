@@ -5,6 +5,7 @@
     
     <!-- UPM standardized paths -->
     <UPMRuntimePath>$(PackageRoot)Runtime/</UPMRuntimePath>
+    <UPMAttributesPath>$(PackageRoot)Runtime/</UPMAttributesPath>
     <UPMAnalyzersPath>$(PackageRoot)Analyzers/</UPMAnalyzersPath>
   </PropertyGroup>
 
@@ -20,6 +21,7 @@
     
     <!-- Final path for Runtime attributes/logic -->
     <FinalRuntimePath>$(UPMRuntimePath)</FinalRuntimePath>
+    <FinalAttributesPath>$(UPMAttributesPath)</FinalAttributesPath>
   </PropertyGroup>
 
   <!-- Target to discover and copy to external Unity projects -->

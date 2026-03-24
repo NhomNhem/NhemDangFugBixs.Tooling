@@ -16,7 +16,6 @@ public class V4InstallerTests {
 
     [Test]
     public void Installer_DetectionAndInvocation_GeneratesCorrectCode() {
-        // Arrange
         var source = @"
 using NhemDangFugBixs.Attributes;
 using VContainer;
@@ -33,16 +32,12 @@ public class MyInstaller : IVContainerInstaller {
 public class MyService { }
 ";
 
-        // Act
         var result = RunGenerator(source);
 
-        // Assert
         var generatedCode = result.GeneratedTrees[0].ToString();
         
-        // Check for installer instantiation and invocation
         Assert.That(generatedCode, Does.Contain("new global::MyInstaller().Install(builder);"));
         
-        // Check for order (Installer before Service)
         int installerPos = generatedCode.IndexOf("new global::MyInstaller().Install(builder);");
         int servicePos = generatedCode.IndexOf("builder.Register<global::MyService>");
         
@@ -51,7 +46,6 @@ public class MyService { }
 
     [Test]
     public void Installer_Ordering_GeneratesInCorrectOrder() {
-        // Arrange
         var source = @"
 using NhemDangFugBixs.Attributes;
 using VContainer;
@@ -72,10 +66,8 @@ public class EarlyInstaller : IVContainerInstaller {
 }
 ";
 
-        // Act
         var result = RunGenerator(source);
 
-        // Assert
         var generatedCode = result.GeneratedTrees[0].ToString();
         
         int earlyPos = generatedCode.IndexOf("new global::EarlyInstaller().Install(builder);");
@@ -88,7 +80,6 @@ public class EarlyInstaller : IVContainerInstaller {
 
     [Test]
     public void Installer_MixedWithCallbacks_GeneratesInCorrectSequence() {
-        // Arrange
         var source = @"
 using NhemDangFugBixs.Attributes;
 using VContainer;
@@ -110,10 +101,8 @@ public class MyCallback : IBuildCallback {
 public class MyService { }
 ";
 
-        // Act
         var result = RunGenerator(source);
 
-        // Assert
         var generatedCode = result.GeneratedTrees[0].ToString();
         
         int installerPos = generatedCode.IndexOf("new global::MyInstaller().Install(builder);");
@@ -122,6 +111,29 @@ public class MyService { }
         
         Assert.That(installerPos, Is.LessThan(servicePos), "Installer should be before service");
         Assert.That(servicePos, Is.LessThan(callbackPos), "Service should be before callback registration");
+    }
+
+    [Test]
+    public void Generator_NoErrors_WhenCompilationIsValid() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer;
+using VContainer.Unity;
+
+public class GameLifetimeScope : LifetimeScope { }
+
+[AutoRegisterIn(typeof(GameLifetimeScope), Lifetime.Transient)]
+public class MyService : IMyService { }
+
+public interface IMyService { }
+";
+
+        var result = RunGenerator(source);
+        
+        var diagnostics = result.Diagnostics.ToList();
+        var errors = diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
+        
+        Assert.That(errors, Is.Empty, $"Should have no errors, but got: {string.Join(", ", errors.Select(e => e.Id))}");
     }
 
     private GeneratorDriverRunResult RunGenerator(string source) {

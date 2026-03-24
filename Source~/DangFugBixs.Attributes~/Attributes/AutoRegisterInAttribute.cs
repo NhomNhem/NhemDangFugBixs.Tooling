@@ -39,7 +39,12 @@ namespace NhemDangFugBixs.Attributes {
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public sealed class AutoRegisterInAttribute : Attribute {
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    sealed class AutoRegisterInAttribute : Attribute {
         /// <summary>
         /// The LifetimeScope type (or Identity Type) that will register this service.
         /// </summary>
@@ -82,5 +87,42 @@ namespace NhemDangFugBixs.Attributes {
         public AutoRegisterInAttribute(Type scopeType) {
             ScopeType = scopeType;
         }
+    }
+
+    /// <summary>
+    /// Generic version for C# 11.0+.
+    /// [AutoRegisterIn<GameScope>]
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+#if NDF_INTERNAL_ATTRIBUTES
+    internal
+#else
+    public
+#endif
+    sealed class AutoRegisterInAttribute<TScope> : Attribute {
+        /// <summary>
+        /// The lifetime for this registration.
+        /// </summary>
+        public NhemLifetime Lifetime { get; set; } = NhemLifetime.Singleton;
+
+        /// <summary>
+        /// Whether to bind to all implemented interfaces.
+        /// </summary>
+        public bool AsImplementedInterfaces { get; set; } = true;
+
+        /// <summary>
+        /// Whether to bind to self.
+        /// </summary>
+        public bool AsSelf { get; set; } = true;
+
+        /// <summary>
+        /// Whether to find existing instance in hierarchy (for MonoBehaviour).
+        /// </summary>
+        public bool RegisterInHierarchy { get; set; } = false;
+
+        /// <summary>
+        /// Explicit interface types to bind to.
+        /// </summary>
+        public Type[] AsTypes { get; set; } = Array.Empty<Type>();
     }
 }

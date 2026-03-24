@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using NhemDangFugBixs.Sandbox;
 using NhemDangFugBixs.Runtime.Models;
+using NhemDangFugBixs.Attributes;
 
 namespace NhemDangFugBixs.Tests {
     public class StatSystemTests {
