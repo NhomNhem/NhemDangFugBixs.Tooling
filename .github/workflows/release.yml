@@ -9,50 +9,43 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.get_version.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x' # Adjust as needed
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-      - name: Determine Version
-        id: get_version
+      - name: Validate manifest version format
         run: |
-          VERSION=$(git describe --tags --abbrev=0 || echo "0.0.0")
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-      - name: Create Git Tag
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions@github.com"
-          git tag v${{ env.VERSION }}
-          git push origin v${{ env.VERSION }}
+          python - <<'PY'
+          import json
+          import re
 
-  release:
+          version = json.load(open("package.json", encoding="utf-8"))["version"]
+          if not re.fullmatch(r"\d+\.\d+\.\d+", version):
+              raise SystemExit(f"package.json version is not semver: {version}")
+          print(f"Validated package version: {version}")
+          PY
+
+  release-readiness:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # To create a release
-      # Only upload release assets relevant to the release (not docs or pkg unless intended)
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'YOUR_GITHUB_USERNAME_OR_ORG' && github.event.head_commit.message !='dry-run' # Add your own logic for dry-run
     steps:
       - uses: actions/checkout@v4
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
-        with:
-          tag_name: v${{ needs.build.outputs.version }}
-          files: |
-            # Example: ./nupkg/*.nupkg
-            # Only include release assets, not docs or Unity pkg unless intended
-          prerelease: contains(github.ref, '-beta') || contains(github.ref, '-rc')
-          generate_release_notes: true # Or provide a custom body
-
-
-
+      - name: Verify release prerequisites
+        run: |
+          test -f LICENSE
+          test -f CHANGELOG.md
+          test -f package.json
+          test -f Runtime/NhemDangFugBixs.Runtime.dll
+          test -f Runtime/NhemDangFugBixs.Attributes.dll
+          test -f Runtime/NhemDangFugBixs.Runtime.asmdef
+          test -f Runtime/NhemDangFugBixs.Attributes.asmdef
+          test -f Editor/NhemDangFugBixs.Editor.asmdef
+          test -f Analyzers/NhemDangFugBixs.Analyzers.dll
+          test -f Analyzers/NhemDangFugBixs.Generators.dll
+          test -f Analyzers/NhemDangFugBixs.Analyzers.asmdef

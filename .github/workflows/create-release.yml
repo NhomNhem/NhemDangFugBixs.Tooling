@@ -44,6 +44,19 @@ jobs:
           fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Releasing: $TAG"
+
+      - name: Validate tag matches package version
+        run: |
+          PACKAGE_VERSION=$(python -c "import json; print(json.load(open('package.json', encoding='utf-8'))['version'])")
+          EXPECTED_TAG="v$PACKAGE_VERSION"
+          ACTUAL_TAG="${{ steps.get_tag.outputs.tag }}"
+          echo "Expected tag: $EXPECTED_TAG"
+          echo "Actual tag:   $ACTUAL_TAG"
+          test -f LICENSE
+          if [ "$EXPECTED_TAG" != "$ACTUAL_TAG" ]; then
+            echo "Tag does not match package.json version."
+            exit 1
+          fi
       
       - name: Generate Release Notes
         id: release_notes

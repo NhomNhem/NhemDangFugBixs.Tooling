@@ -203,12 +203,16 @@ jobs:
               )
           PY
           cp README.md deploy/README.md
+          cp CHANGELOG.md deploy/CHANGELOG.md
+          cp LICENSE deploy/LICENSE
           # Include Unity meta files for tracked Unity assets
           cp Runtime.meta deploy/Runtime.meta
           cp Analyzers.meta deploy/Analyzers.meta
           cp Editor.meta deploy/Editor.meta
           cp package.json.meta deploy/package.json.meta
           cp README.md.meta deploy/README.md.meta
+          cp CHANGELOG.md.meta deploy/CHANGELOG.md.meta
+          cp LICENSE.meta deploy/LICENSE.meta
       # Do NOT copy website/ or docs/ into deploy branch
 
       - name: Deploy to deploy branch
