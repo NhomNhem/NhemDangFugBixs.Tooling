@@ -18,7 +18,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,6 +28,7 @@
     <ItemGroup>
         <Compile Include="..\..\DangFugBixs.Common~\Models\**\*.cs" Link="Common\Models\%(RecursiveDir)%(FileName)%(Extension)" />
         <Compile Include="..\..\DangFugBixs.Common~\DangFugBixs.Common\Utils\**\*.cs" Link="Common\Utils\%(RecursiveDir)%(FileName)%(Extension)" />
+        <Compile Remove="GeneratorBenchmarks.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,17 +43,6 @@
         <Message Importance="high" Text="[UPM-Package] Copying Generator DLL to Local: $(FinalPluginsPath)" />
         <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(FinalPluginsPath)" />
         <Copy SourceFiles="$(PackageRoot)Source~/MetaTemplates/$(AssemblyName).dll.meta" DestinationFolder="$(FinalPluginsPath)" ContinueOnError="true" />
-    </Target>
-
-    <Target Name="CopyRuntimeForGenerators" AfterTargets="PostBuild">
-        <Copy SourceFiles="$(MSBuildProjectDirectory)/../../../Runtime/NhemDangFugBixs.Runtime.dll"
-              DestinationFolder="$(OutputPath)"
-              ContinueOnError="true"
-              Condition="Exists('$(MSBuildProjectDirectory)/../../../Runtime/NhemDangFugBixs.Runtime.dll')" />
-        <Copy SourceFiles="$(MSBuildProjectDirectory)/../../../Runtime/NhemDangFugBixs.Runtime.dll.meta"
-              DestinationFolder="$(OutputPath)"
-              ContinueOnError="true"
-              Condition="Exists('$(MSBuildProjectDirectory)/../../../Runtime/NhemDangFugBixs.Runtime.dll.meta')" />
     </Target>
 
 </Project>

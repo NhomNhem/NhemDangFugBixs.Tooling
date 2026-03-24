@@ -44,10 +44,89 @@ jobs:
           cp Runtime/* deploy/Runtime/
           cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
           cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
-          cp Runtime/NhemDangFugBixs.Runtime.dll deploy/Analyzers/
-          cp Runtime/NhemDangFugBixs.Runtime.dll.meta deploy/Analyzers/
+          rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.dll
+          rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.pdb
           python - <<'PY'
+          import hashlib
           import json
+          from pathlib import Path
+
+          def stable_guid(name: str) -> str:
+              digest = hashlib.md5(name.encode('utf-8')).hexdigest()
+              return f"{digest[:8]}{digest[8:12]}{digest[12:16]}{digest[16:20]}{digest[20:32]}"
+
+          analyzer_meta = """fileFormatVersion: 2
+          labels:
+          - RoslynAnalyzer
+          PluginImporter:
+            serializedVersion: 2
+            iconMap: {}
+            executionOrder: {}
+            defineConstraints: []
+            isPreloaded: 0
+            isAutoReferenced: 0
+            validateReferences: 0
+            platformData:
+            - first:
+                Any:
+              second:
+                enabled: 0
+            - first:
+                Editor:
+              second:
+                enabled: 0
+            - first:
+                Win64:
+              second:
+                enabled: 0
+            - first:
+                OSXUniversal:
+              second:
+                enabled: 0
+            - first:
+                Linux64:
+              second:
+                enabled: 0
+            - first:
+                Android:
+              second:
+                enabled: 0
+            - first:
+                iOS:
+              second:
+                enabled: 0
+            - first:
+                WebGL:
+              second:
+                enabled: 0
+            userData:
+            assetBundleName:
+            assetBundleVariant:
+          """
+
+          dependency_meta = """fileFormatVersion: 2
+          labels: []
+          PluginImporter:
+            serializedVersion: 2
+            iconMap: {}
+            executionOrder: {}
+            defineConstraints: []
+            isPreloaded: 0
+            isAutoReferenced: 0
+            validateReferences: 0
+            platformData:
+            - first:
+                Any:
+              second:
+                enabled: 0
+            - first:
+                Editor:
+              second:
+                enabled: 0
+            userData:
+            assetBundleName:
+            assetBundleVariant:
+          """
 
           with open('package.json', 'r', encoding='utf-8') as fp:
               data = json.load(fp)
@@ -57,6 +136,21 @@ jobs:
           with open('deploy/package.json', 'w', encoding='utf-8') as fp:
               json.dump(data, fp, indent=2)
               fp.write('\n')
+
+          analyzers_dir = Path('deploy/Analyzers')
+          analyzer_names = {
+              'NhemDangFugBixs.Analyzers.dll',
+              'NhemDangFugBixs.Generators.dll',
+          }
+          for dll_path in analyzers_dir.glob('*.dll'):
+              meta_path = dll_path.with_suffix(dll_path.suffix + '.meta')
+              if meta_path.exists():
+                  continue
+              template = analyzer_meta if dll_path.name in analyzer_names else dependency_meta
+              meta_path.write_text(
+                  template.replace('fileFormatVersion: 2', f"fileFormatVersion: 2\nguid: {stable_guid(dll_path.name)}", 1),
+                  encoding='utf-8'
+              )
           PY
           cp README.md deploy/README.md
           # Include Unity meta files for tracked Unity assets
