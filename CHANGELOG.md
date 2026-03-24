@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.5] - 2026-03-24
+
+### Fixed - Unity package import cleanliness
+
+- Removed precompiled assembly wrapper `.asmdef` files that conflicted with shipped DLL filenames in `Runtime/`, `Runtime/Attributes/`, and `Analyzers/`.
+- Kept the source package release-ready for OpenUPM by limiting Unity package assets to the actual runtime, analyzer, generator, editor, and manifest files.
+- Tightened deploy/readiness validation so docs, website, scripts, and contributor-only files do not belong in Unity package outputs.
+
 ## [6.0.1] - 2026-03-23
 
 ### ⭐ Fixed - Generator duplicate emission & stability

@@ -59,7 +59,7 @@ Prerequisite: install VContainer in the project first. This package does not aut
 ## Release Process
 1. Update `package.json`, `CHANGELOG.md`, and release notes together.
 2. Run CI and release-readiness validation.
-3. Create a tag that exactly matches `package.json.version`, for example `v6.0.4`.
+3. Create a tag that exactly matches `package.json.version`, for example `v6.0.5`.
 4. Push the tag to trigger release packaging and docs deployment.
 
 ## Troubleshooting Duplicate Registrations
