@@ -42,13 +42,8 @@ jobs:
           rm -rf deploy
           mkdir -p deploy/Runtime deploy/Analyzers deploy/Editor
           cp Runtime/* deploy/Runtime/
-          cp Editor/* deploy/Editor/
-          cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
-          cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/*.dll deploy/Analyzers/
-          rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.dll
-          rm -f deploy/Analyzers/NhemDangFugBixs.Runtime.pdb
-          # Add Editor DLL to Editor folder (generator runs in editor context)
-          cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/*.dll deploy/Editor/ 2>/dev/null || true
+          cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/NhemDangFugBixs.Analyzers.dll deploy/Analyzers/
+          cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/NhemDangFugBixs.Generators.dll deploy/Analyzers/
           python - <<'PY'
           import hashlib
           import json
@@ -141,6 +136,7 @@ jobs:
               fp.write('\n')
 
           analyzers_dir = Path('deploy/Analyzers')
+          editor_dir = Path('deploy/Editor')
           analyzer_names = {
               'NhemDangFugBixs.Analyzers.dll',
               'NhemDangFugBixs.Generators.dll',
@@ -154,12 +150,21 @@ jobs:
                   template.replace('fileFormatVersion: 2', f"fileFormatVersion: 2\nguid: {stable_guid(dll_path.name)}", 1),
                   encoding='utf-8'
               )
+          # Generate meta files for Editor folder DLLs (generator + dependencies)
+          for dll_path in editor_dir.glob('*.dll'):
+              meta_path = dll_path.with_suffix(dll_path.suffix + '.meta')
+              if meta_path.exists():
+                  continue
+              template = analyzer_meta if dll_path.name in analyzer_names else dependency_meta
+              meta_path.write_text(
+                  template.replace('fileFormatVersion: 2', f"fileFormatVersion: 2\nguid: {stable_guid(dll_path.name)}", 1),
+                  encoding='utf-8'
+              )
           PY
           cp README.md deploy/README.md
           # Include Unity meta files for tracked Unity assets
           cp Runtime.meta deploy/Runtime.meta
           cp Analyzers.meta deploy/Analyzers.meta
-          cp Editor.meta deploy/Editor.meta
           cp package.json.meta deploy/package.json.meta
           cp README.md.meta deploy/README.md.meta
       # Do NOT copy website/ or docs/ into deploy branch
