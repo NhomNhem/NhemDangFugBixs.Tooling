@@ -41,11 +41,11 @@ jobs:
       - name: Prepare deploy directory
         run: |
           rm -rf deploy
-          mkdir -p deploy/Runtime deploy/Analyzers deploy/Editor
+          mkdir -p deploy/Runtime/Attributes deploy/Analyzers deploy/Editor
           # Copy Runtime assemblies and asmdefs
-          cp Source~/DangFugBixs.Attributes~/bin/Release/netstandard2.0/NhemDangFugBixs.Attributes.dll deploy/Runtime/
+          cp Source~/DangFugBixs.Attributes~/bin/Release/netstandard2.0/NhemDangFugBixs.Attributes.dll deploy/Runtime/Attributes/
           cp Source~/DangFugBixs.Runtime~/bin/Release/netstandard2.0/NhemDangFugBixs.Runtime.dll deploy/Runtime/
-          cp Runtime/NhemDangFugBixs.Attributes.asmdef deploy/Runtime/
+          cp Runtime/Attributes/NhemDangFugBixs.Attributes.asmdef deploy/Runtime/Attributes/
           cp Runtime/NhemDangFugBixs.Runtime.asmdef deploy/Runtime/
           # Copy Analyzers and Generators
           cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/NhemDangFugBixs.Analyzers.dll deploy/Analyzers/
@@ -207,6 +207,7 @@ jobs:
           cp LICENSE deploy/LICENSE
           # Include Unity meta files for tracked Unity assets
           cp Runtime.meta deploy/Runtime.meta
+          cp Runtime/Attributes.meta deploy/Runtime/Attributes.meta
           cp Analyzers.meta deploy/Analyzers.meta
           cp Editor.meta deploy/Editor.meta
           cp package.json.meta deploy/package.json.meta
