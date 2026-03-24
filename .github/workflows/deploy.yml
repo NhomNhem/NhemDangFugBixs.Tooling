@@ -45,12 +45,12 @@ jobs:
           # Copy Runtime assemblies and asmdefs
           cp Source~/DangFugBixs.Attributes~/bin/Release/netstandard2.0/NhemDangFugBixs.Attributes.dll deploy/Runtime/Attributes/
           cp Source~/DangFugBixs.Runtime~/bin/Release/netstandard2.0/NhemDangFugBixs.Runtime.dll deploy/Runtime/
-          cp Runtime/Attributes/NhemDangFugBixs.Attributes.asmdef deploy/Runtime/Attributes/
-          cp Runtime/NhemDangFugBixs.Runtime.asmdef deploy/Runtime/
+          cp Runtime/Attributes/NhemDangFugBixs.Attributes.Package.asmdef deploy/Runtime/Attributes/
+          cp Runtime/NhemDangFugBixs.Runtime.Package.asmdef deploy/Runtime/
           # Copy Analyzers and Generators
           cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/NhemDangFugBixs.Analyzers.dll deploy/Analyzers/
           cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/NhemDangFugBixs.Generators.dll deploy/Analyzers/
-          cp Analyzers/NhemDangFugBixs.Analyzers.asmdef deploy/Analyzers/
+          cp Analyzers/NhemDangFugBixs.Analyzers.Package.asmdef deploy/Analyzers/
           # Copy Editor files
           cp Editor/NhemDangFugBixs.Editor.asmdef deploy/Editor/
           cp Editor/SceneInjectedProcessor.cs deploy/Editor/
@@ -214,6 +214,10 @@ jobs:
           cp README.md.meta deploy/README.md.meta
           cp CHANGELOG.md.meta deploy/CHANGELOG.md.meta
           cp LICENSE.meta deploy/LICENSE.meta
+          test ! -e deploy/docs
+          test ! -e deploy/website
+          test ! -e deploy/scripts
+          test ! -e deploy/CONTRIBUTING.md
       # Do NOT copy website/ or docs/ into deploy branch
 
       - name: Deploy to deploy branch
