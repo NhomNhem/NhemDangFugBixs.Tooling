@@ -26,6 +26,7 @@ jobs:
 
       - name: Build runtime and tooling artifacts
         run: |
+          dotnet build Source~/DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj -c Release
           dotnet build Source~/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj -c Release
           dotnet build Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/DangFugBixs.Analyzers.csproj -c Release
           dotnet build Source~/DangFugBixs.Generators~/DangFugBixs.Generators/DangFugBixs.Generators.csproj -c Release
@@ -41,9 +42,18 @@ jobs:
         run: |
           rm -rf deploy
           mkdir -p deploy/Runtime deploy/Analyzers deploy/Editor
-          cp Runtime/* deploy/Runtime/
+          # Copy Runtime assemblies and asmdefs
+          cp Source~/DangFugBixs.Attributes~/bin/Release/netstandard2.0/NhemDangFugBixs.Attributes.dll deploy/Runtime/
+          cp Source~/DangFugBixs.Runtime~/bin/Release/netstandard2.0/NhemDangFugBixs.Runtime.dll deploy/Runtime/
+          cp Runtime/NhemDangFugBixs.Attributes.asmdef deploy/Runtime/
+          cp Runtime/NhemDangFugBixs.Runtime.asmdef deploy/Runtime/
+          # Copy Analyzers and Generators
           cp Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/bin/Release/netstandard2.0/NhemDangFugBixs.Analyzers.dll deploy/Analyzers/
           cp Source~/DangFugBixs.Generators~/DangFugBixs.Generators/bin/Release/netstandard2.0/NhemDangFugBixs.Generators.dll deploy/Analyzers/
+          cp Analyzers/NhemDangFugBixs.Analyzers.asmdef deploy/Analyzers/
+          # Copy Editor files
+          cp Editor/NhemDangFugBixs.Editor.asmdef deploy/Editor/
+          cp Editor/SceneInjectedProcessor.cs deploy/Editor/
           python - <<'PY'
           import hashlib
           import json
@@ -136,6 +146,7 @@ jobs:
               fp.write('\n')
 
           analyzers_dir = Path('deploy/Analyzers')
+          runtime_dir = Path('deploy/Runtime')
           editor_dir = Path('deploy/Editor')
           analyzer_names = {
               'NhemDangFugBixs.Analyzers.dll',
@@ -146,6 +157,16 @@ jobs:
               if meta_path.exists():
                   continue
               template = analyzer_meta if dll_path.name in analyzer_names else dependency_meta
+              meta_path.write_text(
+                  template.replace('fileFormatVersion: 2', f"fileFormatVersion: 2\nguid: {stable_guid(dll_path.name)}", 1),
+                  encoding='utf-8'
+              )
+          # Generate meta files for Runtime folder DLLs
+          for dll_path in runtime_dir.glob('*.dll'):
+              meta_path = dll_path.with_suffix(dll_path.suffix + '.meta')
+              if meta_path.exists():
+                  continue
+              template = dependency_meta
               meta_path.write_text(
                   template.replace('fileFormatVersion: 2', f"fileFormatVersion: 2\nguid: {stable_guid(dll_path.name)}", 1),
                   encoding='utf-8'
@@ -165,6 +186,7 @@ jobs:
           # Include Unity meta files for tracked Unity assets
           cp Runtime.meta deploy/Runtime.meta
           cp Analyzers.meta deploy/Analyzers.meta
+          cp Editor.meta deploy/Editor.meta
           cp package.json.meta deploy/package.json.meta
           cp README.md.meta deploy/README.md.meta
       # Do NOT copy website/ or docs/ into deploy branch
