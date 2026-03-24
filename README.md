@@ -12,7 +12,7 @@ Preferred for production projects once the package is published to the registry:
 openupm add com.nhemdangfugbixs.tooling
 ```
 
-The package declares a dependency on VContainer, so Unity should restore `jp.hadashikick.vcontainer` automatically when the registry is configured.
+Install VContainer separately in the Unity project before using this package.
 
 ### Git URL fallback
 
@@ -23,6 +23,8 @@ https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git?path=/&branch=deploy
 ```
 
 The `deploy` branch stays minimal for Unity Package Manager imports. The source branch keeps the package self-contained so release tags are also suitable for registry publishing workflows such as OpenUPM.
+
+Prerequisite: install VContainer in the project first. This package does not auto-install VContainer for Git-based imports.
 
 ## Quick Start
 1. Build the toolchain:

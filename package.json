@@ -8,9 +8,6 @@
   "changelogUrl": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling/blob/main/CHANGELOG.md",
   "licensesUrl": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling/blob/main/LICENSE",
   "author": "NhomNhem",
-  "dependencies": {
-    "jp.hadashikick.vcontainer": "1.18.0"
-  },
   "keywords": [
     "vcontainer",
     "source-generator",
