@@ -37,7 +37,13 @@ jobs:
 
           cp package.json deploy/
           cp README.md deploy/
-          cp CHANGELOG.md deploy/
+          if [ -f CHANGELOG.md ]; then
+            cp CHANGELOG.md deploy/
+          else
+            echo "# Changelog" > deploy/CHANGELOG.md
+            echo "" >> deploy/CHANGELOG.md
+            echo "Release notes are tracked via GitHub Releases." >> deploy/CHANGELOG.md
+          fi
 
           if [ -f LICENSE.md ]; then cp LICENSE.md deploy/; fi
           if [ -f LICENSE ]; then cp LICENSE deploy/; fi
