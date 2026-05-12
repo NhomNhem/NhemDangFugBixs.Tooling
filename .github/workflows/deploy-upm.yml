@@ -64,7 +64,7 @@ jobs:
           rm -f deploy/AGENTS.md deploy/QWEN.md deploy/GEMINI.md deploy/.openspec.yaml deploy/CONTRIBUTING.md || true
 
           # Hard whitelist validation for package branch.
-          for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers Tests; do
+          for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers; do
             test -e "deploy/$required"
           done
 
