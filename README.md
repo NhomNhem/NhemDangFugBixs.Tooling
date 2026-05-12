@@ -1,79 +1,303 @@
-[# NhemDangFugBixs.VContainer.SourceGenerator
+# Contributing to NhemDangFugBixs.Tooling
 
-Roslyn source generators, analyzers, and Unity package assets that wire up [VContainer](https://github.com/hadashiA/VContainer) dependency registration with safer defaults. The package auto-registers types decorated with `[AutoRegister]` and `[AutoRegisterIn]`, validates scope usage, and ships analyzers to catch duplicate or invalid registrations early.
+Thank you for considering contributing to NhemDangFugBixs.Tooling! This document provides guidelines for contributing to the project.
 
-## Installing
+## 🚀 Getting Started
 
-### OpenUPM
+### Prerequisites
 
-Preferred for production projects once the package is published to the registry:
+- .NET SDK 10.0 or later
+- IDE: Visual Studio 2022, Rider, or VS Code
+- Unity 2021.3+ (for testing in Unity projects)
+- Git
+
+### Setting Up Development Environment
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git
+   cd NhemDangFugBixs.Tooling
+   ```
+
+2. **Open the solution**
+   ```bash
+   # Open in Rider/Visual Studio
+   Source~/NhemDangFugBixs.Tooling.sln
+   ```
+
+3. **Build the solution**
+   ```bash
+   dotnet build Source~/NhemDangFugBixs.Tooling.sln
+   ```
+
+4. **Run tests**
+   ```bash
+   dotnet test Source~/NhemDangFugBixs.Tooling.sln
+   ```
+
+5. **Enable repo hooks**
+   ```bash
+   git config core.hooksPath .githooks
+   ```
+   `pre-push` will:
+   - run package validation tests
+   - fail fast before remote push if core tests fail
+   
+   `deploy` branch sync is handled by GitHub workflow (`deploy-upm.yml`), not by local hooks.
+
+### Project Structure
+
+```
+NhemDangFugBixs.Tooling/
+├── Source~/                                # Hidden from Unity
+│   ├── DangFugBixs.Generators~/           # Roslyn Source Generators
+│   │   ├── VContainerAutoRegisterGenerator.cs
+│   │   ├── Analyzers/ClassAnalyzer.cs
+│   │   └── Emitters/RegistrationEmitter.cs
+│   ├── DangFugBixs.Analyzers~/            # Roslyn Analyzers & Code Fixes
+│   │   ├── Rules/                         # Diagnostic rules (ND001-ND113)
+│   │   └── CodeFixes/                     # Code fix providers
+│   ├── DangFugBixs.Runtime~/              # Runtime attributes
+│   ├── DangFugBixs.Common~/               # Shared models
+│   └── DangFugBixs.Tools~/                # CLI tools (di-smoke)
+├── Runtime/                                # Compiled runtime DLL
+├── Analyzers/                              # Compiled analyzer DLLs
+└── Editor/                                 # Unity editor extensions
+```
+
+## 🔧 Development Workflow
+
+### Adding a New Diagnostic
+
+1. **Create the diagnostic rule** in `Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/Rules/`
+   ```csharp
+   [DiagnosticAnalyzer(LanguageNames.CSharp)]
+   public class MyNewRule : DiagnosticAnalyzer {
+       public const string NDXXXId = "NDXXX";
+       
+       public static readonly DiagnosticDescriptor NDXXX = new(
+           NDXXXId,
+           "Short Title",
+           "Problem description. " +
+           "Fix: solution steps. " +
+           "Docs: https://docs.nhemdangfugbixs.com/diagnostics/NDXXX",
+           "Design",
+           DiagnosticSeverity.Warning,
+           isEnabledByDefault: true,
+           description: "Detailed explanation of what this diagnostic detects.");
+       
+       public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics 
+           => ImmutableArray.Create(NDXXX);
+       
+       public override void Initialize(AnalysisContext context) {
+           context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+           context.EnableConcurrentExecution();
+           context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);
+       }
+       
+       private static void AnalyzeSymbol(SymbolAnalysisContext context) {
+           // Your analysis logic here
+       }
+   }
+   ```
+
+2. **Add tests** in `Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.Tests/`
+   ```csharp
+   public class MyNewRuleTests {
+       [Fact]
+       public async Task ValidCode_NoDiagnostic() {
+           var code = @"
+               // Valid code that should not trigger diagnostic
+           ";
+           await VerifyAnalyzerAsync(code);
+       }
+       
+       [Fact]
+       public async Task InvalidCode_ReportsDiagnostic() {
+           var code = @"
+               // Invalid code that should trigger diagnostic
+           ";
+           await VerifyAnalyzerAsync(code, 
+               Verify.Diagnostic(MyNewRule.NDXXXId));
+       }
+   }
+   ```
+
+3. **Create Code Fix Provider** (optional) in `Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/CodeFixes/`
+   ```csharp
+   [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MyNewCodeFixProvider)), Shared]
+   public sealed class MyNewCodeFixProvider : CodeFixProvider {
+       public override ImmutableArray<string> FixableDiagnosticIds 
+           => ImmutableArray.Create(MyNewRule.NDXXXId);
+       
+       public override FixAllProvider GetFixAllProvider() 
+           => WellKnownFixAllProviders.BatchFixer;
+       
+       public override async Task RegisterCodeFixesAsync(CodeFixContext context) {
+           // Your code fix logic here
+       }
+   }
+   ```
+
+4. **Update documentation** in README.md and add diagnostic docs
+
+### Modifying the Generator
+
+1. **Modify generator logic** in `Source~/DangFugBixs.Generators~/`
+2. **Test in Sandbox** project: `Source~/DangFugBixs.Generators~/DangFugBixs.Sandbox/`
+3. **Add tests** in `Source~/DangFugBixs.Generators~/DangFugBixs.Tests/`
+4. **Verify incremental generation** still works correctly
+
+### Performance Considerations
+
+- **Use incremental generation APIs** - avoid full recomputation
+- **Cache expensive operations** - scope symbol resolution, type checks
+- **Profile hot paths** - measure analyzer performance
+- **Memory limits** - keep caches under 200MB
+
+## 📋 Pull Request Guidelines
+
+### Before Submitting
+
+- [ ] All tests pass: `dotnet test`
+- [ ] Code builds without errors: `dotnet build`
+- [ ] No new warnings introduced
+- [ ] Code follows existing style conventions
+- [ ] XML docs added for public APIs
+- [ ] Tests added for new functionality
+- [ ] README updated if needed
+
+### PR Template
+
+```markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix (non-breaking change)
+- [ ] New feature (non-breaking change)
+- [ ] Breaking change
+- [ ] Documentation update
+
+## Testing
+- [ ] Added unit tests
+- [ ] Tested in Unity project
+- [ ] Verified backward compatibility
+
+## Related Issues
+Fixes #(issue number)
+```
+
+### Commit Message Format
+
+Use conventional commits:
+```
+feat: add ND114 diagnostic for missing dependencies
+fix: correct scope reachability check for nested scopes
+docs: update CONTRIBUTING.md with code fix guidelines
+test: add tests for ND113 code fix provider
+chore: update project dependencies
+```
+
+## 🧪 Testing
+
+### Running Tests
 
 ```bash
-openupm add com.nhemdangfugbixs.tooling
+# Run all tests
+dotnet test
+
+# Run specific test project
+dotnet test Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.Tests/
+
+# Run with detailed output
+dotnet test --logger "console;verbosity=detailed"
 ```
 
-Install VContainer separately in the Unity project before using this package.
+### Testing in Unity
 
-### Git URL fallback
+1. **Set up local development**
+   Create `Source~/LocalBuild.props`:
+   ```xml
+   <Project>
+     <PropertyGroup>
+       <NhemUnityProjectRoot>C:\Path\To\Your\Unity\Project</NhemUnityProjectRoot>
+     </PropertyGroup>
+   </Project>
+   ```
 
-If you need the Git-based package before or alongside OpenUPM, add the Unity-ready branch:
+2. **Build and deploy**
+   ```bash
+   dotnet build Source~/NhemDangFugBixs.Tooling.sln
+   # DLLs automatically copied to Unity project
+   ```
 
-```text
-https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git?path=/&branch=deploy
+3. **Test in Unity**
+   - Open Unity project
+   - Verify analyzers appear in Error List
+   - Test code fixes work
+   - Check generated code
+
+## 📝 Code Style
+
+### C# Conventions
+
+- Use C# 12 features where appropriate
+- Prefer `var` when type is obvious
+- Use nullable reference types
+- Keep methods under 50 lines when possible
+- Use `_camelCase` for private fields
+- Use `PascalCase` for public members
+
+### Diagnostic Message Format
+
+Always include:
+1. **Problem description** - what's wrong?
+2. **Fix instructions** - how to resolve it
+3. **Documentation link** - where to learn more
+4. **Description parameter** - detailed explanation
+
+Example:
+```csharp
+"Type '{0}' has problem X. " +
+"Fix: do Y or Z. " +
+"Docs: https://docs.nhemdangfugbixs.com/diagnostics/NDXXX"
 ```
 
-The `deploy` branch stays minimal for Unity Package Manager imports. The source branch keeps the package self-contained so release tags are also suitable for registry publishing workflows such as OpenUPM.
+## 🐛 Reporting Issues
 
-Prerequisite: install VContainer in the project first. This package does not auto-install VContainer for Git-based imports.
+### Bug Reports
 
-## Quick Start
-1. Build the toolchain:
-   ```bash
-   dotnet build Source~/NhemDangFugBixs.Tooling.sln -c Release
-   ```
-2. Run the preflight validator against a Unity-friendly project:
-   ```bash
-   dotnet di-smoke preflight MyGame.csproj
-   ```
-3. Optionally validate an emitted assembly:
-   ```bash
-   dotnet di-smoke validate bin/Debug/net10.0/MyGame.dll --format json
-   ```
+Use the bug report template and include:
+- **Steps to reproduce**
+- **Expected behavior**
+- **Actual behavior**
+- **Environment** (Unity version, .NET SDK version)
+- **Code sample** (minimal reproduction)
 
-## Repository Layout
-- `Source~/`: C# solution containing the CLI, generators, analyzers, and supporting libraries.
-- `Runtime/`, `Editor/`, `Analyzers/`: Unity package content that must remain release-ready in source tags.
-- `website/` and `docs/`: documentation sources and Docusaurus site, excluded from the `deploy` branch package output.
-- `.github/workflows/`: validation, release, docs, and deploy automation.
+### Feature Requests
 
-## Package Deployment
-- `deploy.yml` builds the .NET projects, filters `package.json` down to UPM-safe fields, copies Unity assets into `deploy/`, and publishes that directory to the `deploy` branch.
-- Source tags must still contain a valid package manifest plus Unity assets so OpenUPM or any tag-based packaging flow can consume the repository without relying on the `deploy` workflow output.
-- The `deploy` branch remains the smallest Unity import surface, while the source branch remains release-ready for registry automation.
+Explain:
+- **Use case** - why is this needed?
+- **Proposed solution** - how should it work?
+- **Alternatives** - what other approaches were considered?
 
-## Building, Testing, and Docs
-- Build everything: `dotnet build Source~/NhemDangFugBixs.Tooling.sln --no-restore -c Release`
-- Run tests: `dotnet test Source~/NhemDangFugBixs.Tooling.sln --no-build -c Release`
-- Build docs: `cd website && npm ci && npm run build`
+## 📚 Resources
 
-## Release Process
-1. Update `package.json`, `CHANGELOG.md`, and release notes together.
-2. Run CI and release-readiness validation.
-3. Create a tag that exactly matches `package.json.version`, for example `v6.0.5`.
-4. Push the tag to trigger release packaging and docs deployment.
+- [Roslyn Analyzer Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/)
+- [Incremental Generators](https://github.com/dotnet/roslyn/blob/main/docs/features/incremental-generators.md)
+- [VContainer Documentation](https://vcontainer.hadashikick.jp/)
+- [Project README](./README.md)
 
-## Troubleshooting Duplicate Registrations
-Common causes:
-- Old generated `.g.cs` files remain in `Generated/` or `Assets/Plugins/Analyzers/`.
-- A type with the same full name exists in multiple assemblies.
-- `[AutoRegister]` or `[AutoRegisterIn]` annotations overlap scopes, or `AllowedAssemblies` is misconfigured.
+## 📧 Contact
 
-Quick fixes:
-1. Upgrade to generator `v6.0.1` or newer for improved dedupe filtering.
-2. Delete stale generated files under `**/Generated/*.g.cs` in the Unity project and rebuild.
-3. Run `dotnet di-smoke preflight` before Play Mode.
-4. Consolidate duplicate implementations or move shared logic into common asmdef references.
+- **Issues**: [GitHub Issues](https://github.com/NhomNhem/NhemDangFugBixs.Tooling/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/NhomNhem/NhemDangFugBixs.Tooling/discussions)
 
-## License
-Released under the ISC license. See [LICENSE](LICENSE).
-](https://github.com/NhomNhem/NhemDangFugBixs.Tooling/releases/tag/v.7.0.0)
+## 📄 License
+
+By contributing, you agree that your contributions will be licensed under the same license as the project (MIT).
+
+---
+
+Thank you for contributing! 🎉
