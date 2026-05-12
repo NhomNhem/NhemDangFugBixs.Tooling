@@ -1,4 +1,4 @@
-# NhemDangFugBixs.VContainer.SourceGenerator
+[# NhemDangFugBixs.VContainer.SourceGenerator
 
 Roslyn source generators, analyzers, and Unity package assets that wire up [VContainer](https://github.com/hadashiA/VContainer) dependency registration with safer defaults. The package auto-registers types decorated with `[AutoRegister]` and `[AutoRegisterIn]`, validates scope usage, and ships analyzers to catch duplicate or invalid registrations early.
 
@@ -76,3 +76,4 @@ Quick fixes:
 
 ## License
 Released under the ISC license. See [LICENSE](LICENSE).
+](https://github.com/NhomNhem/NhemDangFugBixs.Tooling/releases/tag/v.7.0.0)
