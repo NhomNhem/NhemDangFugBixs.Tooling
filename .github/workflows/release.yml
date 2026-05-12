@@ -1,48 +1,44 @@
-name: Release CI
+name: Release
 
 on:
   push:
-    branches:
-      - main
-      - 'release/**'
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-      - name: Restore dependencies
-        run: dotnet restore
+          dotnet-version: "10.0.x"
+
       - name: Build
-        run: dotnet build --no-restore
-      - name: Validate manifest version format
-        run: |
-          python - <<'PY'
-          import json
-          import re
+        run: dotnet build Source~/NhemDangFugBixs.Tooling.sln -c Release
 
-          version = json.load(open("package.json", encoding="utf-8"))["version"]
-          if not re.fullmatch(r"\d+\.\d+\.\d+", version):
-              raise SystemExit(f"package.json version is not semver: {version}")
-          print(f"Validated package version: {version}")
-          PY
+      - name: Test
+        run: dotnet test Source~/NhemDangFugBixs.Tooling.sln -c Release --no-build
 
-  release-readiness:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Verify release prerequisites
+      - name: Create release archive
+        shell: bash
         run: |
-          test -f LICENSE
-          test -f CHANGELOG.md
-          test -f package.json
-          test -f Runtime/NhemDangFugBixs.Runtime.dll
-          test -f Runtime/Attributes/NhemDangFugBixs.Attributes.dll
-          test -f Editor/NhemDangFugBixs.Editor.asmdef
-          test -f Analyzers/NhemDangFugBixs.Analyzers.dll
-          test -f Analyzers/NhemDangFugBixs.Generators.dll
+          set -euo pipefail
+          mkdir -p artifacts
+          zip -r artifacts/NhemDangFugBixs.Tooling-${GITHUB_REF_NAME}.zip \
+            package.json README.md CHANGELOG.md Runtime Editor Analyzers Documentation~ Samples~ Tests \
+            -x '*.git*'
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.zip
+          generate_release_notes: true

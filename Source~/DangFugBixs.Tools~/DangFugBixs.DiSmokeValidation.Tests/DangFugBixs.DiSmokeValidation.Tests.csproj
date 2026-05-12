@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DangFugBixs.DiSmokeValidation\DangFugBixs.DiSmokeValidation.csproj" />
+    <ProjectReference Include="..\DangFugBixs.Cli\DangFugBixs.Cli.csproj" />
   </ItemGroup>
 
 </Project>

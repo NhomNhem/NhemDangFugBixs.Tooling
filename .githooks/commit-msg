@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+msg_file="$1"
+msg=$(cat "$msg_file")
+
+# Conventional-ish commits. Keep simple for indie workflow.
+pattern='^(feat|fix|docs|test|refactor|chore|ci|build|perf|release)(\(.+\))?: .{1,120}'
+
+if ! echo "$msg" | grep -Eq "$pattern"; then
+  echo "[Nhem] Commit message should follow: type(scope): message"
+  echo "Examples:"
+  echo "  feat(generator): add scope marker aggregation"
+  echo "  fix(analyzer): detect public field injection"
+  echo "  docs(scope): add scope marker pattern guide"
+  exit 1
+fi

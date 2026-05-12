@@ -1,0 +1,43 @@
+name: Unity Package Validation
+
+on:
+  pull_request:
+    paths:
+      - "Runtime/**"
+      - "Editor/**"
+      - "Analyzers/**"
+      - "Tests/**"
+      - "Samples~/**"
+      - "Documentation~/**"
+      - "package.json"
+      - ".github/workflows/package-validation.yml"
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  validate-layout:
+    name: Validate UPM Layout
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f package.json
+          test -f README.md
+          test -f CHANGELOG.md
+          test -d Runtime
+          test -d Editor || echo "Editor folder missing; allowed only if package has no editor code yet"
+          test -d Tests || echo "Tests folder missing; add before public release"
+          test -d Documentation~ || echo "Documentation~ missing; add before public release"
+          test -d Samples~ || echo "Samples~ missing; add before public release"
+
+      - name: Validate package.json
+        run: |
+          node -e "const p=require('./package.json'); const required=['name','version','displayName','description','unity','author']; for (const k of required) { if (!p[k]) { throw new Error('Missing package.json field: '+k); } } console.log('package.json ok:', p.name, p.version);"

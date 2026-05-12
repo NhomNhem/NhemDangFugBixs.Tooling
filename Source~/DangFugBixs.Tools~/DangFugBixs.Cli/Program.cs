@@ -15,6 +15,9 @@ public class Program {
 
         if (command == "preflight") return RunPreflight(commandArgs);
         if (command == "validate") return RunValidate(commandArgs);
+        if (command == "list") return RunList(commandArgs);
+        if (command == "graph") return RunGraph(commandArgs);
+        if (command == "report") return RunReport(commandArgs);
         if (command == "--help" || command == "-h") {
             PrintHelp();
             return 0;
@@ -138,6 +141,58 @@ public class Program {
         return result.IsSuccess ? 0 : 1;
     }
 
+    private static int RunList(string[] args) {
+        try {
+            var scope = ReadOption(args, "--scope");
+            var assemblyPath = ResolveAssemblyPathForMetadataCommands(args);
+            var snapshot = RegistrationReportReader.Load(assemblyPath);
+            Console.WriteLine(RegistrationReportWriters.WriteList(snapshot, scope));
+            return 0;
+        } catch (Exception ex) {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+            return 1;
+        }
+    }
+
+    private static int RunGraph(string[] args) {
+        try {
+            var scope = ReadOption(args, "--scope");
+            var format = ReadOption(args, "--format") ?? "mermaid";
+            var outputPath = ReadOption(args, "--output");
+            var assemblyPath = ResolveAssemblyPathForMetadataCommands(args);
+            var snapshot = RegistrationReportReader.Load(assemblyPath);
+            var content = format.Equals("mermaid", StringComparison.OrdinalIgnoreCase)
+                ? RegistrationReportWriters.WriteMermaidGraph(snapshot, scope)
+                : RegistrationReportWriters.WriteJson(snapshot, scope);
+            WriteOutput(content, outputPath);
+            return 0;
+        } catch (Exception ex) {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+            return 1;
+        }
+    }
+
+    private static int RunReport(string[] args) {
+        try {
+            var scope = ReadOption(args, "--scope");
+            var format = ReadOption(args, "--format") ?? "markdown";
+            var outputPath = ReadOption(args, "--output");
+            var assemblyPath = ResolveAssemblyPathForMetadataCommands(args);
+            var snapshot = RegistrationReportReader.Load(assemblyPath);
+            string content = format.ToLowerInvariant() switch {
+                "json" => RegistrationReportWriters.WriteJson(snapshot, scope),
+                "markdown" or "md" => RegistrationReportWriters.WriteMarkdown(snapshot, scope),
+                _ => RegistrationReportWriters.WriteList(snapshot, scope)
+            };
+
+            WriteOutput(content, outputPath);
+            return 0;
+        } catch (Exception ex) {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+            return 1;
+        }
+    }
+
     private static int BuildProject(string? projectPath) {
         if (string.IsNullOrEmpty(projectPath)) return 1;
 
@@ -213,6 +268,47 @@ public class Program {
         return null;
     }
 
+    private static string ResolveAssemblyPathForMetadataCommands(string[] args) {
+        var projectPath = args.FirstOrDefault(a => a.EndsWith(".csproj", StringComparison.Ordinal));
+        var assemblyPath = args.FirstOrDefault(a => a.EndsWith(".dll", StringComparison.Ordinal));
+
+        if (!string.IsNullOrEmpty(assemblyPath)) {
+            return assemblyPath;
+        }
+
+        if (string.IsNullOrEmpty(projectPath)) {
+            throw new InvalidOperationException("Please provide a .csproj or .dll file.");
+        }
+
+        Console.WriteLine("🔨 Building project...");
+        var buildResult = BuildProject(projectPath);
+        if (buildResult != 0) {
+            throw new InvalidOperationException("Build failed.");
+        }
+
+        assemblyPath = FindAssemblyPath(projectPath);
+        if (string.IsNullOrEmpty(assemblyPath) || !File.Exists(assemblyPath)) {
+            throw new InvalidOperationException("Assembly not found after build.");
+        }
+
+        return assemblyPath;
+    }
+
+    private static string? ReadOption(string[] args, string optionName) {
+        var optionIndex = Array.IndexOf(args, optionName);
+        return optionIndex >= 0 && optionIndex < args.Length - 1 ? args[optionIndex + 1] : null;
+    }
+
+    private static void WriteOutput(string content, string? outputPath) {
+        if (!string.IsNullOrWhiteSpace(outputPath)) {
+            File.WriteAllText(outputPath, content);
+            Console.WriteLine($"📄 Report saved to: {outputPath}");
+            return;
+        }
+
+        Console.WriteLine(content);
+    }
+
     private static void PrintHelp() {
         Console.WriteLine(@"
 DangFugBixs.Cli - DI Validation Tool
@@ -223,10 +319,14 @@ Usage:
 Commands:
   preflight <project.csproj>    Run full preflight validation (clean + build + validate)
   validate <assembly.dll>       Run validation on existing assembly
+  list <project.csproj|dll>     List generated registrations by scope
+  graph <project.csproj|dll>    Export a Mermaid or JSON graph from generated metadata
+  report <project.csproj|dll>   Export generated DI report metadata
 
 Options:
   --format <text|json>    Output format (default: text)
   --output <file>         Save report to file
+  --scope <scope>         Filter metadata commands to one scope
   --clean                 Clean generated files before build
   --resolve-smoke         Run runtime resolve smoke test (Phase 1)
   --help, -h              Show this help message
@@ -236,6 +336,9 @@ Examples:
   dotnet di-smoke preflight MyGame.csproj --format json --output report.json
   dotnet di-smoke preflight MyGame.csproj --clean
   dotnet di-smoke validate bin/Debug/net10.0/MyGame.dll
+  dotnet di-smoke list MyGame.csproj --scope GameplayLifetimeScope
+  dotnet di-smoke graph MyGame.csproj --scope GameplayLifetimeScope --format mermaid
+  dotnet di-smoke report MyGame.csproj --format markdown --output di-map.md
 ");
     }
 }

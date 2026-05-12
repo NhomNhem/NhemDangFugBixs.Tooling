@@ -4,47 +4,137 @@
     <projectFile profileName="DebugRoslynAnalyzers">DangFugBixs.Analyzers/DangFugBixs.Analyzers/DangFugBixs.Analyzers.csproj</projectFile>
     <projectFile profileName="DebugRoslynSourceGenerator">DangFugBixs.Generators/DangFugBixs.Generators/DangFugBixs.Generators.csproj</projectFile>
     <projectFile>DangFugBixs.Generators/DangFugBixs.Sandbox/DangFugBixs.Sandbox.csproj</projectFile>
+    <projectFile>DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj</projectFile>
+    <projectFile>DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation/DangFugBixs.DiSmokeValidation.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/ASSEMBLY-ANALYSIS-AND-RECOMMENDATIONS.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/ASSEMBLY-ANALYSIS-AND-RECOMMENDATIONS.md.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/GameLifetimeScope.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/GameLifetimeScope.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/GameplayLifetimeScope.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/GameplayLifetimeScope.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/MIGRATION-GAMEFEELUNITY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/MIGRATION-GAMEFEELUNITY.md.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/README.md.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes.asmdef" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes.asmdef.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes/GameLifetimeScope.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes/GameLifetimeScope.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes/GameplayLifetimeScope.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Scopes/GameplayLifetimeScope.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/AudioService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/AudioService.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/EnemySpawner.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/EnemySpawner.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/GameService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/GameService.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/PlayerController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files/Services/PlayerController.cs.meta" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.codex/rules/default.rules" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.github/workflows/release.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../.github/workflows/release.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Analyzers.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CHANGELOG.md.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Editor.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LICENSE.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RELEASE-v5.2.0.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Runtime.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Common~/Models/ScopeMappingInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Common~/Models/ScopeMappingInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.Cli/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.Cli/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/astro.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/astro.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/pnpm-workspace.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/pnpm-workspace.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/CI-BENCHMARK-REPORT.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/CI-CD-OPTIMIZATION-SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/CI-OPTIMIZATION.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/CI-PERF-REGRESSION.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/CI-PERFORMANCE-SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/MIGRATION_v5_to_v6.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/NEXT-STEPS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/PERFORMANCE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/RELEASE-COMPLETE-SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/RELEASE-NOTES-v6.0.0.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/RELEASE-VERIFICATION.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/RELEASE-v6.0.0-PUBLISHED.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/SPEC-v6.1.0.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/TROUBLESHOOTING.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/V6.0.0-IMPLEMENTATION-COMPLETE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../openspec.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package.json.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/docs/architecture.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/docs/changelog.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/docs/contributing.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/docs/duplicate-registrations.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/docs/faq.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/docs/intro.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/docs/usage.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/docusaurus.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/sidebars.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/sidebars.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/src/components/HomepageFeatures/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/src/components/HomepageFeatures/styles.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/src/css/custom.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/src/pages/index.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/src/pages/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/src/pages/markdown-page.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/static/.nojekyll" beforeDir="false" afterPath="$PROJECT_DIR$/../.codex/rules/default.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/static/img/docusaurus-social-card.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/static/img/docusaurus.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/static/img/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/static/img/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/static/img/undraw_docusaurus_mountain.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/static/img/undraw_docusaurus_react.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/static/img/undraw_docusaurus_tree.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../website/tsconfig.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CopilotChats">
+    <option name="panelChat">
+      <chat>
+        <option name="activeSessionId" value="bd47658d-74fb-4bae-a654-fd7c4ee95afd" />
+        <option name="sessions">
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="f5a630ff-ea99-4c7f-9d50-9a5e39dcdf84" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="status" value="Stopped" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="66ce562b-b90c-4103-afe9-0038ff69e87f" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="bd47658d-74fb-4bae-a654-fd7c4ee95afd" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+        </option>
+        <option name="type" value="PANEL" />
+      </chat>
+    </option>
+  </component>
   <component name="CopilotPersistence">
     <persistenceIdMap>
       <entry key="_I:/unityVers/ArchSurvivor" value="39KBveeIDvA52onLE2bNnIFnVeu" />
+      <entry key="_I:/unityVers/NhemDangFugBixs.Tooling/Source~" value="3DdikFekDyb6LBYqCjM1NQnYFKt" />
       <entry key="_I:/unityVers/NhemDangFugBixs/NhemDangFugBixs.Tooling" value="39KIMjTTPgFDHyb7KDbeEZTCftn" />
     </persistenceIdMap>
   </component>
@@ -53,16 +143,15 @@
   </component>
   <component name="CopilotUserSelectedModel">
     <selectedModels>
-      <entry key="chat-panel" value="GPT-5 mini" />
-      <entry key="agent-panel" value="GPT-5 mini" />
-      <entry key="edit-panel" value="GPT-5 mini" />
+      <entry key="agent-panel" value="Auto" />
+      <entry key="chat-panel" value="Auto" />
     </selectedModels>
   </component>
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="1771" />
+    <option name="cachedIndexableFilesCount" value="4" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -71,7 +160,7 @@
         <entry key="$PROJECT_DIR$/../../../.." value="main" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -81,7 +170,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:NhomNhem/NhemDangFugBixs.Tooling.git&quot;,
+    &quot;url&quot;: &quot;https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git&quot;,
     &quot;accountId&quot;: &quot;c636bf2c-907c-4afa-b57d-13585ec5e844&quot;
   }
 }</component>
@@ -114,33 +203,52 @@
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Agent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="LOCAL" />
+      </template>
+    </option>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.Sandbox.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.Sandbox.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kronk.content.tree.expanded.paths": "|Docs|Docs/guides|Docs/reference",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.github.copilot.settings.customization.CustomizationConfigurable",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1771275639296" />
     <option name="spentUsd" value="0.11020189" />
@@ -149,6 +257,48 @@
     <option name="suspendCountdown" value="0" />
   </component>
   <component name="RunManager" selected=".NET Project.Sandbox">
+    <configuration name="DangFugBixs.Cli" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="DangFugBixs.DiSmokeValidation" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation/DangFugBixs.DiSmokeValidation.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
     <configuration name="DangFugBixs.Sandbox" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -226,6 +376,8 @@
     <list>
       <item itemvalue=".NET Launch Settings Profile.DangFugBixs.Analyzers: DebugRoslynAnalyzers" />
       <item itemvalue=".NET Launch Settings Profile.DangFugBixs.Generators: DebugRoslynSourceGenerator" />
+      <item itemvalue=".NET Project.DangFugBixs.Cli" />
+      <item itemvalue=".NET Project.DangFugBixs.DiSmokeValidation" />
       <item itemvalue=".NET Project.DangFugBixs.Sandbox" />
       <item itemvalue=".NET Project.Sandbox" />
     </list>
@@ -246,6 +398,8 @@
       <workItem from="1773575640204" duration="86000" />
       <workItem from="1773592706978" duration="933000" />
       <workItem from="1773619999734" duration="53000" />
+      <workItem from="1778618494139" duration="1620000" />
+      <workItem from="1778620178553" duration="2380000" />
     </task>
     <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
       <option name="closed" value="true" />

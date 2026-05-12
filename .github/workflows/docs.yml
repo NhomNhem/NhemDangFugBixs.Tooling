@@ -1,0 +1,46 @@
+name: Docs
+
+on:
+  pull_request:
+    paths:
+      - "Documentation~/**"
+      - "README.md"
+      - "CHANGELOG.md"
+      - "Source~/nhemdangfugbixs-tooling-docs/**"
+      - ".github/workflows/docs.yml"
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  docs-check:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check docs exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f README.md
+          test -f CHANGELOG.md
+          if [ -d Documentation~ ]; then
+            find Documentation~ -maxdepth 2 -name '*.md' -print
+          fi
+
+      - name: Setup Node.js
+        if: hashFiles('Source~/nhemdangfugbixs-tooling-docs/package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build docs site if present
+        if: hashFiles('Source~/nhemdangfugbixs-tooling-docs/package.json') != ''
+        working-directory: Source~/nhemdangfugbixs-tooling-docs
+        run: |
+          npm ci
+          npm run build

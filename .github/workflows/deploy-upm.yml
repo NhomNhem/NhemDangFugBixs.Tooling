@@ -1,0 +1,59 @@
+name: Deploy UPM Branch
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Build deploy branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build source projects
+        run: dotnet build Source~/NhemDangFugBixs.Tooling.sln -c Release
+
+      - name: Prepare deploy directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf deploy
+          mkdir -p deploy
+
+          cp package.json deploy/
+          cp README.md deploy/
+          cp CHANGELOG.md deploy/
+
+          if [ -f LICENSE.md ]; then cp LICENSE.md deploy/; fi
+          if [ -f LICENSE ]; then cp LICENSE deploy/; fi
+          if [ -f "Third Party Notices.md" ]; then cp "Third Party Notices.md" deploy/; fi
+
+          if [ -d Runtime ]; then cp -R Runtime deploy/; fi
+          if [ -d Editor ]; then cp -R Editor deploy/; fi
+          if [ -d Analyzers ]; then cp -R Analyzers deploy/; fi
+          if [ -d Tests ]; then cp -R Tests deploy/; fi
+          if [ -d Samples~ ]; then cp -R Samples~ deploy/; fi
+          if [ -d Documentation~ ]; then cp -R Documentation~ deploy/; fi
+
+      - name: Publish deploy branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: deploy
+          publish_dir: ./deploy
+          force_orphan: true

@@ -83,6 +83,14 @@ internal static class RegistrationEmitter {
                         if (!string.IsNullOrEmpty(directMapping.ClassName)) {
                             return MapToScope(s, directMapping.ClassName);
                         }
+                    } else if (scopeMappings != null) {
+                        var aliasMapping = scopeMappings.FirstOrDefault(m =>
+                            !string.IsNullOrEmpty(m.AliasName) &&
+                            string.Equals(m.AliasName, s.ScopeName, System.StringComparison.OrdinalIgnoreCase));
+
+                        if (!string.IsNullOrEmpty(aliasMapping.ClassName)) {
+                            return MapToScope(s, aliasMapping.ClassName);
+                        }
                     }
                     return s;
                 });
@@ -111,6 +119,33 @@ internal static class RegistrationEmitter {
                         }
                     }
                     writer.WriteLine();
+                }
+
+                if (scopeMappings != null && scopeMappings.Count > 0) {
+                    using (writer.Block("public static void RegisterGeneratedFor<TScopeMarker>(global::VContainer.IContainerBuilder builder)")) {
+                        writer.WriteLine("var marker = typeof(TScopeMarker);");
+                        foreach (var mapping in scopeMappings
+                                     .GroupBy(m => m.IdentityTypeName)
+                                     .Select(g => g.First())
+                                     .OrderBy(m => m.IdentityTypeName)) {
+                            var methodName = GetRegistrationMethodName(mapping.ClassName);
+                            writer.WriteLine($"if (marker == typeof(global::{mapping.IdentityTypeName})) {{ {methodName}(builder); return; }}");
+                        }
+                        writer.WriteLine("throw new global::System.InvalidOperationException($\"No generated registration exists for scope marker '{marker.FullName}'.\");");
+                    }
+                    writer.WriteLine();
+
+                    foreach (var mapping in scopeMappings
+                                 .GroupBy(m => m.IdentityTypeName)
+                                 .Select(g => g.First())
+                                 .OrderBy(m => m.IdentityTypeName)) {
+                        var wrapperName = $"RegisterGeneratedFor{SanitizeIdentifier(GetSimpleName(mapping.IdentityTypeName))}";
+                        var methodName = GetRegistrationMethodName(mapping.ClassName);
+                        using (writer.Block($"public static void {wrapperName}(global::VContainer.IContainerBuilder builder)")) {
+                            writer.WriteLine($"{methodName}(builder);");
+                        }
+                        writer.WriteLine();
+                    }
                 }
 
                 foreach (var group in filteredGroups) {
@@ -269,5 +304,16 @@ internal static class RegistrationEmitter {
         }
         
         return $"Register{name}";
+    }
+
+    private static string GetSimpleName(string fullName) {
+        return fullName.Contains(".") ? fullName.Split('.').Last() : fullName;
+    }
+
+    private static string SanitizeIdentifier(string value) {
+        var chars = value
+            .Select(ch => char.IsLetterOrDigit(ch) || ch == '_' ? ch : '_')
+            .ToArray();
+        return new string(chars);
     }
 }

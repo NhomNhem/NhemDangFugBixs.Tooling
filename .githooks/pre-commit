@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[Nhem] pre-commit: checking staged changes..."
+
+# Prevent committing Unity/IDE/generated junk.
+blocked_patterns=(
+  "Library/"
+  "Temp/"
+  "Obj/"
+  "Build/"
+  "Builds/"
+  ".vs/"
+  ".idea/workspace.xml"
+  "UserSettings/"
+)
+
+staged_files=$(git diff --cached --name-only)
+
+for pattern in "${blocked_patterns[@]}"; do
+  if echo "$staged_files" | grep -q "^$pattern"; then
+    echo "[Nhem] ERROR: blocked staged path detected: $pattern"
+    echo "Remove it from staging before committing."
+    exit 1
+  fi
+done
+
+# Warn when generated C# files are committed outside expected package output.
+if echo "$staged_files" | grep -E '\.g\.cs$' >/dev/null; then
+  echo "[Nhem] WARNING: generated .g.cs files are staged."
+  echo "Only commit generated files when they are intended package artifacts."
+fi
+
+# Basic markdown guard.
+if echo "$staged_files" | grep -E '\.md$' >/dev/null; then
+  echo "[Nhem] Markdown files changed. Make sure docs reflect public API changes."
+fi
+
+echo "[Nhem] pre-commit passed."

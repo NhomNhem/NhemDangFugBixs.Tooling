@@ -167,7 +167,7 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             if (!allServices.Any() && !validSceneServices.Any()) return;
 
             var sourceCode = RegistrationEmitter.GenerateSource(allServices, validSceneServices, assemblyName, scopeMappings, stats);
-            var reportCode = ReportEmitter.GenerateSource(allServices, rootLogging, assemblyName);
+            var reportCode = ReportEmitter.GenerateSource(allServices, rootLogging, scopeMappings, assemblyName);
 
             // phase 3: Encapsulation
             // Generate ONE file per assembly containing everything including the global usings

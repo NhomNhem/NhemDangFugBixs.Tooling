@@ -18,6 +18,8 @@ internal class ClassAnalyzer {
     private const string LifetimeScopeForGenericAttributeName = "NhemDangFugBixs.Attributes.LifetimeScopeForAttribute`1";
     private const string SceneAttributeName = "NhemDangFugBixs.Attributes.AutoInjectSceneAttribute";
     private const string InstallerOrderAttributeName = "NhemDangFugBixs.Attributes.InstallerOrderAttribute";
+    private const string AutoRegisterInScopeAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInScopeAttribute";
+    private const string RegisterScopeAliasAttributeName = "NhemDangFugBixs.Attributes.RegisterScopeAliasAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
 
     private static bool IsAttributeMatch(AttributeSyntax attr, string simpleName) {
@@ -63,6 +65,8 @@ internal class ClassAnalyzer {
                         mappingAttr = attr;
                     } else if (IsAttributeMatch(attr, "ScopeName")) {
                         nameAttr = attr;
+                    } else if (IsAttributeMatch(attr, "RegisterScopeAlias")) {
+                        nameAttr ??= attr;
                     }
                 }
             }
@@ -102,17 +106,26 @@ internal class ClassAnalyzer {
 
             // Extract custom name if present
             string className = classDecl.Identifier.Text;
-            if (nameAttr != null && nameAttr.ArgumentList != null && nameAttr.ArgumentList.Arguments.Count > 0) {
-                var nameExpr = nameAttr.ArgumentList.Arguments[0].Expression;
-                var constantValue = context.SemanticModel.GetConstantValue(nameExpr, cancellationToken);
-                if (constantValue.HasValue && constantValue.Value is string customName) {
-                    className = $"{customName}LifetimeScope"; // Add suffix so RegistrationEmitter handles it normally
+            string? aliasName = null;
+            foreach (var attr in classDecl.AttributeLists.SelectMany(x => x.Attributes)) {
+                if (IsAttributeMatch(attr, "ScopeName") && attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
+                    var nameExpr = attr.ArgumentList.Arguments[0].Expression;
+                    var constantValue = context.SemanticModel.GetConstantValue(nameExpr, cancellationToken);
+                    if (constantValue.HasValue && constantValue.Value is string customName) {
+                        className = $"{customName}LifetimeScope";
+                    }
+                } else if (IsAttributeMatch(attr, "RegisterScopeAlias") && attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
+                    var aliasExpr = attr.ArgumentList.Arguments[0].Expression;
+                    var constantValue = context.SemanticModel.GetConstantValue(aliasExpr, cancellationToken);
+                    if (constantValue.HasValue && constantValue.Value is string alias) {
+                        aliasName = alias;
+                    }
                 }
             }
 
             var ns = classDecl.GetNamespace();
             string originalClassName = classDecl.Identifier.Text;
-            return new ScopeMappingInfo(ns, className, identityTypeName!, originalClassName);
+            return new ScopeMappingInfo(ns, className, identityTypeName!, originalClassName, aliasName);
         } catch {
             return null;
         }
@@ -134,6 +147,16 @@ internal class ClassAnalyzer {
                 .Where(info => info.HasValue)
                 .Select(info => info.Value);
 
+            IEnumerable<ServiceInfo> aliasInfos = typeDecl.AttributeLists
+                .SelectMany(x => x.Attributes)
+                .Where(x => IsAttributeMatch(x, "AutoRegisterInScope") ||
+                            IsAttributeMatch(x, "ProjectService") ||
+                            IsAttributeMatch(x, "GameplayService") ||
+                            IsAttributeMatch(x, "MainMenuService"))
+                .Select(attr => ExtractInfoFromAliasAttribute(context, typeDecl, attr, cancellationToken))
+                .Where(info => info.HasValue)
+                .Select(info => info.Value);
+
             // 2. Process [AutoRegisterMessageBrokerIn] attributes
             IEnumerable<ServiceInfo> brokerInfos = typeDecl.AttributeLists
                 .SelectMany(x => x.Attributes)
@@ -142,11 +165,78 @@ internal class ClassAnalyzer {
                 .Where(info => info.HasValue)
                 .Select(info => info.Value);
 
-            return typeSafeInfos.Concat(brokerInfos).ToImmutableArray();
+            return typeSafeInfos.Concat(aliasInfos).Concat(brokerInfos).ToImmutableArray();
         } catch {
             // Log error if needed
             return ImmutableArray<ServiceInfo>.Empty;
         }
+    }
+
+    private static ServiceInfo? ExtractInfoFromAliasAttribute(
+        GeneratorSyntaxContext context,
+        TypeDeclarationSyntax typeDecl,
+        AttributeSyntax attr,
+        CancellationToken cancellationToken)
+    {
+        var ns = typeDecl.GetNamespace();
+        string? scopeAlias = null;
+        var lifetime = "Singleton";
+
+        if (IsAttributeMatch(attr, "ProjectService")) {
+            scopeAlias = "Project";
+            lifetime = "Singleton";
+        } else if (IsAttributeMatch(attr, "GameplayService")) {
+            scopeAlias = "Gameplay";
+            lifetime = "Scoped";
+        } else if (IsAttributeMatch(attr, "MainMenuService")) {
+            scopeAlias = "MainMenu";
+            lifetime = "Scoped";
+        } else if (attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
+            var aliasExpr = attr.ArgumentList.Arguments[0].Expression;
+            var constantValue = context.SemanticModel.GetConstantValue(aliasExpr, cancellationToken);
+            if (constantValue.HasValue && constantValue.Value is string alias) {
+                scopeAlias = alias;
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(scopeAlias)) {
+            return null;
+        }
+
+        lifetime = ExtractLifetime(context, attr, cancellationToken, lifetime);
+        var asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
+        var asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
+        var registerInHierarchy = ExtractBooleanProperty(context, attr, "RegisterInHierarchy", false, cancellationToken);
+        var asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
+        var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder) = ExtractClassInfo(context, typeDecl, cancellationToken);
+        var metadata = ExtractMessagePipeConsumerMetadata(context, typeDecl, cancellationToken);
+        foreach (var pair in ExtractLoggerConsumerMetadata(context, typeDecl, cancellationToken)) {
+            metadata[pair.Key] = pair.Value;
+        }
+
+        return new ServiceInfo(
+            ns,
+            typeDecl.Identifier.Text,
+            lifetime,
+            scopeAlias,
+            interfaceNames.ToArray(),
+            isComponent,
+            asImplementedInterfaces,
+            asSelf,
+            registerInHierarchy,
+            asTypes,
+            isEntryPoint,
+            false,
+            null,
+            false,
+            isExceptionHandler,
+            isBuildCallback,
+            isInstaller,
+            installerOrder,
+            false,
+            null,
+            MessagePipeType.Publisher,
+            metadata);
     }
 
     private static ServiceInfo? ExtractMessageBrokerInfo(
@@ -213,8 +303,8 @@ internal class ClassAnalyzer {
             true, messageType, messagePipeKind);
     }
 
-    private static string ExtractLifetime(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken) {
-        string lifetime = "Singleton";
+    private static string ExtractLifetime(GeneratorSyntaxContext context, AttributeSyntax attr, CancellationToken cancellationToken, string defaultValue = "Singleton") {
+        string lifetime = defaultValue;
         if (attr.ArgumentList != null) {
             // Find named argument "Lifetime"
             var lifetimeArg = attr.ArgumentList.Arguments
