@@ -2,6 +2,21 @@
 
 Roslyn source generators, analyzers, and Unity package assets that wire up [VContainer](https://github.com/hadashiA/VContainer) dependency registration with safer defaults. The package auto-registers types decorated with `[AutoRegister]` and `[AutoRegisterIn]`, validates scope usage, and ships analyzers to catch duplicate or invalid registrations early.
 
+The recommended architecture is marker-based scope mapping:
+
+```csharp
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[As<IPhaseStateMachine>]
+public sealed class PhaseStateMachine : IPhaseStateMachine { }
+
+[LifetimeScopeFor<IGameplayScope>]
+public sealed class GameplayLifetimeScope : LifetimeScope {
+    protected override void Configure(IContainerBuilder builder) {
+        builder.RegisterGeneratedFor<IGameplayScope>();
+    }
+}
+```
+
 ## Installing
 
 ### OpenUPM
@@ -43,6 +58,7 @@ Prerequisite: install VContainer in the project first. This package does not aut
 ## Repository Layout
 - `Source~/`: C# solution containing the CLI, generators, analyzers, and supporting libraries.
 - `Runtime/`, `Editor/`, `Analyzers/`: Unity package content that must remain release-ready in source tags.
+- `Samples~/`: sample architectures for basic registration, scope markers, MessagePipe, and scene components.
 - `website/` and `docs/`: documentation sources and Docusaurus site, excluded from the `deploy` branch package output.
 - `.github/workflows/`: validation, release, docs, and deploy automation.
 

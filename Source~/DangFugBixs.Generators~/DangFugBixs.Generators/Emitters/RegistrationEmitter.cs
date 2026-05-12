@@ -226,7 +226,13 @@ internal static class RegistrationEmitter {
             writer.WriteLine($"builder.RegisterMessageBroker<{messageType}>({lifetime});");
         } else if (svc.IsComponent) {
             string suffix = GetSmartSuffix(svc);
-            writer.WriteLine($"builder.RegisterComponentOnNewGameObject<{fullName}>({lifetime}){suffix};");
+            if (svc.Metadata.TryGetValue("ComponentMode", out var mode) && mode == "Hierarchy") {
+                writer.WriteLine($"builder.RegisterComponentInHierarchy<{fullName}>(){suffix};");
+            } else if (svc.Metadata.TryGetValue("GameObjectName", out var gameObjectName) && !string.IsNullOrWhiteSpace(gameObjectName)) {
+                writer.WriteLine($"builder.RegisterComponentOnNewGameObject<{fullName}>({lifetime}, \"{EscapeString(gameObjectName)}\"){suffix};");
+            } else {
+                writer.WriteLine($"builder.RegisterComponentOnNewGameObject<{fullName}>({lifetime}){suffix};");
+            }
         } else if (svc.IsFactory) {
             string suffix = GetSmartSuffix(svc);
             writer.WriteLine($"builder.RegisterFactory<{fullName}>(c => () => c.Resolve<{fullName}>(), {lifetime}){suffix};");
@@ -315,5 +321,9 @@ internal static class RegistrationEmitter {
             .Select(ch => char.IsLetterOrDigit(ch) || ch == '_' ? ch : '_')
             .ToArray();
         return new string(chars);
+    }
+
+    private static string EscapeString(string value) {
+        return value.Replace("\\", "\\\\").Replace("\"", "\\\"");
     }
 }

@@ -18,78 +18,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../.codex/rules/default.rules" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.github/workflows/release.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../.github/workflows/release.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Analyzers.meta" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/ApiCard.astro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/CodePanel.astro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/DocsHero.astro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/FeatureGrid.astro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/getting-started.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/installation.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/quick-start.mdx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHANGELOG.md.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Editor.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GameFeelUnity-Test-Files.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../LICENSE.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../RELEASE-v5.2.0.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Runtime.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/indexLayout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Attributes.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Attributes.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Runtime.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Runtime.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Common~/Models/ScopeMappingInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Common~/Models/ScopeMappingInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.Tests/DangFugBixs.Analyzers.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.Tests/DangFugBixs.Analyzers.Tests.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.Cli/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.Cli/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Tests/TypeSafeScopeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Tests/TypeSafeScopeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/astro.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/astro.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/pnpm-workspace.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/pnpm-workspace.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/CI-BENCHMARK-REPORT.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/CI-CD-OPTIMIZATION-SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/CI-OPTIMIZATION.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/CI-PERF-REGRESSION.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/CI-PERFORMANCE-SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/MIGRATION_v5_to_v6.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/NEXT-STEPS.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/PERFORMANCE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/RELEASE-COMPLETE-SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/RELEASE-NOTES-v6.0.0.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/RELEASE-VERIFICATION.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/RELEASE-v6.0.0-PUBLISHED.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/SPEC-v6.1.0.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/TROUBLESHOOTING.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/V6.0.0-IMPLEMENTATION-COMPLETE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../openspec.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package.json.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/docs/architecture.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/docs/changelog.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/docs/contributing.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/docs/duplicate-registrations.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/docs/faq.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/docs/intro.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/docs/usage.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/docusaurus.config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/sidebars.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/sidebars.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/src/components/HomepageFeatures/index.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/src/components/HomepageFeatures/styles.module.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/src/css/custom.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/src/pages/index.module.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/src/pages/index.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/src/pages/markdown-page.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/static/.nojekyll" beforeDir="false" afterPath="$PROJECT_DIR$/../.codex/rules/default.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/static/img/docusaurus-social-card.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/static/img/docusaurus.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/static/img/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/static/img/logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/static/img/undraw_docusaurus_mountain.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/static/img/undraw_docusaurus_react.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/static/img/undraw_docusaurus_tree.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../website/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/index.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/index.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/styles/global.css" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/styles/global.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,18 +127,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/AppData/Local/Temp/SourceGeneratedDocuments/A36B7384B2715BDFE13F6AAB/DangFugBixs.Generators/DangFugBixs.Generators.VContainerAutoRegisterGenerator/VContainerRegistration.g.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/a6c52fa9aa0e4118bb12d6ef071d34b61400/60/9182ba55/02000002pdb1.il" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e2be5b197d60408d97f1e949a976ea698530/ec/69a1d938/IGrouping`2.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/DangFugBixs.Common/Models/ServiceInfo.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/Utils/RoslynExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/DangFugBixs.Generators/DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/DangFugBixs.Runtime/AutoRegisterAttribute.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/DangFugBixs.Runtime/Lifetime.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/test_enum.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/SourceGeneratedDocuments/B0C54C9258A462F85BEAA28B/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
@@ -246,6 +187,7 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "com.github.copilot.settings.customization.CustomizationConfigurable",
     "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "J:\\Rider\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -399,7 +341,7 @@
       <workItem from="1773592706978" duration="933000" />
       <workItem from="1773619999734" duration="53000" />
       <workItem from="1778618494139" duration="1620000" />
-      <workItem from="1778620178553" duration="2380000" />
+      <workItem from="1778620178553" duration="5582000" />
     </task>
     <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
       <option name="closed" value="true" />
@@ -457,7 +399,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770641065105</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feat: Add Tailwind CSS integration and update build scripts">
+      <option name="closed" value="true" />
+      <created>1778622723809</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1778622723809</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -474,7 +424,8 @@
     <MESSAGE value="fix: update project references and improve post-build actions for analyzers and generators" />
     <MESSAGE value="Docs: Update README with project description, features, installation, usage, and architecture details" />
     <MESSAGE value="dll" />
-    <option name="LAST_COMMIT_MESSAGE" value="dll" />
+    <MESSAGE value="feat: Add Tailwind CSS integration and update build scripts" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Add Tailwind CSS integration and update build scripts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

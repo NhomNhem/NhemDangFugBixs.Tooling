@@ -283,6 +283,112 @@ public class UIService { }
         Assert.That(generatedCode, Does.Contain("RegisterUI("));
     }
 
+    [Test]
+    public void AutoRegisterInScope_WithAlias_MapsToLifetimeScopeRegistration() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+
+public interface IGameplayScope { }
+
+[RegisterScopeAlias(""Gameplay"")]
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope : LifetimeScope { }
+
+[AutoRegisterInScope(""Gameplay"", Lifetime = Lifetime.Scoped)]
+public class GameplayService { }
+";
+
+        var result = RunGenerator(source);
+        var generatedCode = result.GeneratedTrees[0].ToString();
+
+        Assert.That(generatedCode, Does.Contain("RegisterGameplay("));
+        Assert.That(generatedCode, Does.Contain("builder.Register<global::GameplayService>(global::VContainer.Lifetime.Scoped)"));
+    }
+
+    [Test]
+    public void LifetimeScopeFor_GeneratesGenericAndNonGenericInstallerEntryPoints() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+
+public interface IGameplayScope { }
+
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope : LifetimeScope { }
+
+[AutoRegisterIn(typeof(IGameplayScope))]
+public class GameplayService { }
+";
+
+        var result = RunGenerator(source);
+        var generatedCode = result.GeneratedTrees[0].ToString();
+
+        Assert.That(generatedCode, Does.Contain("RegisterGeneratedFor<TScopeMarker>"));
+        Assert.That(generatedCode, Does.Contain("RegisterGeneratedForIGameplayScope"));
+    }
+
+    [Test]
+    public void EntryPointAttribute_EnablesEntryPointRegistration() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+
+public class GameLifetimeScope : LifetimeScope { }
+
+[AutoRegisterIn(typeof(GameLifetimeScope))]
+[EntryPoint]
+public class ManualEntryPointService { }
+";
+
+        var result = RunGenerator(source);
+        var generatedCode = result.GeneratedTrees[0].ToString();
+
+        Assert.That(generatedCode, Does.Contain("RegisterEntryPoint<global::ManualEntryPointService>"));
+    }
+
+    [Test]
+    public void SceneComponentAttribute_GeneratesHierarchyRegistration() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+using UnityEngine;
+
+public interface IGameplayScope { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope : LifetimeScope { }
+
+[SceneComponent<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+public class PlayerHud : MonoBehaviour { }
+";
+
+        var result = RunGenerator(source);
+        var generatedCode = result.GeneratedTrees[0].ToString();
+
+        Assert.That(generatedCode, Does.Contain("RegisterComponentInHierarchy<global::PlayerHud>()"));
+    }
+
+    [Test]
+    public void NewGameObjectComponentAttribute_GeneratesNamedRegistration() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+using UnityEngine;
+
+public interface IGameplayScope { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope : LifetimeScope { }
+
+[NewGameObjectComponent<IGameplayScope>(name: ""BulletPool"", Lifetime = NhemLifetime.Scoped)]
+public class BulletPool : MonoBehaviour { }
+";
+
+        var result = RunGenerator(source);
+        var generatedCode = result.GeneratedTrees[0].ToString();
+
+        Assert.That(generatedCode, Does.Contain("RegisterComponentOnNewGameObject<global::BulletPool>(global::VContainer.Lifetime.Scoped, \"BulletPool\")"));
+    }
+
     private GeneratorDriverRunResult RunGenerator(string source) {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
         
@@ -356,6 +462,64 @@ public class PlayerJoined { }
         // Assert
         var generatedCode = string.Join("\n", result.GeneratedTrees.Select(t => t.ToString()));
         Assert.That(generatedCode, Does.Contain("RegisterMessageBroker<global::PlayerJoined>"));
+    }
+
+    [Test]
+    public void AutoRegisterMessageBrokerIn_WithMarkerMapping_UsesMappedScopeRegistrationMethod() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+using MessagePipe;
+
+public interface IGameplayScope { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope : LifetimeScope { }
+
+[AutoRegisterMessageBrokerIn(typeof(IGameplayScope))]
+public class SoulServedEvent { }
+";
+
+        var result = RunGenerator(source, includeMessagePipe: true);
+        var generatedCode = string.Join("\n", result.GeneratedTrees.Select(t => t.ToString()));
+
+        Assert.That(generatedCode, Does.Contain("RegisterGameplay("));
+        Assert.That(generatedCode, Does.Contain("RegisterMessageBroker<global::SoulServedEvent>"));
+    }
+
+    [Test]
+    public void GeneratedReport_IncludesScopeMappingsAndServiceKinds() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer;
+using VContainer.Unity;
+using UnityEngine;
+
+public interface IGameplayScope { }
+
+[RegisterScopeAlias(""Gameplay"")]
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope : LifetimeScope { }
+
+[AutoRegisterIn(typeof(IGameplayScope))]
+public class TickEntry : ITickable { public void Tick() {} }
+
+[SceneComponent<IGameplayScope>]
+public class HudView : MonoBehaviour { }
+
+[AutoRegisterIn(typeof(IGameplayScope))]
+public class BootstrapInstaller : IVContainerInstaller {
+    public void Install(IContainerBuilder builder) { }
+}
+";
+
+        var result = RunGenerator(source);
+        var generatedCode = string.Join("\n", result.GeneratedTrees.Select(t => t.ToString()));
+
+        Assert.That(generatedCode, Does.Contain("ScopeMappings"));
+        Assert.That(generatedCode, Does.Contain("IGameplayScope|GameplayLifetimeScope|Gameplay"));
+        Assert.That(generatedCode, Does.Contain("|EntryPoint|"));
+        Assert.That(generatedCode, Does.Contain("|Component|"));
+        Assert.That(generatedCode, Does.Contain("|Installer|"));
     }
 
     private static GeneratorDriverRunResult RunGenerator(string source, bool includeMessagePipe = false) {

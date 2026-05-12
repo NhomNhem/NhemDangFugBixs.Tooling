@@ -20,6 +20,8 @@ internal class ClassAnalyzer {
     private const string InstallerOrderAttributeName = "NhemDangFugBixs.Attributes.InstallerOrderAttribute";
     private const string AutoRegisterInScopeAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInScopeAttribute";
     private const string RegisterScopeAliasAttributeName = "NhemDangFugBixs.Attributes.RegisterScopeAliasAttribute";
+    private const string SceneComponentAttributeName = "NhemDangFugBixs.Attributes.SceneComponentAttribute";
+    private const string NewGameObjectComponentAttributeName = "NhemDangFugBixs.Attributes.NewGameObjectComponentAttribute";
     private static readonly HashSet<string> ValidLifetimes = new() { "Singleton", "Transient", "Scoped" };
 
     private static bool IsAttributeMatch(AttributeSyntax attr, string simpleName) {
@@ -165,11 +167,110 @@ internal class ClassAnalyzer {
                 .Where(info => info.HasValue)
                 .Select(info => info.Value);
 
-            return typeSafeInfos.Concat(aliasInfos).Concat(brokerInfos).ToImmutableArray();
+            IEnumerable<ServiceInfo> componentInfos = typeDecl.AttributeLists
+                .SelectMany(x => x.Attributes)
+                .Where(x => IsAttributeMatch(x, "SceneComponent") || IsAttributeMatch(x, "NewGameObjectComponent"))
+                .Select(attr => ExtractInfoFromComponentAttribute(context, typeDecl, attr, cancellationToken))
+                .Where(info => info.HasValue)
+                .Select(info => info.Value);
+
+            return typeSafeInfos.Concat(aliasInfos).Concat(brokerInfos).Concat(componentInfos).ToImmutableArray();
         } catch {
             // Log error if needed
             return ImmutableArray<ServiceInfo>.Empty;
         }
+    }
+
+    private static ServiceInfo? ExtractInfoFromComponentAttribute(
+        GeneratorSyntaxContext context,
+        TypeDeclarationSyntax typeDecl,
+        AttributeSyntax attr,
+        CancellationToken cancellationToken)
+    {
+        var ns = typeDecl.GetNamespace();
+        string? scopeTypeName = null;
+        bool usesTypeSafeScope = false;
+        string lifetime = "Scoped";
+
+        if (attr.Name is GenericNameSyntax genericName && genericName.TypeArgumentList.Arguments.Count > 0) {
+            var scopeTypeArg = genericName.TypeArgumentList.Arguments[0];
+            var scopeTypeSymbol = context.SemanticModel.GetTypeInfo(scopeTypeArg, cancellationToken).Type;
+            if (scopeTypeSymbol != null) {
+                scopeTypeName = scopeTypeSymbol.ToDisplayString();
+                usesTypeSafeScope = true;
+            }
+        } else if (attr.Name is QualifiedNameSyntax qn && qn.Right is GenericNameSyntax gn && gn.TypeArgumentList.Arguments.Count > 0) {
+            var scopeTypeArg = gn.TypeArgumentList.Arguments[0];
+            var scopeTypeSymbol = context.SemanticModel.GetTypeInfo(scopeTypeArg, cancellationToken).Type;
+            if (scopeTypeSymbol != null) {
+                scopeTypeName = scopeTypeSymbol.ToDisplayString();
+                usesTypeSafeScope = true;
+            }
+        } else if (attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
+            var arg = attr.ArgumentList.Arguments[0].Expression;
+            if (arg is TypeOfExpressionSyntax typeOfExpr) {
+                var scopeTypeSymbol = context.SemanticModel.GetTypeInfo(typeOfExpr.Type, cancellationToken).Type;
+                if (scopeTypeSymbol != null) {
+                    scopeTypeName = scopeTypeSymbol.ToDisplayString();
+                    usesTypeSafeScope = true;
+                }
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(scopeTypeName)) {
+            return null;
+        }
+
+        lifetime = ExtractLifetime(context, attr, cancellationToken, lifetime);
+        var asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
+        var asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
+        var asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
+        var (interfaceNames, _, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder) = ExtractClassInfo(context, typeDecl, cancellationToken);
+        var metadata = ExtractMessagePipeConsumerMetadata(context, typeDecl, cancellationToken);
+        foreach (var pair in ExtractLoggerConsumerMetadata(context, typeDecl, cancellationToken)) {
+            metadata[pair.Key] = pair.Value;
+        }
+
+        if (IsAttributeMatch(attr, "SceneComponent")) {
+            metadata["ComponentMode"] = "Hierarchy";
+        } else {
+            metadata["ComponentMode"] = "NewGameObject";
+            if (attr.ArgumentList != null && attr.ArgumentList.Arguments.Count > 0) {
+                var maybeNameArg = attr.ArgumentList.Arguments
+                    .FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == "name" || a.NameColon?.Name.Identifier.Text == "name")
+                    ?? attr.ArgumentList.Arguments.FirstOrDefault(a => a.Expression is LiteralExpressionSyntax lit && lit.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.StringLiteralExpression));
+                if (maybeNameArg != null) {
+                    var cv = context.SemanticModel.GetConstantValue(maybeNameArg.Expression, cancellationToken);
+                    if (cv.HasValue && cv.Value is string goName && !string.IsNullOrWhiteSpace(goName)) {
+                        metadata["GameObjectName"] = goName;
+                    }
+                }
+            }
+        }
+
+        return new ServiceInfo(
+            ns,
+            typeDecl.Identifier.Text,
+            lifetime,
+            "Global",
+            interfaceNames.ToArray(),
+            true,
+            asImplementedInterfaces,
+            asSelf,
+            metadata["ComponentMode"] == "Hierarchy",
+            asTypes,
+            isEntryPoint,
+            false,
+            scopeTypeName,
+            usesTypeSafeScope,
+            isExceptionHandler,
+            isBuildCallback,
+            isInstaller,
+            installerOrder,
+            false,
+            null,
+            MessagePipeType.Publisher,
+            metadata);
     }
 
     private static ServiceInfo? ExtractInfoFromAliasAttribute(
@@ -213,6 +314,7 @@ internal class ClassAnalyzer {
         foreach (var pair in ExtractLoggerConsumerMetadata(context, typeDecl, cancellationToken)) {
             metadata[pair.Key] = pair.Value;
         }
+        ApplyBehaviorAttributes(context, typeDecl, cancellationToken, ref isEntryPoint, ref registerInHierarchy, metadata);
 
         return new ServiceInfo(
             ns,
@@ -383,6 +485,7 @@ internal class ClassAnalyzer {
         foreach (var pair in ExtractLoggerConsumerMetadata(context, typeDecl, cancellationToken)) {
             metadata[pair.Key] = pair.Value;
         }
+        ApplyBehaviorAttributes(context, typeDecl, cancellationToken, ref isEntryPoint, ref registerInHierarchy, metadata);
 
         return new ServiceInfo(
             ns, typeDecl.Identifier.Text, lifetime, "Global",
@@ -390,6 +493,37 @@ internal class ClassAnalyzer {
             registerInHierarchy, asTypes, isEntryPoint, false,
             scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder,
             false, null, MessagePipeType.Publisher, metadata);
+    }
+
+    private static void ApplyBehaviorAttributes(
+        GeneratorSyntaxContext context,
+        TypeDeclarationSyntax typeDecl,
+        CancellationToken cancellationToken,
+        ref bool isEntryPoint,
+        ref bool registerInHierarchy,
+        Dictionary<string, string> metadata)
+    {
+        foreach (var attr in typeDecl.AttributeLists.SelectMany(x => x.Attributes)) {
+            if (IsAttributeMatch(attr, "EntryPoint") || IsAttributeMatch(attr, "AsyncEntryPoint")) {
+                isEntryPoint = true;
+                metadata["ExplicitEntryPoint"] = "true";
+            } else if (IsAttributeMatch(attr, "SceneComponent")) {
+                registerInHierarchy = true;
+                metadata["ComponentMode"] = "Hierarchy";
+            } else if (IsAttributeMatch(attr, "NewGameObjectComponent")) {
+                registerInHierarchy = false;
+                metadata["ComponentMode"] = "NewGameObject";
+                if (attr.ArgumentList != null) {
+                    foreach (var arg in attr.ArgumentList.Arguments) {
+                        var cv = context.SemanticModel.GetConstantValue(arg.Expression, cancellationToken);
+                        if (cv.HasValue && cv.Value is string goName && !string.IsNullOrWhiteSpace(goName)) {
+                            metadata["GameObjectName"] = goName;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private static (List<string> interfaceNames, bool isComponent, bool isEntryPoint, bool isExceptionHandler, bool isBuildCallback, bool isInstaller, int installerOrder) ExtractClassInfo(
