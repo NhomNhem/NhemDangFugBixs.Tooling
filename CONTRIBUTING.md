@@ -35,6 +35,15 @@ Thank you for considering contributing to NhemDangFugBixs.Tooling! This document
    dotnet test Source~/NhemDangFugBixs.Tooling.sln
    ```
 
+5. **Enable repo hooks**
+   ```bash
+   git config core.hooksPath .githooks
+   ```
+   `pre-push` will:
+   - run package validation tests
+   - when pushing `main/master`, auto-sync `deploy` branch with package-only content
+   - exclude AI/dev files from `deploy` (for example `openspec/`, `AGENTS.md`, `.agent/`)
+
 ### Project Structure
 
 ```

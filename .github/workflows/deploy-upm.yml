@@ -3,6 +3,9 @@ name: Deploy UPM Branch
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
+      - master
     tags:
       - "v*.*.*"
 
@@ -25,9 +28,6 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Build source projects
-        run: dotnet build Source~/NhemDangFugBixs.Tooling.sln -c Release
-
       - name: Prepare deploy directory
         shell: bash
         run: |
@@ -47,8 +47,19 @@ jobs:
           if [ -d Editor ]; then cp -R Editor deploy/; fi
           if [ -d Analyzers ]; then cp -R Analyzers deploy/; fi
           if [ -d Tests ]; then cp -R Tests deploy/; fi
-          if [ -d Samples~ ]; then cp -R Samples~ deploy/; fi
-          if [ -d Documentation~ ]; then cp -R Documentation~ deploy/; fi
+          if [ -d Samples ]; then cp -R Samples deploy/; fi
+          if [ -d Documentation ]; then cp -R Documentation deploy/; fi
+          if [ -d Samples~ ]; then cp -R Samples~ deploy/Samples; fi
+          if [ -d Documentation~ ]; then cp -R Documentation~ deploy/Documentation; fi
+
+          # Remove AI/dev-only artifacts from deploy branch.
+          rm -rf deploy/openspec deploy/.agent deploy/.codex deploy/.github deploy/scripts deploy/Source~ deploy/.githooks || true
+          rm -f deploy/AGENTS.md deploy/QWEN.md deploy/GEMINI.md deploy/.openspec.yaml deploy/CONTRIBUTING.md || true
+
+          # Hard whitelist validation for package branch.
+          for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers Tests; do
+            test -e "deploy/$required"
+          done
 
       - name: Publish deploy branch
         uses: peaceiris/actions-gh-pages@v4
