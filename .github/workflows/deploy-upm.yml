@@ -51,6 +51,7 @@ jobs:
           if [ -d Documentation ]; then cp -R Documentation deploy/; fi
           if [ -d Samples~ ]; then cp -R Samples~ deploy/Samples; fi
           if [ -d Documentation~ ]; then cp -R Documentation~ deploy/Documentation; fi
+          rm -rf deploy/Samples~ deploy/Documentation~
 
           # Remove AI/dev-only artifacts from deploy branch.
           rm -rf deploy/openspec deploy/.agent deploy/.codex deploy/.github deploy/scripts deploy/Source~ deploy/.githooks || true
@@ -60,6 +61,13 @@ jobs:
           for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers Tests; do
             test -e "deploy/$required"
           done
+
+          # Ensure deploy output is clean from AI/dev artifacts.
+          test ! -e deploy/openspec
+          test ! -e deploy/.agent
+          test ! -e deploy/.codex
+          test ! -e deploy/Source~
+          test ! -e deploy/AGENTS.md
 
       - name: Publish deploy branch
         uses: peaceiris/actions-gh-pages@v4

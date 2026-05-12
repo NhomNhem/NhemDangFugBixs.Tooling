@@ -41,8 +41,9 @@ Thank you for considering contributing to NhemDangFugBixs.Tooling! This document
    ```
    `pre-push` will:
    - run package validation tests
-   - when pushing `main/master`, auto-sync `deploy` branch with package-only content
-   - exclude AI/dev files from `deploy` (for example `openspec/`, `AGENTS.md`, `.agent/`)
+   - fail fast before remote push if core tests fail
+   
+   `deploy` branch sync is handled by GitHub workflow (`deploy-upm.yml`), not by local hooks.
 
 ### Project Structure
 
