@@ -1,0 +1,20 @@
+---
+title: MessagePipe Integration
+description: Optional broker registration and event-flow reporting.
+slug: docs/guides/messagepipe
+---
+
+MessagePipe support is optional and should be enabled when your project uses broker-based events.
+
+```csharp
+[AutoRegisterMessageBrokerIn<IGameplayScope>]
+public readonly struct SoulServedEvent { }
+```
+
+The tooling can report publisher/subscriber usage per scope, helping teams track event flow and spot missing registrations.
+
+## Recommended Workflow
+
+1. Register event brokers by scope marker.
+2. Run CLI preflight/report.
+3. Review event table in generated report and Editor diagnostics.

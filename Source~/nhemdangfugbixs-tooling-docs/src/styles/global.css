@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+/* Tailwind design tokens */
+@theme {
+    --color-canvas: #faf9f5;
+    --color-surface-soft: #f5f0e8;
+    --color-surface-card: #efe9de;
+    --color-surface-strong: #e8e0d2;
+
+    --color-surface-dark: #181715;
+    --color-surface-dark-elevated: #252320;
+    --color-surface-dark-soft: #1f1e1b;
+
+    --color-primary: #cc785c;
+    --color-primary-active: #a9583e;
+    --color-primary-disabled: #e6dfd8;
+    --color-accent-teal: #5db8a6;
+    --color-accent-amber: #e8a55a;
+
+    --color-ink: #141413;
+    --color-body: #3d3d3a;
+    --color-muted: #6c6a64;
+    --color-muted-soft: #8e8b82;
+
+    --color-hairline: #e6dfd8;
+
+    --font-display: "Tiempos Headline", "Cormorant Garamond", "EB Garamond", Georgia, serif;
+    --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-code: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Starlight variables */
+:root {
+    --sl-color-bg: #faf9f5;
+    --sl-color-bg-nav: #faf9f5;
+    --sl-color-bg-sidebar: #faf9f5;
+    --sl-color-bg-inline-code: #efe9de;
+
+    --sl-color-text: #141413;
+    --sl-color-text-accent: #cc785c;
+    --sl-color-accent: #cc785c;
+    --sl-color-accent-high: #a9583e;
+    --sl-color-hairline: #e6dfd8;
+
+    --sl-font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --sl-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+    --sl-content-width: 52rem;
+}
+
+/* Optional dark mode */
+:root[data-theme="dark"] {
+    --color-ink: #faf9f5;
+    --color-body: #cbc6bf;
+    --color-muted: #a09d96;
+    --color-muted-soft: #8e8b82;
+
+    --sl-color-bg: #181715;
+    --sl-color-bg-nav: #1f1e1b;
+    --sl-color-bg-sidebar: #1f1e1b;
+    --sl-color-bg-inline-code: #252320;
+
+    --sl-color-text: #faf9f5;
+    --sl-color-text-invert: #141413;
+    --sl-color-text-accent: #cc785c;
+    --sl-color-text-muted: #a09d96;
+    --sl-color-accent: #cc785c;
+    --sl-color-accent-high: #e09578;
+    --sl-color-hairline: #36322e;
+}
+
+body {
+    background: var(--sl-color-bg);
+    font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+}
+
+h1 {
+    letter-spacing: -0.05em;
+}
+
+code,
+pre {
+    font-family: var(--font-code);
+}
+
+.sl-markdown-content a {
+    color: #cc785c;
+    text-decoration-color: rgba(204, 120, 92, 0.35);
+}
+
+.sl-markdown-content a:hover {
+    text-decoration-color: #cc785c;
+}
+
+.sl-markdown-content .nhem-hero-btn-primary {
+    color: #141413 !important;
+    text-decoration: none;
+}
+
+.sl-markdown-content .nhem-hero-btn-primary:hover {
+    background: #faf9f5;
+}
+
+.sl-markdown-content .nhem-hero-btn-secondary {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+/* Better markdown table feel */
+.sl-markdown-content table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.sl-markdown-content th {
+    background: #efe9de;
+}
+
+:root[data-theme="dark"] .sl-markdown-content th {
+    background: #252320;
+    color: #faf9f5;
+}
+
+:root[data-theme="dark"] .sl-markdown-content td {
+    color: #e5e1da;
+}
+
+:root[data-theme="dark"] .sl-markdown-content a {
+    color: #e09578;
+    text-decoration-color: rgba(224, 149, 120, 0.42);
+}
+
+:root[data-theme="dark"] .sl-markdown-content a:hover {
+    color: #f0b49b;
+    text-decoration-color: #f0b49b;
+}
+
+:root[data-theme="dark"] .nhem-card {
+    background: #252320;
+    border-color: #36322e;
+}
+
+:root[data-theme="dark"] .nhem-card p,
+:root[data-theme="dark"] .nhem-card .text-body {
+    color: #cbc6bf !important;
+}
+
+:root[data-theme="dark"] .nhem-card h1,
+:root[data-theme="dark"] .nhem-card h2,
+:root[data-theme="dark"] .nhem-card h3,
+:root[data-theme="dark"] .nhem-card .text-ink {
+    color: #faf9f5 !important;
+}
+
+:root[data-theme="dark"] .nhem-hero-btn-primary {
+    background: #faf9f5;
+    border-color: #e6dfd8;
+    color: #141413 !important;
+}
+
+:root[data-theme="dark"] .nhem-hero-btn-secondary {
+    background: #cc785c;
+    border-color: #cc785c;
+    color: #ffffff !important;
+}
+
+/* Custom utility classes for MDX components */
+.nhem-card {
+    border: 1px solid #e6dfd8;
+    background: #efe9de;
+    border-radius: 16px;
+}
+
+.nhem-dark-card {
+    background: #181715;
+    color: #faf9f5;
+    border-radius: 16px;
+}
+
+.nhem-coral-card {
+    background: #cc785c;
+    color: #ffffff;
+    border-radius: 16px;
+}
+
+.nhem-hero-serif {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+}

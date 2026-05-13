@@ -1,0 +1,23 @@
+---
+title: CLI Reference
+description: di-smoke command reference for preflight, graph, report, and validation workflows.
+slug: docs/reference/cli
+---
+
+## Overview
+
+`di-smoke` validates and reports DI architecture outside Play Mode, including CI pipelines.
+
+## Commands
+
+```bash
+di-smoke preflight MyGame.csproj
+di-smoke validate bin/Debug/MyGame.dll --format json
+di-smoke graph MyGame.csproj --scope IGameplayScope --format mermaid
+di-smoke report MyGame.csproj --format markdown --out docs/generated/di-map.md
+di-smoke list MyGame.csproj --scope IGameplayScope
+```
+
+## CI Usage
+
+Use `preflight` as a required CI step so architecture regressions fail fast before QA.

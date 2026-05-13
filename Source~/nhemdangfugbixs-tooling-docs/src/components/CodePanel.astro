@@ -1,0 +1,15 @@
+---
+const {
+    title = 'Generated code',
+} = Astro.props;
+---
+
+<div class="nhem-dark-card my-6 overflow-hidden">
+    <div class="border-b border-white/10 bg-surface-dark-elevated px-4 py-3 text-sm text-white/70">
+        {title}
+    </div>
+
+    <div class="p-4">
+        <slot />
+    </div>
+</div>

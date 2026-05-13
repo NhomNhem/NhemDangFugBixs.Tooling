@@ -1,0 +1,37 @@
+---
+title: Scene Components
+description: Safe MonoBehaviour registration and injection patterns.
+slug: docs/guides/scene-components
+---
+
+`MonoBehaviour` registration differs from plain C# services.
+
+## Existing Scene Object
+
+```csharp
+[SceneComponent<IGameplayScope>]
+[As<IPlayerView>]
+public sealed class PlayerView : MonoBehaviour, IPlayerView { }
+```
+
+## Legacy Compatibility
+
+```csharp
+[AutoRegisterIn(typeof(IGameplayScope), RegisterInHierarchy = true)]
+public sealed class CameraController : MonoBehaviour { }
+```
+
+## Injection Style
+
+Do:
+
+```csharp
+[Inject]
+private void Construct(IPlayerPresenter presenter) { }
+```
+
+Avoid:
+
+- Constructor injection in `MonoBehaviour` (`NDF020`)
+- `[Inject]` public fields (`NDF021`)
+- `[Inject]` async methods (`NDF023`)

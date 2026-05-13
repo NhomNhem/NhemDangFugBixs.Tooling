@@ -1,0 +1,36 @@
+---
+title: Troubleshooting
+description: Fast fixes for common generation, mapping, and analyzer issues.
+slug: docs/troubleshooting
+---
+
+## Service Is Not Generated
+
+Symptom: attributed service never appears in generated installer.
+
+Cause: missing or wrong scope mapping.
+
+Fix: confirm `LifetimeScopeFor` mapping exists and marker type names match exactly.
+
+## Missing Scope Mapping (`NDFG010`)
+
+Symptom: diagnostic shows unmapped marker.
+
+Fix: add mapping in Composition:
+
+```csharp
+[LifetimeScopeFor<IGameplayScope>]
+public sealed class GameplayLifetimeScope : LifetimeScope { }
+```
+
+## MonoBehaviour Injection Error (`NDF020` / `NDF021`)
+
+Cause: constructor injection or `[Inject]` public field.
+
+Fix: move dependencies into a private `[Inject]` method.
+
+## CLI Cannot Find Project
+
+Cause: wrong working directory or path.
+
+Fix: run CLI from solution root or provide absolute `.csproj` path.

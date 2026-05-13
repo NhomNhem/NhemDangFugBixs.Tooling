@@ -1,0 +1,152 @@
+---
+title: Claude Editorial System
+description: Warm cream, coral, and dark-navy documentation style system for NhemDangFugBixs.Tooling docs.
+slug: docs/design-system/claude-editorial-system
+---
+
+## Overview
+
+Claude.com style is warm, editorial, and deliberate.
+The base atmosphere is a tinted cream canvas: `#faf9f5`.
+Headlines are slab-serif display style with negative tracking, while body copy remains humanist sans.
+
+This system is intentionally different from cold AI-brand palettes:
+- Warm cream canvas.
+- Muted coral primary.
+- Dark-navy product surfaces.
+
+## Core Surface Modes
+
+1. `#faf9f5` canvas floor.
+2. `#efe9de` cream card layer.
+3. `#181715` dark product layer.
+
+Use these three as page rhythm:
+cream -> card -> dark -> cream -> callout -> dark footer.
+
+## Color Tokens
+
+| Token | Hex | Purpose |
+|---|---|---|
+| `--color-canvas` | `#faf9f5` | Primary page floor |
+| `--color-surface-soft` | `#f5f0e8` | Soft section bands |
+| `--color-surface-card` | `#efe9de` | Feature cards |
+| `--color-surface-strong` | `#e8e0d2` | Strong cream bands |
+| `--color-surface-dark` | `#181715` | Product and footer surfaces |
+| `--color-surface-dark-elevated` | `#252320` | Elevated dark inner panels |
+| `--color-surface-dark-soft` | `#1f1e1b` | Code sub-panels |
+| `--color-primary` | `#cc785c` | Primary CTA / coral callouts |
+| `--color-primary-active` | `#a9583e` | Pressed state |
+| `--color-ink` | `#141413` | Headline and body anchor |
+| `--color-body` | `#3d3d3a` | Body paragraphs |
+| `--color-muted` | `#6c6a64` | Secondary text |
+| `--color-muted-soft` | `#8e8b82` | Captions |
+| `--color-hairline` | `#e6dfd8` | Borders and dividers |
+| `--color-accent-teal` | `#5db8a6` | Small secondary accents |
+| `--color-accent-amber` | `#e8a55a` | Warm badge accents |
+
+## Typography
+
+### Font Pairing
+
+- Display: Copernicus / Tiempos Headline fallback to Cormorant Garamond.
+- Body UI: StyreneB fallback to Inter.
+- Code: JetBrains Mono.
+
+### Display Rules
+
+- Prefer weight `400`.
+- Apply negative tracking for display headings.
+- Never switch display headlines to generic sans.
+
+### Recommended Scale
+
+| Token | Size | Weight | Line | Tracking |
+|---|---:|---:|---:|---:|
+| Display XL | 64px | 400 | 1.05 | -1.5px |
+| Display LG | 48px | 400 | 1.10 | -1px |
+| Display MD | 36px | 400 | 1.15 | -0.5px |
+| Body MD | 16px | 400 | 1.55 | 0 |
+| Body SM | 14px | 400 | 1.55 | 0 |
+| Caption | 13px | 500 | 1.40 | 0 |
+| Button | 14px | 500 | 1.00 | 0 |
+
+## Spacing and Shape
+
+- Base unit: `4px`.
+- Section vertical rhythm: `96px`.
+- Card inner padding: `32px` (or `24px` for compact product cards).
+- Radius scale:
+  - `8px` buttons and inputs.
+  - `12px` content cards.
+  - `16px` hero / marquee cards.
+  - `9999px` pills.
+
+## Components
+
+### Primary Button
+
+- Background: `#cc785c`.
+- Text: white.
+- Height: `40px`.
+- Radius: `8px`.
+
+### Feature Card
+
+- Background: `#efe9de`.
+- Radius: `12px`.
+- Padding: `32px`.
+
+### Dark Product Card
+
+- Background: `#181715`.
+- Text: `#faf9f5`.
+- Radius: `12px`.
+- Use for code, terminal, comparison surfaces.
+
+### Coral Callout
+
+- Background: `#cc785c`.
+- White text.
+- Radius: `12px`.
+- Generous inner spacing (`48px+`).
+
+## Responsive
+
+| Breakpoint | Behavior |
+|---|---|
+| `<768px` | Stack hero, single-column cards |
+| `768-1024px` | 2-up cards and tighter nav |
+| `1024-1440px` | Full desktop layout |
+| `>1440px` | Keep max-width container and extra outer breathing room |
+
+Code windows should keep fixed code font and horizontal scroll on mobile.
+
+## Do
+
+- Keep cream as the base.
+- Use coral for primary actions and big callouts.
+- Alternate cream and dark bands for pacing.
+- Show real product chrome on dark cards.
+
+## Do Not
+
+- Do not switch to cool gray/blue base themes.
+- Do not overuse coral on every small element.
+- Do not make display headlines bold-heavy.
+- Do not collapse all sections to one surface tone.
+
+## Iteration Guide
+
+1. Work component-by-component.
+2. Keep variants explicit (`active`, `disabled`, `focused`).
+3. Use token references, avoid ad-hoc colors.
+4. Keep serif display + sans body split intact.
+5. Preserve cream/coral/dark triad.
+
+## Known Gaps
+
+- Licensed Anthropic fonts need open-source substitutes.
+- Brand spike mark remains a logo asset, not a token.
+- Motion system is intentionally out of this docs scope.
+- Product chat UI components are out of marketing-surface scope.

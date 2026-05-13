@@ -1,0 +1,87 @@
+---
+title: NhemDangFugBixs.Tooling
+description: Compile-time VContainer workflow toolkit for Unity projects.
+slug: docs
+---
+
+import DocsHero from '../../components/DocsHero.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+
+<DocsHero eyebrow="Unity · VContainer · Source Generator · Analyzer" title="Compile-time DI safety for Unity projects." description="NhemDangFugBixs.Tooling keeps VContainer registrations explicit, generated, and architecture-aware across asmdef boundaries." primaryHref="/docs/quick-start/" primaryLabel="Quick Start" secondaryHref="/docs/installation/" secondaryLabel="Install Package" />
+
+## One-line definition
+
+`NhemDangFugBixs.Tooling` is a compile-time VContainer workflow toolkit for Unity.
+
+It does not replace VContainer. It adds source generation, analyzer guardrails, and reporting around VContainer workflows.
+
+## Core value
+
+```txt
+NhemDangFugBixs.Tooling does not force your architecture.
+It lets your architecture become compile-time checked.
+```
+
+## Main features
+
+<FeatureGrid
+    items={[
+        {
+            title: 'Attribute-driven registration',
+            description: 'Declare service intent with AutoRegisterIn, As, EntryPoint, SceneComponent, and marker mappings.',
+        },
+        {
+            title: 'Source-generated installers',
+            description: 'Emit readable VContainer registration code instead of scaling manual LifetimeScope.Configure methods.',
+        },
+        {
+            title: 'Scope marker architecture',
+            description: 'Keep lower layers independent from Composition by registering against marker types, not concrete scopes.',
+        },
+        {
+            title: 'Analyzer guardrails',
+            description: 'Catch architecture mistakes early: missing mappings, bad injection style, wrong lifetimes, resolver misuse.',
+        },
+    ]}
+/>
+
+## Concept example
+
+```csharp
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[As<IDayPhaseMechanicsService>]
+public sealed class DayPhaseMechanicsService : IDayPhaseMechanicsService
+{
+}
+```
+
+```csharp
+[LifetimeScopeFor<IGameplayScope>]
+public sealed class GameplayLifetimeScope : LifetimeScope
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        builder.RegisterGeneratedFor<IGameplayScope>();
+    }
+}
+```
+
+This keeps dependency direction clean:
+
+- Application -> Shared markers
+- Composition -> Shared markers + concrete `LifetimeScope`
+
+## Who should use this
+
+- Teams using VContainer with asmdef-separated architecture.
+- Projects where `LifetimeScope.Configure()` is growing too fast.
+- Teams that want CI validation (`di-smoke`) before Play Mode.
+- Teams using AI coding agents and wanting stronger DI safety rails.
+
+## Recommended reading order
+
+1. [Installation](/docs/installation/)
+2. [Quick Start](/docs/quick-start/)
+3. [Scope Marker Pattern](/docs/concepts/scope-marker-pattern/)
+4. [Auto Register](/docs/guides/auto-register/)
+5. [Diagnostics](/docs/reference/diagnostics/)

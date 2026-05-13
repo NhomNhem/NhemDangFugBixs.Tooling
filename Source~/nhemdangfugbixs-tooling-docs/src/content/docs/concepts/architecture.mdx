@@ -1,0 +1,28 @@
+---
+title: Package Architecture
+description: How Runtime, Analyzers, Editor tooling, and Source projects fit together.
+slug: docs/concepts/architecture
+---
+
+`NhemDangFugBixs.Tooling` separates declarations, compile-time processing, and diagnostics tooling.
+
+## Surfaces
+
+| Surface | Location | Responsibility |
+| --- | --- | --- |
+| Runtime | `Runtime/` | Attributes and minimal runtime-safe models used by game code |
+| Analyzer/Generator | `Analyzers/` + `Source~/NhemDangFugBixs.Generators` | Emit registrations and diagnostics |
+| Editor | `Editor/` | Unity diagnostics UI and report actions |
+| CLI | `Source~/NhemDangFugBixs.Cli` | Preflight, report, graph, list outside Unity |
+
+## Design Principle
+
+Game services declare intent once using attributes. Composition maps scope markers to real VContainer scopes. The generator emits explicit registration code; analyzers guard architecture boundaries.
+
+## Folder Orientation
+
+- `Runtime/`: safe for game assemblies, no `UnityEditor` dependency.
+- `Editor/`: Unity Editor-only utilities.
+- `Analyzers/`: packaged Roslyn analyzer/generator artifacts.
+- `Source~/`: contributor source for generators, analyzers, CLI, and tests.
+- `Samples~` and `Documentation~`: Unity package conventions for optional import content.

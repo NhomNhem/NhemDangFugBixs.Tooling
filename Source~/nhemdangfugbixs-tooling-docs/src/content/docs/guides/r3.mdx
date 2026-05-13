@@ -1,0 +1,25 @@
+---
+title: R3 Guardrails
+description: Optional analyzer conventions for Subject/Observable safety.
+slug: docs/guides/r3
+---
+
+R3 rules are optional but strongly recommended in reactive gameplay code.
+
+## Visibility Rule
+
+Avoid public `Subject<T>`. Expose `Observable<T>` instead.
+
+```csharp
+private readonly Subject<SwapEvent> _swap = new();
+public Observable<SwapEvent> OnSwap => _swap.AsObservable();
+```
+
+## Ownership Rule
+
+If a class owns `Subject<T>`, it should typically implement `IDisposable` and dispose owned subjects.
+
+Diagnostics:
+
+- `NDF070`: public `Subject<T>`
+- `NDF071`: subject owner not disposable

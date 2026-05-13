@@ -1,0 +1,16 @@
+---
+title: Scope Marker Architecture
+description: Recommended asmdef layering pattern using shared scope markers.
+slug: docs/samples/scope-marker-architecture
+---
+
+This sample shows the preferred dependency direction for medium and large Unity projects.
+
+## Focus
+
+- Markers in Shared assembly
+- Services in Application/Infrastructure
+- Real `LifetimeScope` classes in Composition only
+- Generated installer invoked from mapped scope
+
+Use this sample as baseline when your project has multiple asmdefs.

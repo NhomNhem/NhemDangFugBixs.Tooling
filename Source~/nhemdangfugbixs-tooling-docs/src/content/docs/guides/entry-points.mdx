@@ -1,0 +1,34 @@
+---
+title: Entry Points
+description: Register lifecycle services as VContainer entry points.
+slug: docs/guides/entry-points
+---
+
+Use `[EntryPoint]` for classes that run lifecycle behavior (`IStartable`, `ITickable`, etc.).
+
+```csharp
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[EntryPoint]
+public sealed class PhaseFlowEntryPoint : IStartable, ITickable
+{
+    public void Start() { }
+    public void Tick() { }
+}
+```
+
+Generated intent:
+
+```csharp
+builder.RegisterEntryPoint<PhaseFlowEntryPoint>(Lifetime.Scoped);
+```
+
+## Best Practice
+
+- Prefer explicit `[EntryPoint]` even if auto-detection is available.
+- Keep entry points orchestration-focused, not domain-heavy.
+
+## Diagnostics
+
+- Missing entry point marker (`NDF040`)
+- `[EntryPoint]` with no lifecycle interfaces (`NDF041`)
+- Duplicate exception handler per scope (`NDF042`)

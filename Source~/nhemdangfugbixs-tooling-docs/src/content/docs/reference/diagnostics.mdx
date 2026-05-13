@@ -1,0 +1,34 @@
+---
+title: Diagnostics Reference
+description: Diagnostic codes for scope mapping, injection, lifetime, and architecture guardrails.
+slug: docs/reference/diagnostics
+---
+
+## Scope Mapping
+
+| Code | Meaning |
+| --- | --- |
+| `NDFG010` | Missing marker-to-scope mapping |
+| `NDFG011` | Duplicate marker mapping |
+| `NDFG012` | Missing scope alias for preset/alias usage |
+| `NDFG013` | Marker declared in Composition assembly (warning) |
+
+## Injection
+
+| Code | Meaning |
+| --- | --- |
+| `NDF020` | `MonoBehaviour` constructor injection |
+| `NDF021` | `[Inject]` public field |
+| `NDF022` | `[Inject]` public method warning |
+| `NDF023` | `[Inject]` async method |
+
+## Lifetime and Architecture
+
+| Code | Meaning |
+| --- | --- |
+| `NDF030` | Singleton depends on scoped |
+| `NDF031` | Runtime namespace likely wrong singleton |
+| `NDF040` | Lifecycle interface without `[EntryPoint]` |
+| `NDF052` | `IObjectResolver` misuse (service locator risk) |
+| `NDF070` | Public `Subject<T>` |
+| `NDF071` | Subject owner not disposable |

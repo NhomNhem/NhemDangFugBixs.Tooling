@@ -1,0 +1,20 @@
+---
+title: Attributes Reference
+description: Lookup reference for registration, binding, scope, and tooling attributes.
+slug: docs/reference/attributes
+---
+
+## Core Attributes
+
+| Attribute | Purpose | Applies To |
+| --- | --- | --- |
+| `AutoRegisterIn` / `AutoRegisterIn<TScope>` | Declare scope + lifetime registration | Class |
+| `LifetimeScopeFor` / `LifetimeScopeFor<TScope>` | Map marker to concrete `LifetimeScope` | Composition scope class |
+| `As<T>` | Bind explicit contract | Class |
+| `BindAs` | Bind multiple explicit contracts | Class |
+| `AsSelf` | Bind self | Class |
+| `AsImplementedInterfaces` | Bind implemented interfaces | Class |
+| `EntryPoint` / `AsyncEntryPoint` | Register lifecycle type as entry point | Class |
+| `SceneComponent<TScope>` | Register existing scene component | `MonoBehaviour` |
+
+Use Guides for workflow; use this page as lookup.

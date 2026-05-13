@@ -1,0 +1,27 @@
+---
+const {
+    name,
+    type = 'Attribute',
+    description,
+} = Astro.props;
+---
+
+<div class="my-5 rounded-xl border border-hairline bg-surface-card p-5">
+    <div class="mb-2 flex items-center gap-2">
+    <span class="rounded-full bg-primary px-3 py-1 text-xs font-medium uppercase tracking-wider text-white">
+      {type}
+    </span>
+
+        <code class="text-sm text-ink">
+            {name}
+        </code>
+    </div>
+
+    <p class="m-0 text-body">
+        {description}
+    </p>
+
+    <div class="mt-4">
+        <slot />
+    </div>
+</div>

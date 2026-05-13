@@ -1,0 +1,41 @@
+---
+const {
+  eyebrow = 'Unity · VContainer · Source Generator',
+  title,
+  description,
+  primaryHref = '/docs/quick-start/',
+  primaryLabel = 'Quick Start',
+  secondaryHref = '/docs/concepts/overview/',
+  secondaryLabel = 'Learn Concepts',
+} = Astro.props;
+---
+
+<section class="nhem-card px-8 py-10 md:px-12 md:py-14">
+  <p class="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-primary">
+    {eyebrow}
+  </p>
+
+  <h1 class="max-w-3xl font-display text-4xl leading-[1.05] tracking-[-0.045em] text-ink md:text-6xl">
+    {title}
+  </h1>
+
+  <p class="mt-6 max-w-2xl text-lg leading-8 text-body">
+    {description}
+  </p>
+
+  <div class="mt-8 flex flex-wrap gap-3">
+    <a
+      href={primaryHref}
+      class="nhem-hero-btn-primary rounded-lg border border-hairline bg-white px-5 py-3 text-sm font-semibold text-ink"
+    >
+      {primaryLabel}
+    </a>
+
+    <a
+      href={secondaryHref}
+      class="nhem-hero-btn-secondary rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-primary-active"
+    >
+      {secondaryLabel}
+    </a>
+  </div>
+</section>

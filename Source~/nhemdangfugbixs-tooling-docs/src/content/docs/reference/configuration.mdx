@@ -1,0 +1,20 @@
+---
+title: Configuration Reference
+description: Configure aliases, presets, and analyzer rules with .nhem-di.json.
+slug: docs/reference/configuration
+---
+
+Configuration can live in project root as `.nhem-di.json` (or equivalent package settings asset when supported).
+
+## Common Fields
+
+| Field | Purpose |
+| --- | --- |
+| `scopeAliases` | Map alias names to marker type names |
+| `servicePresets` | Optional shorthand for common scope/lifetime patterns |
+| `rules.maxConstructorDependencies` | Warning threshold for constructor size |
+| `rules.maxMonoBehaviourDependencies` | Warning threshold for MonoBehaviour injection size |
+| `rules.allowedResolverConsumers` | Controls allowed `IObjectResolver` consumer categories |
+| `runtimeNamespaces` | Heuristics for runtime lifetime warnings |
+
+Prefer keeping config small and explicit. Start with aliases and dependency thresholds, then expand only when needed.

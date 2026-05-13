@@ -1,0 +1,29 @@
+---
+title: Concepts Overview
+description: Mental model for using NhemDangFugBixs.Tooling safely in Unity + VContainer projects.
+slug: docs/concepts/overview
+---
+
+This package has three connected surfaces:
+
+1. Runtime attributes declare registration intent near your services.
+2. Source generation and analyzers convert intent into checked, explicit VContainer code.
+3. Tooling (CLI + Editor + reports) helps teams inspect and validate DI architecture continuously.
+
+## Core Concepts
+
+| Concept | What it is | Why it matters |
+| --- | --- | --- |
+| Scope markers | Conceptual scope identities like `IGameplayScope` | Keep Application/Domain layers independent from Composition types |
+| Attribute-driven registration | `[AutoRegisterIn]`, `[As<T>]`, `[EntryPoint]`, etc. | Remove repetitive manual registration boilerplate |
+| Scope mapping | `[LifetimeScopeFor(typeof(IGameplayScope))]` in Composition | Enforces clean dependency direction |
+| Generated installer | `builder.RegisterGeneratedFor<TScopeMarker>()` | Produces readable, explicit runtime registration |
+| Analyzer diagnostics | NDF* warnings/errors for DI mistakes | Catch architecture drift before Play Mode |
+| Reports and tooling | DI map, graph, diagnostics window, CLI preflight | Make DI state understandable for humans and AI agents |
+
+## Recommended Learning Path
+
+1. Start with [Quick Start](/docs/quick-start/).
+2. Learn [Scope Marker Pattern](/docs/concepts/scope-marker-pattern/).
+3. Use [Auto Register Services](/docs/guides/auto-register/) and [Entry Points](/docs/guides/entry-points/).
+4. Keep [Diagnostics Reference](/docs/reference/diagnostics/) open while integrating.

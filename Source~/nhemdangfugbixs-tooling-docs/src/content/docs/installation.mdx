@@ -1,0 +1,88 @@
+---
+title: Installation
+description: Install NhemDangFugBixs.Tooling safely in Unity projects using VContainer.
+slug: docs/installation
+---
+
+## What this page covers
+
+This page shows the recommended installation flow and verification checklist for Unity projects.
+
+## Requirements
+
+| Requirement | Notes |
+|---|---|
+| Unity | 2021.3+ |
+| VContainer | Install first, this package builds on top |
+| asmdef usage | Recommended for layered architecture |
+| .NET SDK | Needed only if you run CLI or source projects locally |
+
+## Install from Git URL (UPM)
+
+In Unity Package Manager:
+
+1. Open `Window > Package Manager`.
+2. Click `+` -> `Add package from git URL...`.
+3. Use the repository URL for this package.
+
+## Install via `manifest.json`
+
+Add dependency entry to your Unity project manifest:
+
+```json
+{
+  "dependencies": {
+    "com.nhemdangfugbixs.tooling": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git"
+  }
+}
+```
+
+## Expected package layout
+
+After install, package root should include:
+
+- `Runtime/`
+- `Editor/`
+- `Analyzers/`
+- `README.md`
+- `package.json`
+
+Optional:
+
+- `Tests/`
+- `Samples~` or `Samples`
+- `Documentation~` or `Documentation`
+
+## Verify installation
+
+1. Open a script and confirm package attributes are visible.
+2. Create one minimal `[AutoRegisterIn<TScope>]` service.
+3. Build scripts and verify generated installer appears.
+4. Run `di-smoke preflight` if CLI is available.
+
+## Recommended asmdef direction
+
+- Place scope markers in Shared or Abstractions assembly.
+- Register services against marker types in Application/Infrastructure.
+- Map marker -> concrete `LifetimeScope` only in Composition.
+
+Do not reference Composition assemblies from Application services.
+
+## Optional integrations
+
+- MessagePipe support (optional).
+- R3 analyzer guardrails (optional/configurable).
+- Editor diagnostics window (`Window/Nhem/DI Diagnostics`).
+
+## Import samples
+
+Use Package Manager sample import for starter structures:
+
+- Basic Auto Register
+- Scope Marker Architecture
+- MessagePipe Integration
+- Scene Components
+
+## Next step
+
+Continue to [Quick Start](/docs/quick-start/) to create your first generated registration flow.

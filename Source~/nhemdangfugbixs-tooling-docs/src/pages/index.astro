@@ -1,0 +1,107 @@
+---
+const title = 'NhemDangFugBixs.Tooling';
+const description = 'Compile-time VContainer workflow toolkit for Unity projects.';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <style>
+      :root {
+        --canvas: #faf9f5;
+        --ink: #141413;
+        --body: #3d3d3a;
+        --primary: #cc785c;
+        --primary-active: #a9583e;
+        --card: #efe9de;
+        --hairline: #e6dfd8;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--canvas);
+        color: var(--ink);
+      }
+      .wrap {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px;
+      }
+      .card {
+        width: min(900px, 100%);
+        background: var(--card);
+        border: 1px solid var(--hairline);
+        border-radius: 18px;
+        padding: 56px 48px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+      .brand img { width: 34px; height: 34px; }
+      h1 {
+        margin: 0 0 14px;
+        font-family: "Tiempos Headline", "Cormorant Garamond", Georgia, serif;
+        font-weight: 400;
+        letter-spacing: -0.04em;
+        line-height: 1.05;
+        font-size: clamp(38px, 5vw, 60px);
+      }
+      p {
+        margin: 0 0 28px;
+        color: var(--body);
+        font-size: 20px;
+        line-height: 1.55;
+        max-width: 68ch;
+      }
+      .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+      .btn {
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 12px 18px;
+        border: 1px solid var(--hairline);
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+      }
+      .btn-primary:hover { background: var(--primary-active); }
+      .btn-secondary {
+        background: #fff;
+        color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="card">
+        <div class="brand">
+          <img src="/logo.svg" alt="NhemDangFugBixs.Tooling" />
+          <strong>NhemDangFugBixs.Tooling</strong>
+        </div>
+        <h1>Compile-time DI safety for Unity projects.</h1>
+        <p>
+          Attribute-driven VContainer workflow toolkit with source generation,
+          analyzer guardrails, and architecture-aware reporting.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/docs/">Open Docs</a>
+          <a class="btn btn-secondary" href="https://github.com/NhomNhem/NhemDangFugBixs.Tooling">GitHub</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+

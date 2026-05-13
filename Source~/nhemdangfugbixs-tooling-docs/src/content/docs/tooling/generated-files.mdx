@@ -1,0 +1,19 @@
+---
+title: Generated Files
+description: Understand generated installers and report artifacts and how to maintain them.
+slug: docs/tooling/generated-files
+---
+
+Generated files are outputs, not authoring surfaces.
+
+## Guidance
+
+- Do edit attributes and configuration.
+- Do not manually edit generated installer files.
+- Commit generated reports only when your team wants architecture snapshots in VCS.
+
+## Debug Loop
+
+1. Update source attributes/config.
+2. Regenerate.
+3. Verify diagnostics and generated installer output.

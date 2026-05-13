@@ -1,0 +1,100 @@
+---
+title: Quick Start
+description: Build your first marker-based generated VContainer registration workflow.
+slug: docs/quick-start
+---
+
+## What you will build
+
+A minimal marker-based flow:
+
+1. Define scope marker.
+2. Annotate service.
+3. Map marker to concrete `LifetimeScope`.
+4. Call generated installer.
+
+## Step 1: Create a scope marker
+
+Put marker in a shared assembly:
+
+```csharp
+namespace Game.Shared.Composition;
+
+public interface IGameplayScope { }
+```
+
+## Step 2: Create service contract + implementation
+
+```csharp
+public interface IPhaseStateMachine { }
+
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[As<IPhaseStateMachine>]
+public sealed class PhaseStateMachine : IPhaseStateMachine { }
+```
+
+## Step 3: Map marker to real scope in Composition
+
+```csharp
+[LifetimeScopeFor<IGameplayScope>]
+public sealed class GameplayLifetimeScope : LifetimeScope
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        builder.RegisterGeneratedFor<IGameplayScope>();
+    }
+}
+```
+
+## Step 4: Check generated behavior
+
+Generated installer should register your service using normal VContainer intent:
+
+```csharp
+builder.Register<PhaseStateMachine>(Lifetime.Scoped)
+    .As<IPhaseStateMachine>();
+```
+
+## Why this pattern matters
+
+Service assembly depends on marker, not concrete scope class.
+This keeps dependency direction clean across asmdefs.
+
+## Optional: Entry point
+
+```csharp
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[EntryPoint]
+public sealed class GameplayBootstrap : IStartable
+{
+    public void Start() { }
+}
+```
+
+## Optional: Scene component
+
+```csharp
+[SceneComponent<IGameplayScope>]
+[As<IPlayerView>]
+public sealed class PlayerView : MonoBehaviour, IPlayerView { }
+```
+
+## Common mistakes
+
+- Using concrete `LifetimeScope` type in Application assembly.
+- Constructor injection in `MonoBehaviour`.
+- Missing `[LifetimeScopeFor]` mapping for used marker.
+- Registering lifecycle service without entry point intent.
+
+## Minimal checklist
+
+- Marker lives in Shared assembly.
+- Service uses `[AutoRegisterIn<TMarker>]`.
+- Composition maps marker with `[LifetimeScopeFor<TMarker>]`.
+- `builder.RegisterGeneratedFor<TMarker>()` is called.
+
+## Next pages
+
+- [Scope Marker Pattern](/docs/concepts/scope-marker-pattern/)
+- [Auto Register Services](/docs/guides/auto-register/)
+- [Diagnostics](/docs/reference/diagnostics/)

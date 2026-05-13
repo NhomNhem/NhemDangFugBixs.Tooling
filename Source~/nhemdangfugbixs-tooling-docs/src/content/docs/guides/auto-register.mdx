@@ -1,0 +1,30 @@
+---
+title: Auto Register Services
+description: Register plain C# services declaratively with attributes.
+slug: docs/guides/auto-register
+---
+
+Use `AutoRegisterIn` to declare service scope and lifetime near implementation code.
+
+```csharp
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[As<IPhaseStateMachine>]
+public sealed class PhaseStateMachine : IPhaseStateMachine { }
+```
+
+## Binding Options
+
+- Explicit contract: `[As<IService>]`
+- Multiple contracts: `[BindAs(typeof(IA), typeof(IB))]`
+- Self only: `[AsSelf]`
+- Broad contracts: `[AsImplementedInterfaces]`
+
+Prefer explicit contracts for long-term readability.
+
+## Common Diagnostics
+
+- Missing scope mapping (`NDFG010`)
+- Duplicate scope mapping (`NDFG011`)
+- Runtime singleton warning (`NDF031`)
+
+Next: [Binding Contracts](/docs/guides/binding/).

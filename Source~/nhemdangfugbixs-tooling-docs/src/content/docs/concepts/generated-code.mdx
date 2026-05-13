@@ -1,0 +1,36 @@
+---
+title: Generated Code
+description: What the generator emits and how to reason about the output.
+slug: docs/concepts/generated-code
+---
+
+The generator is designed for readable output, not hidden runtime magic.
+
+## Generated Installer API
+
+```csharp
+builder.RegisterGeneratedFor<IGameplayScope>();
+```
+
+Generated code should resemble handwritten VContainer registration.
+
+## Typical Output Shape
+
+- Service registrations (`Register<T>(Lifetime...)`)
+- Contract bindings (`As<TContract>()`, optional `AsSelf()`)
+- Entry points (`RegisterEntryPoint<T>()`)
+- Scene components (`RegisterComponentInHierarchy<T>()` when requested)
+- Optional MessagePipe broker registrations
+
+## Emission Behavior
+
+1. Map scope marker to owner `LifetimeScope`.
+2. Gather attributed services matching that marker.
+3. Validate and deduplicate.
+4. Emit stable installer code and optional report metadata.
+
+## Debugging Tips
+
+- Confirm marker mapping exists via `[LifetimeScopeFor]`.
+- Confirm service assembly references runtime attributes assembly.
+- Check diagnostics in [Reference: Diagnostics](/docs/reference/diagnostics/).

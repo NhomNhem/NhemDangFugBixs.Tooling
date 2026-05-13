@@ -1,0 +1,74 @@
+---
+title: Scope Marker Pattern
+description: Register services by conceptual scope markers instead of concrete LifetimeScope classes.
+slug: docs/concepts/scope-marker-pattern
+---
+
+Use scope markers to avoid architecture inversion across asmdef layers.
+
+## The Problem
+
+If an Application assembly uses:
+
+```csharp
+[AutoRegisterIn(typeof(GameplayLifetimeScope))]
+```
+
+it now depends on Composition. That breaks clean layering.
+
+## Recommended Pattern
+
+Define markers in a shared low-level assembly:
+
+```csharp
+namespace Game.Shared.Composition;
+
+public interface IScopeMarker { }
+public interface IProjectScope : IScopeMarker { }
+public interface IGameplayScope : IScopeMarker { }
+```
+
+Use marker in services:
+
+```csharp
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[As<IPhaseStateMachine>]
+public sealed class PhaseStateMachine : IPhaseStateMachine { }
+```
+
+Map marker to real scope in Composition only:
+
+```csharp
+[LifetimeScopeFor<IGameplayScope>]
+public sealed class GameplayLifetimeScope : LifetimeScope
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        builder.RegisterGeneratedFor<IGameplayScope>();
+    }
+}
+```
+
+## Dependency Direction
+
+Good:
+
+```txt
+Application -> Shared
+Infrastructure -> Shared
+Composition -> Application + Infrastructure + Shared
+```
+
+Avoid:
+
+```txt
+Application -> Composition
+```
+
+## Common Mistakes
+
+- Defining marker interfaces inside Composition assembly.
+- Mapping one marker to multiple `LifetimeScope` classes.
+- Forgetting to call `RegisterGeneratedFor<TScopeMarker>()` in the mapped scope.
+
+Next: [Package Architecture](/docs/concepts/architecture/) and [Diagnostics Reference](/docs/reference/diagnostics/).
