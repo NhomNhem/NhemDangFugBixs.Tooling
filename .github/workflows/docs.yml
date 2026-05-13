@@ -38,9 +38,15 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Setup pnpm
+        if: hashFiles('Source~/nhemdangfugbixs-tooling-docs/package.json') != ''
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Build docs site if present
         if: hashFiles('Source~/nhemdangfugbixs-tooling-docs/package.json') != ''
         working-directory: Source~/nhemdangfugbixs-tooling-docs
         run: |
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
