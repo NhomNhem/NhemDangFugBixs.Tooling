@@ -18,45 +18,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/nhem-studio-logo-dark.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/nhem-studio-logo-light.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.github/workflows/ci-validation.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../.github/workflows/ci-validation.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.github/workflows/docs-preview.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../.github/workflows/docs-preview.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Attributes.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Attributes.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Runtime.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Runtime.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/astro.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/astro.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/logo.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/DocsHero.astro" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/DocsHero.astro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/concepts/architecture.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/concepts/architecture.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/concepts/generated-code.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/concepts/generated-code.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/concepts/overview.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/concepts/overview.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/concepts/scope-marker-pattern.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/concepts/scope-marker-pattern.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/design-system/claude-editorial-system.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/design-system/claude-editorial-system.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/auto-register.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/auto-register.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/binding.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/binding.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/entry-points.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/entry-points.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/messagepipe.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/messagepipe.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/r3.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/r3.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/scene-components.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/scene-components.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/index.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/index.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/installation.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/installation.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/quick-start.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/quick-start.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/attributes.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/attributes.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/cli.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/cli.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/configuration.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/configuration.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/diagnostics.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/diagnostics.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/roadmap.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/roadmap.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/samples/basic-auto-register.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/samples/basic-auto-register.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/samples/scope-marker-architecture.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/samples/scope-marker-architecture.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/samples/solar-phobia-style.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/samples/solar-phobia-style.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/tooling/editor-window.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/tooling/editor-window.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/tooling/generated-files.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/tooling/generated-files.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/tooling/reports.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/tooling/reports.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/troubleshooting.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/troubleshooting.mdx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/styles/global.css" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/styles/global.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -357,7 +322,7 @@
       <workItem from="1773592706978" duration="933000" />
       <workItem from="1773619999734" duration="53000" />
       <workItem from="1778618494139" duration="1620000" />
-      <workItem from="1778620178553" duration="9839000" />
+      <workItem from="1778620178553" duration="10167000" />
     </task>
     <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
       <option name="closed" value="true" />
@@ -447,7 +412,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778667020661</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="feat: Update documentation slugs for improved navigation and consistency">
+      <option name="closed" value="true" />
+      <created>1778668326704</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1778668326704</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -468,7 +441,8 @@
     <MESSAGE value="feat: Add initial implementation of NhemDangFugBixs.Tooling with core features and documentation" />
     <MESSAGE value="fix: update timestamps in generated files for consistency" />
     <MESSAGE value="feat: Add documentation for various tooling concepts and installation instructions" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Add documentation for various tooling concepts and installation instructions" />
+    <MESSAGE value="feat: Update documentation slugs for improved navigation and consistency" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Update documentation slugs for improved navigation and consistency" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
