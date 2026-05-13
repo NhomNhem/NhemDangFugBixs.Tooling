@@ -2,39 +2,42 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master, main ]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  contents: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
 
-      - name: Install, build, and upload your site
-        uses: withastro/action@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: Source~/nhemdangfugbixs-tooling-docs
+          node-version: "22.12.0"
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Install dependencies
+        working-directory: Source~/nhemdangfugbixs-tooling-docs
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Astro docs site
+        working-directory: Source~/nhemdangfugbixs-tooling-docs
+        run: pnpm run build
+
+      - name: Deploy to gh-pages (legacy Pages source)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: Source~/nhemdangfugbixs-tooling-docs/dist
+          publish_branch: gh-pages
+          force_orphan: true
