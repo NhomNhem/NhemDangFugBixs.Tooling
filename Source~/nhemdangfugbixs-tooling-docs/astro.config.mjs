@@ -9,7 +9,7 @@ export default defineConfig({
     starlight({
       title: 'NhemDangFugBixs.Tooling',
       description: 'Compile-time VContainer workflow tooling for Unity projects.',
-      favicon: '/NhemDangFugBixs.Tooling/logo.png',
+      favicon: '/logo.png',
       logo: {
         light: './public/nhem-studio-logo-light.svg',
         dark: './public/nhem-studio-logo-dark.svg',
@@ -37,7 +37,7 @@ export default defineConfig({
         {
           label: 'Start Here',
           items: [
-            { label: 'Overview', link: '/NhemDangFugBixs.Tooling/docs/' },
+            { label: 'Overview', slug: 'docs' },
             { label: 'Installation', slug: 'docs/installation' },
             { label: 'Quick Start', slug: 'docs/quick-start' },
           ],
