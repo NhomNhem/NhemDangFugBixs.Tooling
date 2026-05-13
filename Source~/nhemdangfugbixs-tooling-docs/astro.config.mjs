@@ -3,11 +3,13 @@ import starlight from '@astrojs/starlight';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  site: 'https://nhomnhem.github.io',
+  base: '/NhemDangFugBixs.Tooling',
   integrations: [
     starlight({
       title: 'NhemDangFugBixs.Tooling',
       description: 'Compile-time VContainer workflow tooling for Unity projects.',
-      favicon: '/logo.png',
+      favicon: '/NhemDangFugBixs.Tooling/logo.png',
       logo: {
         light: './public/nhem-studio-logo-light.svg',
         dark: './public/nhem-studio-logo-dark.svg',
@@ -35,7 +37,7 @@ export default defineConfig({
         {
           label: 'Start Here',
           items: [
-            { label: 'Overview', link: '/docs/' },
+            { label: 'Overview', link: '/NhemDangFugBixs.Tooling/docs/' },
             { label: 'Installation', slug: 'docs/installation' },
             { label: 'Quick Start', slug: 'docs/quick-start' },
           ],
