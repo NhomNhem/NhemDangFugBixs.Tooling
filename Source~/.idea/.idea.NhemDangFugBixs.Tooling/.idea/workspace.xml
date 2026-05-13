@@ -18,29 +18,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/ApiCard.astro" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/CodePanel.astro" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/DocsHero.astro" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/FeatureGrid.astro" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/getting-started.mdx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/installation.mdx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/quick-start.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.github/workflows/deploy-docs.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../.github/workflows/deploy-docs.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Attributes.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Attributes.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Runtime.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Runtime.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.Tests/DangFugBixs.Analyzers.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.Tests/DangFugBixs.Analyzers.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Tests/TypeSafeScopeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Tests/TypeSafeScopeTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/astro.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/astro.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/favicon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/public/logo.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/DocsHero.astro" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/components/DocsHero.astro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/getting-started.mdx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/guides/example.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/index.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/index.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/installation.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/installation.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/quick-start.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/quick-start.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/content/docs/reference/example.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/styles/global.css" beforeDir="false" afterPath="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs/src/styles/global.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -113,6 +107,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs" />
+    <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -162,35 +157,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.Sandbox.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kronk.content.tree.expanded.paths": "|Docs|Docs/guides|Docs/reference",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.github.copilot.settings.customization.CustomizationConfigurable",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "J:\\Rider\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.Sandbox.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kronk.content.tree.expanded.paths&quot;: &quot;|Docs|Docs/guides|Docs/reference&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.github.copilot.settings.customization.CustomizationConfigurable&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;J:\\Rider\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1771275639296" />
     <option name="spentUsd" value="0.11020189" />
@@ -341,7 +336,7 @@
       <workItem from="1773592706978" duration="933000" />
       <workItem from="1773619999734" duration="53000" />
       <workItem from="1778618494139" duration="1620000" />
-      <workItem from="1778620178553" duration="5582000" />
+      <workItem from="1778620178553" duration="8532000" />
     </task>
     <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
       <option name="closed" value="true" />
@@ -407,7 +402,23 @@
       <option name="project" value="LOCAL" />
       <updated>1778622723809</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat: Add initial implementation of NhemDangFugBixs.Tooling with core features and documentation">
+      <option name="closed" value="true" />
+      <created>1778627649101</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1778627649101</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix: update timestamps in generated files for consistency">
+      <option name="closed" value="true" />
+      <created>1778627709583</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1778627709583</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -425,7 +436,9 @@
     <MESSAGE value="Docs: Update README with project description, features, installation, usage, and architecture details" />
     <MESSAGE value="dll" />
     <MESSAGE value="feat: Add Tailwind CSS integration and update build scripts" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Add Tailwind CSS integration and update build scripts" />
+    <MESSAGE value="feat: Add initial implementation of NhemDangFugBixs.Tooling with core features and documentation" />
+    <MESSAGE value="fix: update timestamps in generated files for consistency" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: update timestamps in generated files for consistency" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
