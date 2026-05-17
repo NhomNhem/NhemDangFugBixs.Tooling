@@ -196,6 +196,30 @@ $env:NHEM_UNITY_PROJECT_ROOT = "I:\unityVers\NhemDangFugBixs.Tooling\unity-sampl
 
 The release gate runs generator tests, analyzer tests, version drift checks, docs checks, and Unity batchmode compile when Unity is configured.
 
+## Troubleshooting
+
+### Unity loads old Attributes assembly / Cannot resolve As / EntryPoint
+
+If Unity or Rider is loading an old version of the NhemDangFugBixs.Attributes assembly despite the package.json showing a newer version, this is likely due to a stale Unity PackageCache or packages-lock.json.
+
+**Symptoms:**
+- Compiler errors for attributes that should exist (e.g., `AsAttribute`, `EntryPointAttribute`)
+- Assembly version mismatch in diagnostics
+- Missing analyzer diagnostics
+
+**Diagnosis:**
+Run the diagnostics menu:
+```
+Tools/Nhem/Tooling Diagnostics/Print Diagnostics
+```
+
+**Fix steps:**
+1. Close Unity
+2. Delete `Library/PackageCache/com.nhemdangfugbixs.tooling*`
+3. Check `Packages/packages-lock.json` for stale entries
+4. Reopen Unity
+5. Regenerate project files (Assets > Open C# Project)
+
 ## Repository Layout
 
 ```txt

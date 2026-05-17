@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.2.2 - 2026-05-17
+
+### Added
+- Unity Editor diagnostics menu (Tools/Nhem/Tooling Diagnostics/Print Diagnostics) to detect stale package imports, version mismatches, and missing analyzer DLLs.
+- Troubleshooting documentation for stale Unity PackageCache issues.
+
 ## 7.2.1 - 2026-05-17
 
 ### Changed
