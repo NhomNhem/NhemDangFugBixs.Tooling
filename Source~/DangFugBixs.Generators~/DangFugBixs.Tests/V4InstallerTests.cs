@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 
 namespace DangFugBixs.Tests;
@@ -136,6 +137,7 @@ public interface IMyService { }
     }
 
     private GeneratorDriverRunResult RunGenerator(string source) {
+        source = AddLegacyLifetimeScopeMappings(source);
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
         
         var references = AppDomain.CurrentDomain.GetAssemblies()
@@ -158,5 +160,23 @@ public interface IMyService { }
         var runDriver = driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         return runDriver.GetRunResult();
+    }
+
+    private static string AddLegacyLifetimeScopeMappings(string source) {
+        return Regex.Replace(
+            source,
+            @"(^\s*public\s+class\s+(?<name>\w+LifetimeScope)\s*:\s*LifetimeScope\s*\{\s*\}\s*$)",
+            match => {
+                var className = match.Groups["name"].Value;
+                var marker = $"[LifetimeScopeFor(typeof({className}))]{Environment.NewLine}";
+                var lookbackStart = Math.Max(0, match.Index - 256);
+                var lookback = source.Substring(lookbackStart, match.Index - lookbackStart);
+                if (lookback.Contains("LifetimeScopeFor", StringComparison.Ordinal)) {
+                    return match.Value;
+                }
+
+                return marker + match.Value;
+            },
+            RegexOptions.Multiline);
     }
 }

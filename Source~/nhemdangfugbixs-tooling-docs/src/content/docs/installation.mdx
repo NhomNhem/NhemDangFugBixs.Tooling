@@ -4,16 +4,12 @@ description: Install NhemDangFugBixs.Tooling safely in Unity projects using VCon
 slug: docs/installation
 ---
 
-## What this page covers
-
-This page shows the recommended installation flow and verification checklist for Unity projects.
-
 ## Requirements
 
 | Requirement | Notes |
 |---|---|
 | Unity | 2021.3+ |
-| VContainer | Install first, this package builds on top |
+| VContainer | Required by the composition asmdef |
 | asmdef usage | Recommended for layered architecture |
 | .NET SDK | Needed only if you run CLI or source projects locally |
 
@@ -27,61 +23,40 @@ In Unity Package Manager:
 
 ## Install via `manifest.json`
 
-Add dependency entry to your Unity project manifest:
+Add dependency entries to your Unity project manifest:
 
 ```json
 {
   "dependencies": {
-    "com.nhemdangfugbixs.tooling": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git"
+    "jp.hadashikick.vcontainer": "https://github.com/hadashiA/VContainer.git?path=VContainer/Assets/VContainer#1.17.0",
+    "com.nhemdangfugbixs.tooling": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git?path=/&branch=deploy"
   }
 }
 ```
 
-## Expected package layout
+## Recommended asmdef direction
 
-After install, package root should include:
-
-- `Runtime/`
-- `Editor/`
-- `Analyzers/`
-- `README.md`
-- `package.json`
-
-Optional:
-
-- `Tests/`
-- `Samples~` or `Samples`
-- `Documentation~` or `Documentation`
+- `Shared` contains scope markers and service contracts.
+- `Gameplay` or `Application` contains services with `[AutoRegisterIn]` and package attributes.
+- `Gameplay` or `Application` does not need a `VContainer` reference just to declare DI intent.
+- `Composition` contains `[LifetimeScopeFor]`, references `VContainer`, and references the service assemblies it wants to compose.
 
 ## Verify installation
 
-1. Open a script and confirm package attributes are visible.
+1. Confirm package attributes are visible in a service asmdef.
 2. Create one minimal `[AutoRegisterIn<TScope>]` service.
-3. Build scripts and verify generated installer appears.
-4. Run `di-smoke preflight` if CLI is available.
+3. Create one `[LifetimeScopeFor<TScope>]` mapping in a composition asmdef.
+4. Confirm the composition assembly can call `builder.RegisterGeneratedFor<TScope>()`.
+5. Run `di-smoke preflight` if the CLI is available.
 
-## Recommended asmdef direction
+## Discovery boundary (MVP)
 
-- Place scope markers in Shared or Abstractions assembly.
-- Register services against marker types in Application/Infrastructure.
-- Map marker -> concrete `LifetimeScope` only in Composition.
+Generated composition installers discover registrations from:
 
-Do not reference Composition assemblies from Application services.
+1. the current compilation
+2. directly referenced assemblies only
 
-## Optional integrations
-
-- MessagePipe support (optional).
-- R3 analyzer guardrails (optional/configurable).
-- Editor diagnostics window (`Window/Nhem/DI Diagnostics`).
-
-## Import samples
-
-Use Package Manager sample import for starter structures:
-
-- Basic Auto Register
-- Scope Marker Architecture
-- MessagePipe Integration
-- Scene Components
+The generator does not scan all loaded Unity assemblies and does not perform transitive discovery in the MVP path.
 
 ## Next step
 

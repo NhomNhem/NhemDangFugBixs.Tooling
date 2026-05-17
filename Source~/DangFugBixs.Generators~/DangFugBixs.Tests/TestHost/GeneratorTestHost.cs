@@ -52,6 +52,28 @@ internal static class GeneratorTestHost {
         return MetadataReference.CreateFromImage(stream.ToArray());
     }
 
+    public static MetadataReference CompileToReference(
+        string source,
+        string assemblyName,
+        IEnumerable<MetadataReference> additionalReferences) {
+        var syntaxTree = CSharpSyntaxTree.ParseText(source);
+        var compilation = CSharpCompilation.Create(
+            assemblyName,
+            new[] { syntaxTree },
+            CreateDefaultReferences().Concat(additionalReferences),
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+        using var stream = new MemoryStream();
+        var emitResult = compilation.Emit(stream);
+        if (!emitResult.Success) {
+            var errors = string.Join(Environment.NewLine, emitResult.Diagnostics);
+            throw new InvalidOperationException(errors);
+        }
+
+        stream.Position = 0;
+        return MetadataReference.CreateFromImage(stream.ToArray());
+    }
+
     private static IEnumerable<MetadataReference> CreateDefaultReferences() {
         var assemblies = new[] {
             typeof(object).Assembly,

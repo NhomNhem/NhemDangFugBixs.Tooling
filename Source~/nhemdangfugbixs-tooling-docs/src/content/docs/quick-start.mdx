@@ -6,11 +6,11 @@ slug: docs/quick-start
 
 ## What you will build
 
-A minimal marker-based flow:
+A minimal composition-only flow:
 
-1. Define a scope marker.
-2. Annotate a service.
-3. Map the marker to a concrete `LifetimeScope`.
+1. Define a scope marker in a shared asmdef.
+2. Annotate a service in a service asmdef.
+3. Map the marker to a concrete `LifetimeScope` in a composition asmdef.
 4. Call the generated extension.
 
 ## Step 1: Create a scope marker
@@ -32,6 +32,8 @@ public interface IPhaseStateMachine { }
 public sealed class PhaseStateMachine : IPhaseStateMachine { }
 ```
 
+This assembly only needs the package attributes and your shared marker assembly. It does not need a `VContainer` reference.
+
 ## Step 3: Map marker to a user-owned `LifetimeScope`
 
 ```csharp
@@ -49,6 +51,8 @@ public sealed class GameplayLifetimeScope : LifetimeScope
     }
 }
 ```
+
+This composition assembly references `VContainer` plus the service assemblies it wants to compose.
 
 ## Step 4: Check generated behavior
 
@@ -99,4 +103,5 @@ builder.RegisterComponentInHierarchy<PlayerView>()
 - `LifetimeScope` classes are user-owned.
 - The generator does not create `LifetimeScope` MonoBehaviours by default.
 - The generated extension namespace is `NhemDangFugBixs.VContainer`.
-- The generated path is stateless and does not cache `IObjectResolver`.
+- Only composition assemblies that contain `[LifetimeScopeFor]` emit VContainer registration code.
+- The generated path is stateless and does not call `Resolve<T>()` during registration.

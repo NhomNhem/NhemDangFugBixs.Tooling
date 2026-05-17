@@ -11,13 +11,13 @@ public class EntryPointGenerationTests {
 using NhemDangFugBixs.Attributes;
 using VContainer.Unity;
 public interface IGameplayScope { }
-[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemLifetime.Scoped)]
-public sealed class PhaseFlowEntryPoint : ITickable { public void Tick() { } }
 [LifetimeScopeFor(typeof(IGameplayScope))]
 public sealed class GameplayLifetimeScope { }
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemLifetime.Scoped)]
+public sealed class PhaseFlowEntryPoint : ITickable { public void Tick() { } }
 """;
 
         var (_, generated) = GeneratorTestHost.Run(source);
-        Assert.That(generated, Does.Contain("RegisterEntryPoint<global::PhaseFlowEntryPoint>(global::VContainer.Lifetime.Scoped)"));
+        Assert.That(generated, Does.Contain("RegisterEntryPoint<global::PhaseFlowEntryPoint>()"));
     }
 }

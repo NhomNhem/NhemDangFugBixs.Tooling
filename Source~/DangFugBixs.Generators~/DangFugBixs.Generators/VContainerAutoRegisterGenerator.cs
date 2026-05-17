@@ -106,7 +106,9 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             // We keep the dots but handle other invalid chars
             string sanitizedHint = new string(assemblyName.Select(c => char.IsLetterOrDigit(c) || c == '.' ? c : '_').ToArray());
 
-            // v3.1 Logic: If we have ScopeMappings, we perform a global scan of referenced assemblies
+            // Composition-only generation:
+            // - service-only assemblies still get diagnostics
+            // - VContainer installers/extensions are emitted only when local LifetimeScopeFor mappings exist
             var scopeMappings = input.LoggingData.Data.ScopeMappings
                 .Where(s => s.HasValue)
                 .Select(s => s!.Value)
@@ -120,33 +122,30 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
                     group.Any(i => i.HasLoggerFactory),
                     group.Any(i => i.HasLoggerAdapter)));
 
-            IEnumerable<ServiceInfo> discoveredServices = Enumerable.Empty<ServiceInfo>();
-            if (scopeMappings.Any()) {
-                var scanResult = ReferencedAssemblyScanner.Scan(input.Compilation);
-                discoveredServices = scanResult.Services ?? Enumerable.Empty<ServiceInfo>();
+            // Always validate local services so service-only assemblies still report local diagnostics.
+            var validatedLocalServices = ValidateAndFilterServices(input.LoggingData.Data.BaseData.Services, input.Compilation, context);
 
-                // Report warnings as diagnostics
-                foreach (var warning in scanResult.Warnings) {
-                    stats.Warnings.Add(warning);
-                    var parts = warning.Split(new[] { ':' }, 2);
-                    string asmName = parts.Length > 0 ? parts[0].Trim() : "Unknown";
-                    string msg = parts.Length > 1 ? parts[1].Trim() : warning;
-                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.UnresolvedAssemblyScan, Location.None, asmName, msg));
-                }
+            if (!scopeMappings.Any()) {
+                return;
             }
 
-            // Filter valid local services
-            IEnumerable<ServiceInfo> validServices = input.LoggingData.Data.BaseData.Services;
+            IEnumerable<ServiceInfo> discoveredServices = Enumerable.Empty<ServiceInfo>();
+            var scanResult = ReferencedAssemblyScanner.Scan(input.Compilation);
+            discoveredServices = scanResult.Services ?? Enumerable.Empty<ServiceInfo>();
 
-            // Combine local and discovered services
-            // Only include discovered services that are declared in THIS assembly. This prevents emitting services
-            // from referenced assemblies into every compilation that references them, avoiding duplicated
-            // registrations across generated files.
-            var discoveredLocal = discoveredServices.Where(s => s.Metadata != null && s.Metadata.TryGetValue("DeclaringAssembly", out var asm) && asm == assemblyName);
-            IEnumerable<ServiceInfo> allServices = validServices.Concat(discoveredLocal);
+            // Report warnings as diagnostics
+            foreach (var warning in scanResult.Warnings) {
+                stats.Warnings.Add(warning);
+                var parts = warning.Split(new[] { ':' }, 2);
+                string asmName = parts.Length > 0 ? parts[0].Trim() : "Unknown";
+                string msg = parts.Length > 1 ? parts[1].Trim() : warning;
+                context.ReportDiagnostic(Diagnostic.Create(Diagnostics.UnresolvedAssemblyScan, Location.None, asmName, msg));
+            }
 
-            // v4.1: Deduplication pass - ensure each unique class is registered only once globally
-            // Prefer services declared in the current assembly when duplicates exist
+            // Combine local and directly referenced services.
+            IEnumerable<ServiceInfo> allServices = validatedLocalServices.Concat(discoveredServices);
+
+            // Deduplicate by implementation identity. Prefer services declared in the current assembly when duplicates exist.
             allServices = allServices
                 .GroupBy(s => s.FullName)
                 .Select(g => {

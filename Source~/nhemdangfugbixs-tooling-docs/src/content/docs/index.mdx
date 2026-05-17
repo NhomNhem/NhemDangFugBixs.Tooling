@@ -7,7 +7,7 @@ slug: docs
 import DocsHero from '../../components/DocsHero.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
 
-<DocsHero eyebrow="Unity · VContainer · Source Generator · Analyzer" title="Compile-time DI safety for Unity projects." description="Marker-first VContainer generation with user-owned LifetimeScopes, stateless installers, and analyzer guardrails." primaryHref="/NhemDangFugBixs.Tooling/docs/quick-start/" primaryLabel="Quick Start" secondaryHref="/NhemDangFugBixs.Tooling/docs/installation/" secondaryLabel="Install Package" />
+<DocsHero eyebrow="Unity · VContainer · Source Generator · Analyzer" title="Compile-time DI safety for Unity projects." description="Composition-owned VContainer generation with user-owned LifetimeScopes, stateless installers, and analyzer guardrails." primaryHref="/NhemDangFugBixs.Tooling/docs/quick-start/" primaryLabel="Quick Start" secondaryHref="/NhemDangFugBixs.Tooling/docs/installation/" secondaryLabel="Install Package" />
 
 ## Current shipped API (Phase 1/2)
 
@@ -36,20 +36,20 @@ It lets your architecture become compile-time checked.
 <FeatureGrid
     items={[
         {
-            title: 'Attribute-driven registration',
-            description: 'Declare registration intent directly on services with AutoRegisterIn, As, EntryPoint, and RegisterComponentInHierarchy.',
+            title: 'Intent in service assemblies',
+            description: 'Declare DI intent directly on services with AutoRegisterIn, As, EntryPoint, and RegisterComponentInHierarchy without forcing service asmdefs to own VContainer registration code.',
         },
         {
-            title: 'One installer per scope',
-            description: 'Emit one stateless generated installer per scope marker plus one generated dispatch extension.',
+            title: 'Composition-owned installers',
+            description: 'Emit one stateless installer per scope marker plus one generated dispatch extension only in assemblies that contain LifetimeScopeFor mappings.',
         },
         {
             title: 'User-owned LifetimeScopes',
             description: 'Keep concrete LifetimeScope classes in user code. The generator does not create scope MonoBehaviours by default.',
         },
         {
-            title: 'Analyzer guardrails',
-            description: 'Catch invalid contracts, invalid markers, missing mappings, wrong generated calls, and resolver misuse early.',
+            title: 'Bounded discovery',
+            description: 'Composition targets discover registrations from the current compilation and directly referenced assemblies only.',
         },
     ]}
 />

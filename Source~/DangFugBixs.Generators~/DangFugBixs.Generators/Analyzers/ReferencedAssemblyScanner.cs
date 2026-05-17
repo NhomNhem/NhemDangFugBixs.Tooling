@@ -11,6 +11,10 @@ internal static class ReferencedAssemblyScanner {
     private const string AutoRegisterInAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute";
     private const string AutoRegisterInGenericAttributeName = "NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1";
     private const string InstallerOrderAttributeName = "NhemDangFugBixs.Attributes.InstallerOrderAttribute";
+    private const string AsAttributeName = "NhemDangFugBixs.Attributes.AsAttribute";
+    private const string AsSelfAttributeName = "NhemDangFugBixs.Attributes.AsSelfAttribute";
+    private const string EntryPointAttributeName = "NhemDangFugBixs.Attributes.EntryPointAttribute";
+    private const string RegisterComponentInHierarchyAttributeName = "NhemDangFugBixs.Attributes.RegisterComponentInHierarchyAttribute";
 
     public static (List<ServiceInfo> Services, List<string> Warnings) Scan(Compilation compilation) {
         var results = new List<ServiceInfo>();
@@ -24,7 +28,7 @@ internal static class ReferencedAssemblyScanner {
         if (attrSymbol == null && genericAttrSymbol == null) return (results, warnings);
 
         // Scan all referenced assemblies
-        foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols) {
+        foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols.OrderBy(a => a.Name, System.StringComparer.Ordinal)) {
             try {
                 ScanNamespace(assembly.GlobalNamespace, attrSymbol, genericAttrSymbol, orderAttrSymbol, results);
             } catch (System.Exception ex) {
@@ -131,6 +135,23 @@ internal static class ReferencedAssemblyScanner {
             }
         }
 
+        foreach (var explicitContract in ExtractExplicitContractTypes(type)) {
+            asTypes.Add(explicitContract);
+        }
+
+        asTypes = asTypes
+            .Where(typeName => !string.IsNullOrWhiteSpace(typeName))
+            .Distinct(System.StringComparer.Ordinal)
+            .ToList();
+
+        bool hasExplicitContracts = asTypes.Count > 0;
+        if (hasExplicitContracts) {
+            asImplementedInterfaces = false;
+            if (!HasNamedArgument(attr, "AsSelf") && !HasAttribute(type, AsSelfAttributeName)) {
+                asSelf = false;
+            }
+        }
+
         // Extract interfaces and component info
         var interfaceNames = type.AllInterfaces.Select(i => i.ToDisplayString()).ToArray();
         
@@ -141,6 +162,15 @@ internal static class ReferencedAssemblyScanner {
         bool isExceptionHandler = interfaceNames.Any(i => i.EndsWith("IEntryPointExceptionHandler"));
         bool isBuildCallback = interfaceNames.Any(i => i.EndsWith("IBuildCallback"));
         bool isInstaller = interfaceNames.Any(i => i.EndsWith("IVContainerInstaller"));
+
+        if (HasAttribute(type, EntryPointAttributeName)) {
+            isEntryPoint = true;
+        }
+
+        if (registerInHierarchy || HasAttribute(type, RegisterComponentInHierarchyAttributeName)) {
+            registerInHierarchy = true;
+            isComponent = true;
+        }
 
         int installerOrder = 0;
         if (isInstaller && orderAttrSymbol != null) {
@@ -194,5 +224,50 @@ internal static class ReferencedAssemblyScanner {
             current = current.BaseType;
         }
         return false;
+    }
+
+    private static IEnumerable<string> ExtractExplicitContractTypes(INamedTypeSymbol type) {
+        foreach (var attr in type.GetAttributes()) {
+            if (!IsAttribute(attr, AsAttributeName)) {
+                continue;
+            }
+
+            if (attr.AttributeClass?.IsGenericType == true && attr.AttributeClass.TypeArguments.Length > 0) {
+                yield return attr.AttributeClass.TypeArguments[0].ToDisplayString();
+                continue;
+            }
+
+            if (attr.ConstructorArguments.Length > 0 &&
+                attr.ConstructorArguments[0].Kind == TypedConstantKind.Type &&
+                attr.ConstructorArguments[0].Value is ITypeSymbol typeSymbol) {
+                yield return typeSymbol.ToDisplayString();
+            }
+        }
+    }
+
+    private static bool HasNamedArgument(AttributeData attr, string name) {
+        return attr.NamedArguments.Any(kv => kv.Key == name);
+    }
+
+    private static bool HasAttribute(INamedTypeSymbol type, string metadataName) {
+        return type.GetAttributes().Any(attr => IsAttribute(attr, metadataName));
+    }
+
+    private static bool IsAttribute(AttributeData attr, string metadataName) {
+        var attributeClass = attr.AttributeClass;
+        if (attributeClass == null) {
+            return false;
+        }
+
+        if (attributeClass.ToDisplayString() == metadataName ||
+            attributeClass.OriginalDefinition.ToDisplayString() == metadataName) {
+            return true;
+        }
+
+        var simpleName = metadataName.Split('.').Last();
+        return attributeClass.Name == simpleName ||
+               attributeClass.OriginalDefinition.Name == simpleName ||
+               attributeClass.Name == simpleName.Replace("Attribute", "Attribute`1") ||
+               attributeClass.OriginalDefinition.Name == simpleName.Replace("Attribute", "Attribute`1");
     }
 }

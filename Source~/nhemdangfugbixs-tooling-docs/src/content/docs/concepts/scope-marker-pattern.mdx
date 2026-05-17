@@ -6,9 +6,9 @@ slug: docs/concepts/scope-marker-pattern
 
 Use scope markers to avoid architecture inversion across asmdef layers.
 
-## The Problem
+## The problem
 
-If an Application assembly uses:
+If a service assembly uses a concrete composition type such as:
 
 ```csharp
 [AutoRegisterIn(typeof(GameplayLifetimeScope))]
@@ -16,7 +16,7 @@ If an Application assembly uses:
 
 it now depends on Composition. That breaks clean layering.
 
-## Recommended Pattern
+## Recommended pattern
 
 Define markers in a shared low-level assembly:
 
@@ -28,7 +28,7 @@ public interface IProjectScope : IScopeMarker { }
 public interface IGameplayScope : IScopeMarker { }
 ```
 
-Use marker in services:
+Use the marker in services:
 
 ```csharp
 [AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
@@ -36,9 +36,15 @@ Use marker in services:
 public sealed class PhaseStateMachine : IPhaseStateMachine { }
 ```
 
-Map marker to real scope in Composition only:
+This service assembly can stay free of direct `VContainer` references.
+
+Map the marker to a real scope in Composition only:
 
 ```csharp
+using NhemDangFugBixs.VContainer;
+using VContainer;
+using VContainer.Unity;
+
 [LifetimeScopeFor<IGameplayScope>]
 public sealed class GameplayLifetimeScope : LifetimeScope
 {
@@ -49,14 +55,31 @@ public sealed class GameplayLifetimeScope : LifetimeScope
 }
 ```
 
-## Dependency Direction
+## Composition-only generation
+
+Assemblies that contain `[LifetimeScopeFor]` are composition targets.
+
+Only those assemblies emit:
+
+- `NhemGeneratedVContainerExtensions`
+- `RegisterGeneratedFor<TScope>()`
+- one stateless installer per mapped scope
+
+MVP discovery inspects:
+
+1. the current compilation
+2. directly referenced assemblies only
+
+It does not scan all loaded Unity assemblies and does not use transitive discovery yet.
+
+## Dependency direction
 
 Good:
 
 ```txt
 Application -> Shared
 Infrastructure -> Shared
-Composition -> Application + Infrastructure + Shared
+Composition -> Application + Infrastructure + Shared + VContainer
 ```
 
 Avoid:
@@ -65,10 +88,11 @@ Avoid:
 Application -> Composition
 ```
 
-## Common Mistakes
+## Common mistakes
 
-- Defining marker interfaces inside Composition assembly.
-- Mapping one marker to multiple `LifetimeScope` classes.
-- Forgetting to call `RegisterGeneratedFor<TScopeMarker>()` in the mapped scope.
+- Defining marker interfaces inside a composition assembly.
+- Mapping one marker to multiple `LifetimeScope` classes in the same composition compilation.
+- Forgetting `using NhemDangFugBixs.VContainer;` where `RegisterGeneratedFor<TScope>()` is called.
+- Expecting an unreferenced service asmdef to be discovered automatically.
 
 Next: [Package Architecture](/NhemDangFugBixs.Tooling/docs/concepts/architecture/) and [Diagnostics Reference](/NhemDangFugBixs.Tooling/docs/reference/diagnostics/).

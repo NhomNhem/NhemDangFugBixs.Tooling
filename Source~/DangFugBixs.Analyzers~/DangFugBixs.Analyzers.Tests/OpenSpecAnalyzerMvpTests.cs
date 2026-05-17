@@ -82,7 +82,7 @@ namespace NhemDangFugBixs.Attributes {
     }
 
     [Fact]
-    public void MissingLifetimeScopeMapping_ReportsNhemDi010() {
+    public void ServiceOnlyAssembly_DoesNotReportNhemDi010() {
         const string source = """
 using NhemDangFugBixs.Attributes;
 public interface IScopeMarker {}
@@ -95,7 +95,7 @@ namespace NhemDangFugBixs.Attributes {
 """;
 
         var diagnostics = AnalyzerTestHost.Run(source, new ScopeMappingAnalyzer());
-        Assert.Contains(diagnostics, d => d.Id == "NHEM_DI_010");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_010");
     }
 
     [Fact]

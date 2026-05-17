@@ -6,6 +6,25 @@ namespace DangFugBixs.Tests;
 [TestFixture]
 public class GeneratedOutputSnapshotTests {
     [Test]
+    public void ServiceOnlyAssembly_EmitsNoVContainerGeneratedCode() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker { }
+public interface IGameplayScope : IScopeMarker { }
+public interface ICombatCoreService { }
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemLifetime.Scoped)]
+[As(typeof(ICombatCoreService))]
+public sealed class CombatCoreService : ICombatCoreService { }
+""";
+
+        var (result, generated) = GeneratorTestHost.Run(source, "Game.Gameplay");
+
+        Assert.That(result.Diagnostics.Any(d => d.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error), Is.False);
+        Assert.That(result.Results.SelectMany(r => r.GeneratedSources), Is.Empty);
+        Assert.That(generated, Is.Empty);
+    }
+
+    [Test]
     public void GeneratedOutput_UsesDocumentedExtensionNamespaceAndSingleScopeInstaller() {
         const string source = """
 using NhemDangFugBixs.Attributes;
@@ -60,8 +79,6 @@ public interface IOtherContract { }
 [AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemLifetime.Scoped)]
 [As(typeof(IOtherContract))]
 public sealed class CombatCoreService : ICombatCoreService { }
-[LifetimeScopeFor(typeof(IGameplayScope))]
-public sealed class GameplayLifetimeScope { }
 """;
 
         var (result, generated) = GeneratorTestHost.Run(source);

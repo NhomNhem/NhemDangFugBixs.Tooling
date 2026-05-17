@@ -13,6 +13,7 @@ $docsRoot = Join-Path $repoRoot "Source~\nhemdangfugbixs-tooling-docs"
 $artifactsRoot = Join-Path $repoRoot "artifacts"
 $unityLogPath = Join-Path $artifactsRoot "unity-sample-compile.log"
 $unityProjectRoot = if ($env:NHEM_UNITY_PROJECT_ROOT) { $env:NHEM_UNITY_PROJECT_ROOT } else { $null }
+$unityCompileDuration = $null
 
 $summary = [ordered]@{
     Restore = "PENDING"
@@ -332,6 +333,7 @@ try {
                     Remove-Item -LiteralPath $unityLogPath -Force
                 }
 
+                $timer = [System.Diagnostics.Stopwatch]::StartNew()
                 & $unitySelection.SelectedPath `
                     -batchmode `
                     -nographics `
@@ -339,8 +341,14 @@ try {
                     -quit `
                     -projectPath $unityProjectRoot `
                     -logFile $unityLogPath
+                $timer.Stop()
+                $script:unityCompileDuration = $timer.Elapsed
             }
-            $summary.UnitySampleCompile = "PASS"
+            if ($unityCompileDuration -ne $null) {
+                $summary.UnitySampleCompile = ("PASS ({0:n1}s)" -f $unityCompileDuration.TotalSeconds)
+            } else {
+                $summary.UnitySampleCompile = "PASS"
+            }
         }
     }
 
