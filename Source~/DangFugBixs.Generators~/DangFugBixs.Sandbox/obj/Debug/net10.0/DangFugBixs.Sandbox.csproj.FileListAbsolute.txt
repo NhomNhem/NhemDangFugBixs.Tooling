@@ -1,0 +1,6 @@
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Sandbox\obj\Debug\net10.0\DangFugBixs.Sandbox.csproj.AssemblyReference.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Sandbox\obj\Debug\net10.0\DangFugBixs.Sandbox.GeneratedMSBuildEditorConfig.editorconfig
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Sandbox\obj\Debug\net10.0\DangFugBixs.Sandbox.AssemblyInfoInputs.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Sandbox\obj\Debug\net10.0\DangFugBixs.Sandbox.AssemblyInfo.cs
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Sandbox\obj\Debug\net10.0\DangFugBixs.Sandbox.csproj.CoreCompileInputs.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Generators~\DangFugBixs.Sandbox\obj\Debug\net10.0\DangFugBixs.Sandbox.sourcelink.json

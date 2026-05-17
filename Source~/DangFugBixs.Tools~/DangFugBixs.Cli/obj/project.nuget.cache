@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "MvVK1I3qiDo=",
+  "success": true,
+  "projectFilePath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.Cli\\DangFugBixs.Cli.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\truon\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
+    "C:\\Users\\truon\\.nuget\\packages\\microsoft.codeanalysis.common\\4.3.0\\microsoft.codeanalysis.common.4.3.0.nupkg.sha512",
+    "C:\\Users\\truon\\.nuget\\packages\\microsoft.codeanalysis.csharp\\4.3.0\\microsoft.codeanalysis.csharp.4.3.0.nupkg.sha512"
+  ],
+  "logs": []
+}

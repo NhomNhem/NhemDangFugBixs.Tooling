@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "iof93zuV4nU=",
+  "success": true,
+  "projectFilePath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Analyzers~\\DangFugBixs.Analyzers.Sample\\DangFugBixs.Analyzers.Sample.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\truon\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.15\\microsoft.netcore.app.ref.9.0.15.nupkg.sha512",
+    "C:\\Users\\truon\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.15\\microsoft.windowsdesktop.app.ref.9.0.15.nupkg.sha512",
+    "C:\\Users\\truon\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.15\\microsoft.aspnetcore.app.ref.9.0.15.nupkg.sha512"
+  ],
+  "logs": []
+}

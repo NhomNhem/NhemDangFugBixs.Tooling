@@ -1,0 +1,11 @@
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\bin\Release\netstandard2.0\NhemDangFugBixs.Attributes.deps.json
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\bin\Release\netstandard2.0\NhemDangFugBixs.Attributes.dll
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\bin\Release\netstandard2.0\NhemDangFugBixs.Attributes.pdb
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\obj\Release\netstandard2.0\NhemDangFugBixs.Attributes.csproj.AssemblyReference.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\obj\Release\netstandard2.0\NhemDangFugBixs.Attributes.GeneratedMSBuildEditorConfig.editorconfig
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\obj\Release\netstandard2.0\NhemDangFugBixs.Attributes.AssemblyInfoInputs.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\obj\Release\netstandard2.0\NhemDangFugBixs.Attributes.AssemblyInfo.cs
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\obj\Release\netstandard2.0\NhemDangFugBixs.Attributes.csproj.CoreCompileInputs.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\obj\Release\netstandard2.0\NhemDangFugBixs.Attributes.sourcelink.json
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\obj\Release\netstandard2.0\NhemDangFugBixs.Attributes.dll
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Attributes~\obj\Release\netstandard2.0\NhemDangFugBixs.Attributes.pdb

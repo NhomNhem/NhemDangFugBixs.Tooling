@@ -1,0 +1,14 @@
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Release\netstandard2.0\NhemDangFugBixs.Runtime.deps.json
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Release\netstandard2.0\NhemDangFugBixs.Runtime.dll
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Release\netstandard2.0\NhemDangFugBixs.Runtime.pdb
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Release\netstandard2.0\NhemDangFugBixs.Attributes.dll
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Release\netstandard2.0\NhemDangFugBixs.Attributes.pdb
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\DangFugBixs.Runtime.csproj.AssemblyReference.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\DangFugBixs.Runtime.GeneratedMSBuildEditorConfig.editorconfig
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\DangFugBixs.Runtime.AssemblyInfoInputs.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\DangFugBixs.Runtime.AssemblyInfo.cs
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\DangFugBixs.Runtime.csproj.CoreCompileInputs.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\DangFugBixs.Runtime.sourcelink.json
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\DangFugB.C82558F8.Up2Date
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\NhemDangFugBixs.Runtime.dll
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Release\netstandard2.0\NhemDangFugBixs.Runtime.pdb

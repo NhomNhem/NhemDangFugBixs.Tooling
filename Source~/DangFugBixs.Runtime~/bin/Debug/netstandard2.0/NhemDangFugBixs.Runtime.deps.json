@@ -1,0 +1,40 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.0/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.0": {},
+    ".NETStandard,Version=v2.0/": {
+      "NhemDangFugBixs.Runtime/1.0.0": {
+        "dependencies": {
+          "NhemDangFugBixs.Attributes": "1.0.0"
+        },
+        "runtime": {
+          "NhemDangFugBixs.Runtime.dll": {}
+        }
+      },
+      "NhemDangFugBixs.Attributes/1.0.0": {
+        "runtime": {
+          "NhemDangFugBixs.Attributes.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NhemDangFugBixs.Runtime/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NhemDangFugBixs.Attributes/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

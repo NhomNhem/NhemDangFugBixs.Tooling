@@ -1,0 +1,68 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "DangFugBixs.Analyzers.Sample/1.0.0": {
+        "dependencies": {
+          "NhemDangFugBixs.Runtime": "1.0.0",
+          "NhemDangFugBixs.Runtime.Reference": "1.0.0.0"
+        },
+        "runtime": {
+          "DangFugBixs.Analyzers.Sample.dll": {}
+        }
+      },
+      "NhemDangFugBixs.Attributes/1.0.0": {
+        "runtime": {
+          "NhemDangFugBixs.Attributes.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "NhemDangFugBixs.Runtime/1.0.0": {
+        "dependencies": {
+          "NhemDangFugBixs.Attributes": "1.0.0"
+        },
+        "runtime": {
+          "NhemDangFugBixs.Runtime.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "NhemDangFugBixs.Runtime.Reference/1.0.0.0": {
+        "runtime": {
+          "NhemDangFugBixs.Runtime.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DangFugBixs.Analyzers.Sample/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NhemDangFugBixs.Attributes/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NhemDangFugBixs.Runtime/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NhemDangFugBixs.Runtime.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
