@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DangFugBixs.Analyzers\DangFugBixs.Analyzers.csproj"
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj" />
+        <ProjectReference Include="..\..\DangFugBixs.Runtime~\DangFugBixs.Runtime.csproj">
+            <OutputItemType>Analyzer</OutputItemType>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <SetTargetFramework>TargetFramework=netstandard2.0</SetTargetFramework>
+        </ProjectReference>
+    </ItemGroup>
+
+    <Target Name="CopyRuntimeForSample" AfterTargets="Build">
+        <Copy SourceFiles="..\..\DangFugBixs.Runtime~\bin\$(Configuration)\netstandard2.0\NhemDangFugBixs.Runtime.dll"
+              DestinationFolder="$(OutputPath)"
+              ContinueOnError="true"
+              Condition="Exists('..\..\DangFugBixs.Runtime~\bin\$(Configuration)\netstandard2.0\NhemDangFugBixs.Runtime.dll')" />
+    </Target>
+
+</Project>
