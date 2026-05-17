@@ -780,7 +780,7 @@
           "bin/placeholder/NhemDangFugBixs.Attributes.dll": {}
         }
       },
-      "NhemDangFugBixs.Generators/7.2.0": {
+      "NhemDangFugBixs.Generators/7.3.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
@@ -2466,7 +2466,7 @@
       "path": "../../DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj",
       "msbuildProject": "../../DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj"
     },
-    "NhemDangFugBixs.Generators/7.2.0": {
+    "NhemDangFugBixs.Generators/7.3.0": {
       "type": "project",
       "path": "../DangFugBixs.Generators/DangFugBixs.Generators.csproj",
       "msbuildProject": "../DangFugBixs.Generators/DangFugBixs.Generators.csproj"
@@ -2485,7 +2485,7 @@
       "NUnit >= 4.3.2",
       "NUnit.Analyzers >= 4.7.0",
       "NUnit3TestAdapter >= 5.0.0",
-      "NhemDangFugBixs.Generators >= 7.2.0",
+      "NhemDangFugBixs.Generators >= 7.3.0",
       "NhemDangFugBixs.Runtime >= 1.0.0",
       "coverlet.collector >= 6.0.4"
     ]

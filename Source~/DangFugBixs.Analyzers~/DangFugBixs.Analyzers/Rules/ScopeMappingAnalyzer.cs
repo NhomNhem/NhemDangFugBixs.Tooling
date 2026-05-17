@@ -56,10 +56,6 @@ public sealed class ScopeMappingAnalyzer : DiagnosticAnalyzer {
         CompilationAnalysisContext context,
         List<(INamedTypeSymbol Type, ITypeSymbol? Marker)> autoServices,
         List<(INamedTypeSymbol Type, ITypeSymbol Marker)> scopeMappings) {
-        if (scopeMappings.Count == 0) {
-            return;
-        }
-
         var markers = new HashSet<ITypeSymbol>(scopeMappings.Select(m => m.Marker), SymbolEqualityComparer.Default);
 
         foreach (var service in autoServices.Where(s => s.Marker != null)) {

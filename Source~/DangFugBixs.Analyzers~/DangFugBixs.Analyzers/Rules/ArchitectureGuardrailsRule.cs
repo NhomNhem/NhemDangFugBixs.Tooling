@@ -127,10 +127,6 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
     }
 
     private static void AnalyzeScopeMapping(CompilationAnalysisContext context, List<INamedTypeSymbol> services, Dictionary<string, List<INamedTypeSymbol>> mappings) {
-        if (mappings.Count == 0) {
-            return;
-        }
-
         foreach (var pair in mappings.Where(p => p.Value.Count > 1)) {
             foreach (var type in pair.Value) {
                 context.ReportDiagnostic(Diagnostic.Create(NDFG011, type.Locations.FirstOrDefault(), pair.Key));
