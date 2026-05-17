@@ -1,6 +1,7 @@
 using NhemDangFugBixs.Attributes;
 using VContainer;
 using VContainer.Unity;
+using DangFugBixs.Sandbox.Testing;
 
 namespace DangFugBixs.Sandbox.Scopes;
 
@@ -23,7 +24,7 @@ public class GameLifetimeScope : LifetimeScope {
 /// <summary>
 /// A test scope mapping to an Identity Type in a different assembly (Runtime.dll)
 /// </summary>
-[NhemDangFugBixs.Attributes.LifetimeScopeFor(typeof(NhemDangFugBixs.Runtime.Testing.CrossLayerIdentity))]
+[NhemDangFugBixs.Attributes.LifetimeScopeFor(typeof(CrossLayerIdentity))]
 public class CrossLayerLifetimeScope : LifetimeScope {
 }
 
@@ -41,7 +42,7 @@ public class GameplayLifetimeScope : LifetimeScope {
 /// UI-specific lifetime scope with custom name override.
 /// </summary>
 [ScopeName("UI")]
-[NhemDangFugBixs.Attributes.LifetimeScopeFor(typeof(NhemDangFugBixs.Runtime.Testing.CrossLayerIdentity))] // Just for testing multiple mappings
+[NhemDangFugBixs.Attributes.LifetimeScopeFor(typeof(CrossLayerIdentity))] // Just for testing multiple mappings
 public class UserInterfaceLifetimeScope : LifetimeScope {
     protected override void Configure(IContainerBuilder builder) {
         NhemDangFugBixs.Generated.DangFugBixs_Sandbox.VContainerRegistration.RegisterUI(builder);

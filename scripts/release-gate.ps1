@@ -12,8 +12,13 @@ $generatorProjectPath = Join-Path $repoRoot "Source~\DangFugBixs.Generators~\Dan
 $docsRoot = Join-Path $repoRoot "Source~\nhemdangfugbixs-tooling-docs"
 $artifactsRoot = Join-Path $repoRoot "artifacts"
 $unityLogPath = Join-Path $artifactsRoot "unity-sample-compile.log"
+$unityStdOutPath = Join-Path $artifactsRoot "unity-sample-stdout.log"
+$unityStdErrPath = Join-Path $artifactsRoot "unity-sample-stderr.log"
 $unityProjectRoot = if ($env:NHEM_UNITY_PROJECT_ROOT) { $env:NHEM_UNITY_PROJECT_ROOT } else { $null }
+$unitySampleSolutionPath = $null
 $unityCompileDuration = $null
+$unityExitCode = $null
+$unityFailureReason = $null
 
 $summary = [ordered]@{
     Restore = "PENDING"
@@ -21,7 +26,45 @@ $summary = [ordered]@{
     AnalyzerTests = "PENDING"
     VersionDrift = "PENDING"
     DocsCheck = "PENDING"
+    UnitySampleDotnetBuild = "PENDING"
     UnitySampleCompile = "PENDING"
+}
+
+function Find-UnityFailureText {
+    param([string]$Content)
+
+    $patterns = @(
+        "Aborting batchmode due to fatal error",
+        "another Unity instance is running with this project open",
+        "error CS\d{4}",
+        "Compilation failed",
+        "BuildFailedException",
+        "Exiting without the bug reporter\. Application will terminate with return code 1"
+    )
+
+    foreach ($pattern in $patterns) {
+        if ($Content -match $pattern) {
+            return $matches[0]
+        }
+    }
+
+    return $null
+}
+
+function Get-UnityLogSummary {
+    param([string[]]$Paths)
+
+    foreach ($path in $Paths) {
+        if (-not [string]::IsNullOrWhiteSpace($path) -and (Test-Path -LiteralPath $path)) {
+            $content = Get-Content -LiteralPath $path -Raw
+            $match = Find-UnityFailureText -Content $content
+            if ($match) {
+                return "$match [$path]"
+            }
+        }
+    }
+
+    return $null
 }
 
 function Write-Section {
@@ -77,6 +120,21 @@ function Test-TruthyEnvironmentValue {
         'y' { return $true }
         default { return $false }
     }
+}
+
+function Resolve-UnitySampleSolutionPath {
+    param([string]$ProjectRoot)
+
+    if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
+        return $null
+    }
+
+    $solution = Get-ChildItem -LiteralPath $ProjectRoot -Filter "*.sln" -File -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($null -eq $solution) {
+        return $null
+    }
+
+    return $solution.FullName
 }
 
 function Get-UnityProjectVersion {
@@ -296,6 +354,24 @@ try {
         Write-Host "Docs check: SKIPPED (pnpm not available or docs directory missing)" -ForegroundColor Yellow
     }
 
+    $unitySampleSolutionPath = Resolve-UnitySampleSolutionPath -ProjectRoot $unityProjectRoot
+    if (-not [string]::IsNullOrWhiteSpace($unityProjectRoot) -and -not [string]::IsNullOrWhiteSpace($unitySampleSolutionPath)) {
+        Invoke-Step "Unity sample dotnet build" {
+            dotnet build $unitySampleSolutionPath --nologo
+        }
+        $summary.UnitySampleDotnetBuild = "PASS"
+    } elseif (-not [string]::IsNullOrWhiteSpace($unityProjectRoot)) {
+        $summary.UnitySampleDotnetBuild = "SKIPPED"
+        Write-Host ""
+        Write-Host "== Unity sample dotnet build ==" -ForegroundColor Cyan
+        Write-Host "Unity sample dotnet build: SKIPPED (no .sln found under NHEM_UNITY_PROJECT_ROOT)" -ForegroundColor Yellow
+    } else {
+        $summary.UnitySampleDotnetBuild = "SKIPPED"
+        Write-Host ""
+        Write-Host "== Unity sample dotnet build ==" -ForegroundColor Cyan
+        Write-Host "Unity sample dotnet build: SKIPPED (NHEM_UNITY_PROJECT_ROOT not set)" -ForegroundColor Yellow
+    }
+
     $requestedUnity = Get-RequestedUnityVersion -ProjectRoot $unityProjectRoot
     $unitySelection = Resolve-UnityExecutableSelection `
         -UnityExe $env:UNITY_EXE `
@@ -332,22 +408,48 @@ try {
                 if (Test-Path -LiteralPath $unityLogPath) {
                     Remove-Item -LiteralPath $unityLogPath -Force
                 }
+                if (Test-Path -LiteralPath $unityStdOutPath) {
+                    Remove-Item -LiteralPath $unityStdOutPath -Force
+                }
+                if (Test-Path -LiteralPath $unityStdErrPath) {
+                    Remove-Item -LiteralPath $unityStdErrPath -Force
+                }
 
                 $timer = [System.Diagnostics.Stopwatch]::StartNew()
-                & $unitySelection.SelectedPath `
-                    -batchmode `
-                    -nographics `
-                    -accept-apiupdate `
-                    -quit `
-                    -projectPath $unityProjectRoot `
-                    -logFile $unityLogPath
+                $process = Start-Process `
+                    -FilePath $unitySelection.SelectedPath `
+                    -ArgumentList @(
+                        "-batchmode",
+                        "-nographics",
+                        "-accept-apiupdate",
+                        "-quit",
+                        "-projectPath", $unityProjectRoot,
+                        "-logFile", $unityLogPath
+                    ) `
+                    -NoNewWindow `
+                    -Wait `
+                    -PassThru `
+                    -RedirectStandardOutput $unityStdOutPath `
+                    -RedirectStandardError $unityStdErrPath
                 $timer.Stop()
                 $script:unityCompileDuration = $timer.Elapsed
+                $script:unityExitCode = $process.ExitCode
+
+                Start-Sleep -Milliseconds 500
+                $script:unityFailureReason = Get-UnityLogSummary -Paths @($unityStdOutPath, $unityStdErrPath, $unityLogPath)
+
+                if ($script:unityExitCode -ne 0) {
+                    throw "Unity sample compile failed with exit code $script:unityExitCode. Log: $unityLogPath"
+                }
+
+                if ($script:unityFailureReason) {
+                    throw "Unity sample compile failed: $script:unityFailureReason. Log: $unityLogPath"
+                }
             }
             if ($unityCompileDuration -ne $null) {
-                $summary.UnitySampleCompile = ("PASS ({0:n1}s)" -f $unityCompileDuration.TotalSeconds)
+                $summary.UnitySampleCompile = ("PASS ({0:n1}s, exit={1}, log={2})" -f $unityCompileDuration.TotalSeconds, $unityExitCode, $unityLogPath)
             } else {
-                $summary.UnitySampleCompile = "PASS"
+                $summary.UnitySampleCompile = ("PASS (exit={0}, log={1})" -f $unityExitCode, $unityLogPath)
             }
         }
     }
@@ -363,7 +465,16 @@ catch {
     elseif ($summary.AnalyzerTests -eq "PENDING") { $summary.AnalyzerTests = "FAIL" }
     elseif ($summary.VersionDrift -eq "PENDING") { $summary.VersionDrift = "FAIL" }
     elseif ($summary.DocsCheck -eq "PENDING") { $summary.DocsCheck = "FAIL" }
-    elseif ($summary.UnitySampleCompile -eq "PENDING") { $summary.UnitySampleCompile = "FAIL" }
+    elseif ($summary.UnitySampleDotnetBuild -eq "PENDING") { $summary.UnitySampleDotnetBuild = "FAIL" }
+    elseif ($summary.UnitySampleCompile -eq "PENDING") {
+        if ($unityExitCode -ne $null) {
+            $summary.UnitySampleCompile = ("FAIL (exit={0}, log={1})" -f $unityExitCode, $unityLogPath)
+        } elseif (Test-Path -LiteralPath $unityLogPath) {
+            $summary.UnitySampleCompile = ("FAIL (log={0})" -f $unityLogPath)
+        } else {
+            $summary.UnitySampleCompile = "FAIL"
+        }
+    }
 
     if ($summary.UnitySampleCompile -eq "FAIL" -and (Test-Path -LiteralPath $unityLogPath)) {
         Write-Host ""
