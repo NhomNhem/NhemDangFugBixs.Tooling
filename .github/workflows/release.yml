@@ -34,7 +34,7 @@ jobs:
           set -euo pipefail
           mkdir -p artifacts
           zip -r artifacts/NhemDangFugBixs.Tooling-${GITHUB_REF_NAME}.zip \
-            package.json README.md CHANGELOG.md Runtime Editor Analyzers Documentation~ Samples~ Tests \
+            package.json README.md CHANGELOG.md Runtime Editor Analyzers docs Documentation~ Samples~ Tests \
             -x '*.git*'
 
       - name: Create GitHub Release

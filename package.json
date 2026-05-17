@@ -30,7 +30,9 @@
     "CHANGELOG.md",
     "CHANGELOG.md.meta",
     "LICENSE",
-    "LICENSE.meta"
+    "LICENSE.meta",
+    "docs",
+    "docs.meta"
   ],
   "dependencies": {
     "jp.hadashikick.vcontainer": "1.17.0"
