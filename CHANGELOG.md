@@ -1,5 +1,20 @@
 # Changelog
 
+## 7.3.0 - 2026-05-17
+
+### Added
+- NHEM_DI_061: Duplicate explicit contract exposure warning. Detects duplicate `[As(...)]` declarations for the same contract type.
+- NHEM_DI_066: RegisterComponentInHierarchy on non-MonoBehaviour error. Ensures `[RegisterComponentInHierarchy]` is only used on MonoBehaviour types.
+- NHEM_DI_067: EntryPoint without known lifecycle contract warning. Ensures `[EntryPoint]` types implement a known VContainer lifecycle interface (IStartable, ITickable, IInitializable, IDisposable, etc.).
+- Analyzer tests for all new diagnostics including positive and negative cases.
+
+### Changed
+- Analyzer source layout recovered from v7.1.0 tag and restored to `Source~/DangFugBixs.Analyzers~/`.
+- Analyzer csproj PostBuild target made conditional on `$(FinalPluginsPath)` for test-only builds.
+
+### Validation
+- 34 analyzer tests pass (8 new + 26 existing).
+
 ## 7.2.2 - 2026-05-17
 
 ### Added
