@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.2.1 - 2026-05-17
+
+### Changed
+- Prefer explicit exposure attributes over implicit registration exposure detection.
+
 ## 7.2.0 - 2026-05-17
 
 ### Changed
