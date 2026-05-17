@@ -28,12 +28,12 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-       - name: Prepare deploy directory
-         shell: bash
-         run: |
-           set -euo pipefail
-           rm -rf deploy
-           mkdir -p deploy
+      - name: Prepare deploy directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf deploy
+          mkdir -p deploy
 
            copy_file_if_exists() {
              if [ -f "$1" ]; then
