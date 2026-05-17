@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(("DI Validation Tool for VContainer - Preflight validation, smoke tests, and resolv" +
     "e validation"))]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("5.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.1.0+a11b0e264e16e935f341d705cbdd331a0dc4a675")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.1.0+842a4635b298ffcaad8c885904d8d452845a55e7")]
 [assembly: System.Reflection.AssemblyProductAttribute("DangFugBixs.Cli")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DangFugBixs.Cli")]
 [assembly: System.Reflection.AssemblyVersionAttribute("5.1.0.0")]
