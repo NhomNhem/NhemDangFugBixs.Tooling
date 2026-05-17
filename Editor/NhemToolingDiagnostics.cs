@@ -7,6 +7,7 @@ using NhemDangFugBixs.Attributes;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using PackageManagerPackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace NhemDangFugBixs.Editor
 {
@@ -116,7 +117,7 @@ namespace NhemDangFugBixs.Editor
         {
             try
             {
-                var packageInfo = PackageInfo.FindForAssembly(typeof(AutoRegisterInAttribute).Assembly);
+                var packageInfo = PackageManagerPackageInfo.FindForAssembly(typeof(AutoRegisterInAttribute).Assembly);
                 if (packageInfo != null)
                 {
                     return (packageInfo.version, packageInfo.resolvedPath);

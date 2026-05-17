@@ -82,7 +82,7 @@ namespace NhemDangFugBixs.Attributes {
     }
 
     [Fact]
-    public void ServiceOnlyAssembly_DoesNotReportNhemDi010() {
+    public void MissingLifetimeScopeMapping_ReportsNhemDi010() {
         const string source = """
 using NhemDangFugBixs.Attributes;
 public interface IScopeMarker {}
@@ -95,7 +95,7 @@ namespace NhemDangFugBixs.Attributes {
 """;
 
         var diagnostics = AnalyzerTestHost.Run(source, new ScopeMappingAnalyzer());
-        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_010");
+        Assert.Contains(diagnostics, d => d.Id == "NHEM_DI_010");
     }
 
     [Fact]
@@ -210,5 +210,173 @@ namespace NhemDangFugBixs.Attributes {
 
         var diagnostics = AnalyzerTestHost.Run(source, new ServiceLocatorAnalyzer());
         Assert.Contains(diagnostics, d => d.Id == "NHEM_DI_050");
+    }
+
+    [Fact]
+    public void DuplicateAsAttribute_SameContract_ReportsNhemDi061() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+public interface IPlayerView {}
+[AutoRegisterIn(typeof(IGameplayScope))]
+[As(typeof(IPlayerView))]
+[As(typeof(IPlayerView))]
+public sealed class PlayerView : IPlayerView {}
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+  public class AsAttribute : System.Attribute { public AsAttribute(System.Type t) {} }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new AttributeContractAnalyzer());
+        Assert.Contains(diagnostics, d => d.Id == "NHEM_DI_061");
+    }
+
+    [Fact]
+    public void DuplicateAsAttribute_DifferentContracts_NoNhemDi061() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+public interface IPlayerView {}
+public interface ICombatTarget {}
+[AutoRegisterIn(typeof(IGameplayScope))]
+[As(typeof(IPlayerView))]
+[As(typeof(ICombatTarget))]
+public sealed class PlayerView : IPlayerView, ICombatTarget {}
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+  public class AsAttribute : System.Attribute { public AsAttribute(System.Type t) {} }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new AttributeContractAnalyzer());
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_061");
+    }
+
+    [Fact]
+    public void RegisterComponentInHierarchy_NonMonoBehaviour_ReportsNhemDi066() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+[RegisterComponentInHierarchy]
+[AutoRegisterIn(typeof(IGameplayScope))]
+public sealed class PlayerViewService {}
+namespace UnityEngine { public class MonoBehaviour {} }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+  public class RegisterComponentInHierarchyAttribute : System.Attribute { }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new AttributeContractAnalyzer());
+        Assert.Contains(diagnostics, d => d.Id == "NHEM_DI_066");
+    }
+
+    [Fact]
+    public void RegisterComponentInHierarchy_MonoBehaviourSubclass_NoNhemDi066() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+[RegisterComponentInHierarchy]
+[AutoRegisterIn(typeof(IGameplayScope))]
+public sealed class PlayerView : UnityEngine.MonoBehaviour {}
+namespace UnityEngine { public class MonoBehaviour {} }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+  public class RegisterComponentInHierarchyAttribute : System.Attribute { }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new AttributeContractAnalyzer());
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_066");
+    }
+
+    [Fact]
+    public void EntryPointWithoutLifecycle_ReportsNhemDi067() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+[AutoRegisterIn(typeof(IGameplayScope))]
+[EntryPoint]
+public sealed class GameplayLoop {}
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+  public class EntryPointAttribute : System.Attribute { }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new AttributeContractAnalyzer());
+        Assert.Contains(diagnostics, d => d.Id == "NHEM_DI_067");
+    }
+
+    [Fact]
+    public void EntryPointWithIStartable_NoNhemDi067() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+[AutoRegisterIn(typeof(IGameplayScope))]
+[EntryPoint]
+public sealed class GameplayLoop : VContainer.Unity.IStartable {
+    public void Start() {}
+}
+namespace VContainer.Unity { public interface IStartable { void Start(); } }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+  public class EntryPointAttribute : System.Attribute { }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new AttributeContractAnalyzer());
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_067");
+    }
+
+    [Fact]
+    public void EntryPointWithITickable_NoNhemDi067() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+[AutoRegisterIn(typeof(IGameplayScope))]
+[EntryPoint]
+public sealed class GameplayLoop : VContainer.Unity.ITickable {
+    public void Tick() {}
+}
+namespace VContainer.Unity { public interface ITickable { void Tick(); } }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+  public class EntryPointAttribute : System.Attribute { }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new AttributeContractAnalyzer());
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_067");
+    }
+
+    [Fact]
+    public void EntryPointWithIDisposable_NoNhemDi067() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+using System;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+[AutoRegisterIn(typeof(IGameplayScope))]
+[EntryPoint]
+public sealed class GameplayLoop : IDisposable {
+    public void Dispose() {}
+}
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+  public class EntryPointAttribute : System.Attribute { }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new AttributeContractAnalyzer());
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_067");
     }
 }

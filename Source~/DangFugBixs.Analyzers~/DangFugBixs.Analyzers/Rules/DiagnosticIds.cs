@@ -10,4 +10,7 @@ internal static class DiagnosticIds {
     public const string DuplicateGeneratedInvocation = "NHEM_DI_022";
     public const string InvalidEntryPoint = "NHEM_DI_040";
     public const string ResolverInjection = "NHEM_DI_050";
+    public const string DuplicateContractExposure = "NHEM_DI_061";
+    public const string RegisterComponentInHierarchyOnNonMonoBehaviour = "NHEM_DI_066";
+    public const string EntryPointWithoutLifecycleInterface = "NHEM_DI_067";
 }

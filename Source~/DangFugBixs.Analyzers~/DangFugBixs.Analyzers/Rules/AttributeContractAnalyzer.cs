@@ -12,7 +12,10 @@ public sealed class AttributeContractAnalyzer : DiagnosticAnalyzer {
         DiagnosticCatalog.InvalidContract,
         DiagnosticCatalog.InvalidScopeMarker,
         DiagnosticCatalog.MissingExposureIntent,
-        DiagnosticCatalog.InvalidEntryPoint);
+        DiagnosticCatalog.InvalidEntryPoint,
+        DiagnosticCatalog.DuplicateContractExposure,
+        DiagnosticCatalog.RegisterComponentInHierarchyOnNonMonoBehaviour,
+        DiagnosticCatalog.EntryPointWithoutLifecycleInterface);
 
     public override void Initialize(AnalysisContext context) {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -63,6 +66,10 @@ public sealed class AttributeContractAnalyzer : DiagnosticAnalyzer {
                 type.Locations.FirstOrDefault(),
                 type.Name));
         }
+
+        CheckDuplicateContractExposure(type, context);
+        CheckRegisterComponentInHierarchyUsage(type, context);
+        CheckEntryPointLifecycleInterface(type, context);
     }
 
     private static bool ShouldWarnMissingExposure(INamedTypeSymbol type, AttributeData autoRegister) {
@@ -173,5 +180,76 @@ public sealed class AttributeContractAnalyzer : DiagnosticAnalyzer {
         }
 
         return null;
+    }
+    private static void CheckDuplicateContractExposure(INamedTypeSymbol type, SymbolAnalysisContext context) {
+        var contractTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
+
+        foreach (var attr in type.GetAttributes()) {
+            if (!IsAttribute(attr, "AsAttribute")) {
+                continue;
+            }
+
+            ITypeSymbol? contractType = null;
+
+            if (attr.AttributeClass?.IsGenericType == true && attr.AttributeClass.TypeArguments.Length > 0) {
+                contractType = attr.AttributeClass.TypeArguments[0];
+            } else if (attr.ConstructorArguments.Length > 0 &&
+                       attr.ConstructorArguments[0].Kind == TypedConstantKind.Type &&
+                       attr.ConstructorArguments[0].Value is ITypeSymbol typeSymbol) {
+                contractType = typeSymbol;
+            }
+
+            if (contractType != null) {
+                if (contractTypes.Contains(contractType)) {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        DiagnosticCatalog.DuplicateContractExposure,
+                        type.Locations.FirstOrDefault()));
+                    return;
+                }
+                contractTypes.Add(contractType);
+            }
+        }
+    }
+
+    private static void CheckRegisterComponentInHierarchyUsage(INamedTypeSymbol type, SymbolAnalysisContext context) {
+        if (!HasAttribute(type, "RegisterComponentInHierarchyAttribute")) {
+            return;
+        }
+
+        var monoBehaviourSymbol = context.Compilation.GetTypeByMetadataName("UnityEngine.MonoBehaviour");
+        if (monoBehaviourSymbol == null) {
+            return;
+        }
+
+        if (!InheritsFrom(type, monoBehaviourSymbol)) {
+            context.ReportDiagnostic(Diagnostic.Create(
+                DiagnosticCatalog.RegisterComponentInHierarchyOnNonMonoBehaviour,
+                type.Locations.FirstOrDefault()));
+        }
+    }
+
+    private static void CheckEntryPointLifecycleInterface(INamedTypeSymbol type, SymbolAnalysisContext context) {
+        if (!HasAttribute(type, "EntryPointAttribute")) {
+            return;
+        }
+
+        if (ImplementsLifecycle(type)) {
+            return;
+        }
+
+        context.ReportDiagnostic(Diagnostic.Create(
+            DiagnosticCatalog.EntryPointWithoutLifecycleInterface,
+            type.Locations.FirstOrDefault()));
+    }
+
+    private static bool InheritsFrom(INamedTypeSymbol type, INamedTypeSymbol baseType) {
+        var current = type.BaseType;
+        while (current != null) {
+            if (SymbolEqualityComparer.Default.Equals(current, baseType)) {
+                return true;
+            }
+            current = current.BaseType;
+        }
+        return false;
     }
 }

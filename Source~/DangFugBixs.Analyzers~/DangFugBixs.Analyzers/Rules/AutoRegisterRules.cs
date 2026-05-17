@@ -81,7 +81,7 @@ public class AutoRegisterRules : DiagnosticAnalyzer {
         description: "Installers are instantiated directly by the generator and cannot be Unity Components which require scene instantiation.");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-        => ImmutableArray.Create(ND001, ND002, ND003, ND105, ND106, ND107, EntryPointAsSelfRule.ND108, ViewComponentRegistrationRule.ND110, MissingContractRegistrationRule.ND111, DuplicateContractRegistrationRule.ND112, SceneViewBindingMismatchRule.ND113, ConflictCheckRule.ND005);
+        => ImmutableArray.Create(ND001, ND002, ND003, ND105, ND106, ND107, EntryPointAsSelfRule.ND108, MissingContractRegistrationRule.ND111, DuplicateContractRegistrationRule.ND112, SceneViewBindingMismatchRule.ND113, ConflictCheckRule.ND005);
 
     public override void Initialize(AnalysisContext context) {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);

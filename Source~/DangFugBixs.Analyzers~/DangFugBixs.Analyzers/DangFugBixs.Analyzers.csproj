@@ -47,7 +47,7 @@
         <Compile Include="..\..\DangFugBixs.Common~\DangFugBixs.Common\Utils\**\*.cs" Link="Common\Utils\%(RecursiveDir)%(FileName)%(Extension)" />
     </ItemGroup>
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(FinalPluginsPath)' != ''">
         <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(FinalPluginsPath)" />
         <Copy SourceFiles="$(PackageRoot)Source~/MetaTemplates/$(AssemblyName).dll.meta" DestinationFolder="$(FinalPluginsPath)" ContinueOnError="true" />
     </Target>

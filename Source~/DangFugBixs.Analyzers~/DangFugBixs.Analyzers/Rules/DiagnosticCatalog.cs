@@ -74,4 +74,28 @@ internal static class DiagnosticCatalog {
         "Architecture",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor DuplicateContractExposure = new(
+        DiagnosticIds.DuplicateContractExposure,
+        "Duplicate explicit contract exposure",
+        "Duplicate contract exposure. Remove duplicate [As] declaration for the same contract.",
+        "Usage",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor RegisterComponentInHierarchyOnNonMonoBehaviour = new(
+        DiagnosticIds.RegisterComponentInHierarchyOnNonMonoBehaviour,
+        "RegisterComponentInHierarchy on non-MonoBehaviour",
+        "RegisterComponentInHierarchy can only be used on MonoBehaviour types.",
+        "Usage",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor EntryPointWithoutLifecycleInterface = new(
+        DiagnosticIds.EntryPointWithoutLifecycleInterface,
+        "EntryPoint without known lifecycle contract",
+        "EntryPoint should implement a known lifecycle interface such as IStartable, ITickable, IInitializable, or IDisposable.",
+        "Usage",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
 }

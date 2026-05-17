@@ -8,7 +8,7 @@ namespace NhemDangFugBixs.Analyzers.Tests;
 
 public class ArchitectureGuardrailsRuleTests {
     [Fact]
-    public async Task ServiceOnlyAssembly_DoesNotReportNDFG010() {
+    public async Task MissingScopeMapping_ReportsNDFG010() {
         var test = """
 using NhemDangFugBixs.Attributes;
 [AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Scoped)]
@@ -23,7 +23,8 @@ namespace NhemDangFugBixs.Attributes {
   public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 """;
-        await Verifier.VerifyAnalyzerAsync(test);
+        var expected = Verifier.Diagnostic("NDFG010").WithLocation(0).WithArguments("MyService", "IGameplayScope");
+        await Verifier.VerifyAnalyzerAsync(test, expected);
     }
 
     [Fact]
