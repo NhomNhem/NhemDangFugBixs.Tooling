@@ -53,6 +53,9 @@ jobs:
            copy_file_if_exists Editor.meta deploy/
            copy_dir_if_exists Analyzers deploy/
            copy_file_if_exists Analyzers.meta deploy/
+           mkdir -p deploy/docs
+           copy_dir_if_exists docs/assets deploy/docs/
+           copy_file_if_exists docs.meta deploy/
            copy_dir_if_exists Assets deploy/
            copy_file_if_exists Assets.meta deploy/
 
@@ -74,7 +77,7 @@ jobs:
            rm -f deploy/AGENTS.md deploy/QWEN.md deploy/GEMINI.md deploy/.openspec.yaml deploy/CONTRIBUTING.md || true
 
            # Hard whitelist validation for package branch.
-           for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers; do
+           for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers docs/assets; do
              test -e "deploy/$required"
            done
 
