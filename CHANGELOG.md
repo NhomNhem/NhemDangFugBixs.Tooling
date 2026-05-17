@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.2.0 - 2026-05-17
+
+### Changed
+- Removed runtime testing fixtures from shipped runtime surface to prevent Unity package analyzer noise.
+- Added release gate Unity sample dotnet preflight build and stricter Unity compile failure handling.
+- Updated composition-only sandbox fixtures to keep cross-layer coverage in test-only code.
+
 ## 7.1.0 - 2026-05-17
 
 ### Changed
