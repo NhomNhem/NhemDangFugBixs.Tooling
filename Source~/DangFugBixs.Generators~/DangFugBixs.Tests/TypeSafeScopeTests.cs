@@ -338,7 +338,7 @@ public class GameLifetimeScope : LifetimeScope { }
 
 [AutoRegisterIn(typeof(GameLifetimeScope))]
 [EntryPoint]
-public class ManualEntryPointService { }
+public class ManualEntryPointService : IStartable { public void Start() { } }
 ";
 
         var result = RunGenerator(source);

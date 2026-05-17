@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 using NhemDangFugBixs.Generators.Analyzers;
 using NhemDangFugBixs.Generators.Emitters;
+using NhemDangFugBixs.Generators.Utils;
 using NhemDangFugBixs.Common.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -95,8 +96,9 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             }
 
             // Initialize stats
+            var packageVersion = typeof(VContainerAutoRegisterGenerator).Assembly.GetName().Version?.ToString() ?? "0.0.0";
             var stats = new GenerationStats {
-                Version = "v4.1.0",
+                Version = packageVersion,
                 Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
             };
 
@@ -154,20 +156,21 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
                     return list.First();
                 });
 
-            stats.ServiceCount = allServices.Any() ? allServices.Count() : 0;
+            var validatedServices = ValidateAndFilterServices(allServices, input.Compilation, context);
+            stats.ServiceCount = validatedServices.Count;
 
             // Guard: only emit for allowed assemblies OR if we found services (opt-in via attribute)
             bool assemblyAllowed = AllowedAssemblies.Contains(assemblyName);
-            if (!assemblyAllowed && !allServices.Any()) return;
+            if (!assemblyAllowed && validatedServices.Count == 0) return;
 
             var validSceneServices = input.LoggingData.Data.BaseData.SceneServices
                 .Where(s => s.HasValue)
                 .Select(s => s!.Value);
 
-            if (!allServices.Any() && !validSceneServices.Any()) return;
+            if (validatedServices.Count == 0 && !validSceneServices.Any()) return;
 
-            var sourceCode = RegistrationEmitter.GenerateSource(allServices, validSceneServices, assemblyName, scopeMappings, stats);
-            var reportCode = ReportEmitter.GenerateSource(allServices, rootLogging, scopeMappings, assemblyName);
+            var sourceCode = RegistrationEmitter.GenerateSource(validatedServices, validSceneServices, assemblyName, scopeMappings, stats);
+            var reportCode = ReportEmitter.GenerateSource(validatedServices, rootLogging, scopeMappings, assemblyName, packageVersion);
 
             // phase 3: Encapsulation
             // Generate ONE file per assembly containing everything including the global usings
@@ -181,5 +184,182 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
         } catch (Exception ex) {
             context.ReportDiagnostic(Diagnostic.Create(Diagnostics.GeneratorError, Location.None, ex.Message));
         }
+    }
+
+    private static List<ServiceInfo> ValidateAndFilterServices(
+        IEnumerable<ServiceInfo> services,
+        Compilation compilation,
+        SourceProductionContext context) {
+        var validated = new List<ServiceInfo>();
+
+        foreach (var service in services) {
+            if (service.IsExceptionHandler || service.IsBuildCallback) {
+                continue;
+            }
+
+            if (!ValidateScopeMarker(service, compilation, context)) {
+                continue;
+            }
+
+            if (!ValidateContracts(service, compilation, context)) {
+                continue;
+            }
+
+            if (!ValidateExplicitEntryPoint(service, context)) {
+                continue;
+            }
+
+            validated.Add(service);
+        }
+
+        return validated;
+    }
+
+    private static bool ValidateScopeMarker(ServiceInfo service, Compilation compilation, SourceProductionContext context) {
+        if (!service.UsesTypeSafeScope || string.IsNullOrWhiteSpace(service.ScopeTypeName)) {
+            return true;
+        }
+
+        var markerSymbol = compilation.GetTypeByMetadataName(service.ScopeTypeName);
+        if (markerSymbol == null || IsValidScopeTarget(markerSymbol, compilation)) {
+            return true;
+        }
+
+        context.ReportDiagnostic(Diagnostic.Create(
+            Diagnostics.InvalidScopeMarker,
+            Location.None,
+            service.ClassName,
+            service.ScopeTypeName));
+        return false;
+    }
+
+    private static bool ValidateContracts(ServiceInfo service, Compilation compilation, SourceProductionContext context) {
+        if (service.AsTypes == null || service.AsTypes.Length == 0) {
+            return true;
+        }
+
+        var implementationSymbol = compilation.GetTypeByMetadataName(service.FullName);
+        if (implementationSymbol == null) {
+            return true;
+        }
+
+        foreach (var contractName in service.AsTypes) {
+            if (string.IsNullOrWhiteSpace(contractName)) {
+                continue;
+            }
+
+            var contractSymbol = compilation.GetTypeByMetadataName(contractName);
+            if (contractSymbol == null || !ImplementsContract(implementationSymbol, contractSymbol)) {
+                context.ReportDiagnostic(Diagnostic.Create(
+                    Diagnostics.InvalidContract,
+                    Location.None,
+                    service.ClassName,
+                    contractName));
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool ValidateExplicitEntryPoint(ServiceInfo service, SourceProductionContext context) {
+        if (!service.Metadata.TryGetValue("ExplicitEntryPoint", out var explicitEntryPoint) ||
+            !string.Equals(explicitEntryPoint, "true", StringComparison.OrdinalIgnoreCase)) {
+            return true;
+        }
+
+        if (service.InterfaceNames.Any(InterfaceUtils.IsVContainerEntryPoint)) {
+            return true;
+        }
+
+        context.ReportDiagnostic(Diagnostic.Create(
+            Diagnostics.InvalidEntryPoint,
+            Location.None,
+            service.ClassName));
+        return false;
+    }
+
+    private static bool ImplementsContract(INamedTypeSymbol implementation, ITypeSymbol contract) {
+        if (SymbolEqualityComparer.Default.Equals(implementation, contract)) {
+            return true;
+        }
+
+        if (implementation.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, contract))) {
+            return true;
+        }
+
+        var current = implementation.BaseType;
+        while (current != null) {
+            if (SymbolEqualityComparer.Default.Equals(current, contract)) {
+                return true;
+            }
+
+            current = current.BaseType;
+        }
+
+        return false;
+    }
+
+    private static bool IsValidScopeTarget(INamedTypeSymbol marker, Compilation compilation) {
+        if (IsLifetimeScopeType(marker)) {
+            return true;
+        }
+
+        if (marker.TypeKind == TypeKind.Interface && !CompilationDeclaresScopeMarkerContract(compilation)) {
+            return true;
+        }
+
+        return IsValidScopeMarker(marker);
+    }
+
+    private static bool IsValidScopeMarker(INamedTypeSymbol marker) {
+        if (marker.TypeKind != TypeKind.Interface) {
+            return false;
+        }
+
+        if (marker.Name == "IScopeMarker") {
+            return true;
+        }
+
+        return marker.AllInterfaces.Any(i => i.Name == "IScopeMarker" || i.ToDisplayString().EndsWith(".IScopeMarker", StringComparison.Ordinal));
+    }
+
+    private static bool IsLifetimeScopeType(INamedTypeSymbol type) {
+        var current = type;
+        while (current != null) {
+            if (current.Name == "LifetimeScope" || current.ToDisplayString() == "VContainer.Unity.LifetimeScope") {
+                return true;
+            }
+
+            current = current.BaseType;
+        }
+
+        return false;
+    }
+
+    private static bool CompilationDeclaresScopeMarkerContract(Compilation compilation) {
+        return ContainsTypeNamed(compilation.Assembly.GlobalNamespace, "IScopeMarker");
+    }
+
+    private static bool ContainsTypeNamed(INamespaceOrTypeSymbol symbol, string typeName) {
+        if (symbol is INamedTypeSymbol namedType) {
+            if (namedType.Name == typeName) {
+                return true;
+            }
+
+            foreach (var member in namedType.GetTypeMembers()) {
+                if (ContainsTypeNamed(member, typeName)) {
+                    return true;
+                }
+            }
+        }
+
+        foreach (var member in symbol.GetMembers()) {
+            if (member is INamespaceOrTypeSymbol nested && ContainsTypeNamed(nested, typeName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

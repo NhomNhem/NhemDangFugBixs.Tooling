@@ -3,6 +3,30 @@ using Microsoft.CodeAnalysis;
 namespace NhemDangFugBixs.Generators;
 
 internal static class Diagnostics {
+    public static readonly DiagnosticDescriptor InvalidContract = new(
+        id: "NHEM_DI_001",
+        title: "Contract is not implemented",
+        messageFormat: "Type '{0}' uses As contract '{1}' but does not implement it. Generation skipped for this registration.",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor InvalidScopeMarker = new(
+        id: "NHEM_DI_002",
+        title: "Invalid scope marker",
+        messageFormat: "Type '{0}' uses scope marker '{1}', but the marker does not implement IScopeMarker. Generation skipped for this registration.",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor InvalidEntryPoint = new(
+        id: "NHEM_DI_040",
+        title: "Invalid entry point type",
+        messageFormat: "Type '{0}' uses [EntryPoint] but does not implement a supported VContainer lifecycle interface. Generation skipped for this registration.",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
     public static readonly DiagnosticDescriptor GeneratorError = new(
         id: "ND999",
         title: "Generator Error",

@@ -8,24 +8,23 @@ slug: docs/quick-start
 
 A minimal marker-based flow:
 
-1. Define scope marker.
-2. Annotate service.
-3. Map marker to concrete `LifetimeScope`.
-4. Call generated installer.
+1. Define a scope marker.
+2. Annotate a service.
+3. Map the marker to a concrete `LifetimeScope`.
+4. Call the generated extension.
 
 ## Step 1: Create a scope marker
 
-Put marker in a shared assembly:
-
 ```csharp
-namespace Game.Shared.Composition;
-
-public interface IGameplayScope { }
+public interface IScopeMarker { }
+public interface IGameplayScope : IScopeMarker { }
 ```
 
 ## Step 2: Create service contract + implementation
 
 ```csharp
+using NhemDangFugBixs.Attributes;
+
 public interface IPhaseStateMachine { }
 
 [AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
@@ -33,9 +32,14 @@ public interface IPhaseStateMachine { }
 public sealed class PhaseStateMachine : IPhaseStateMachine { }
 ```
 
-## Step 3: Map marker to real scope in Composition
+## Step 3: Map marker to a user-owned `LifetimeScope`
 
 ```csharp
+using NhemDangFugBixs.Attributes;
+using NhemDangFugBixs.VContainer;
+using VContainer;
+using VContainer.Unity;
+
 [LifetimeScopeFor<IGameplayScope>]
 public sealed class GameplayLifetimeScope : LifetimeScope
 {
@@ -48,19 +52,16 @@ public sealed class GameplayLifetimeScope : LifetimeScope
 
 ## Step 4: Check generated behavior
 
-Generated installer should register your service using normal VContainer intent:
+The generated installer stays close to normal VContainer code:
 
 ```csharp
 builder.Register<PhaseStateMachine>(Lifetime.Scoped)
     .As<IPhaseStateMachine>();
 ```
 
-## Why this pattern matters
+## Phase 2 options
 
-Service assembly depends on marker, not concrete scope class.
-This keeps dependency direction clean across asmdefs.
-
-## Optional: Entry point
+Entry point:
 
 ```csharp
 [AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
@@ -71,30 +72,31 @@ public sealed class GameplayBootstrap : IStartable
 }
 ```
 
-## Optional: Scene component
+Generated output:
 
 ```csharp
-[SceneComponent<IGameplayScope>]
+builder.RegisterEntryPoint<GameplayBootstrap>();
+```
+
+Scene component:
+
+```csharp
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[RegisterComponentInHierarchy]
 [As<IPlayerView>]
 public sealed class PlayerView : MonoBehaviour, IPlayerView { }
 ```
 
-## Common mistakes
+Generated output:
 
-- Using concrete `LifetimeScope` type in Application assembly.
-- Constructor injection in `MonoBehaviour`.
-- Missing `[LifetimeScopeFor]` mapping for used marker.
-- Registering lifecycle service without entry point intent.
+```csharp
+builder.RegisterComponentInHierarchy<PlayerView>()
+    .As<IPlayerView>();
+```
 
-## Minimal checklist
+## Important policy
 
-- Marker lives in Shared assembly.
-- Service uses `[AutoRegisterIn<TMarker>]`.
-- Composition maps marker with `[LifetimeScopeFor<TMarker>]`.
-- `builder.RegisterGeneratedFor<TMarker>()` is called.
-
-## Next pages
-
-- [Scope Marker Pattern](/NhemDangFugBixs.Tooling/docs/concepts/scope-marker-pattern/)
-- [Auto Register Services](/NhemDangFugBixs.Tooling/docs/guides/auto-register/)
-- [Diagnostics](/NhemDangFugBixs.Tooling/docs/reference/diagnostics/)
+- `LifetimeScope` classes are user-owned.
+- The generator does not create `LifetimeScope` MonoBehaviours by default.
+- The generated extension namespace is `NhemDangFugBixs.VContainer`.
+- The generated path is stateless and does not cache `IObjectResolver`.

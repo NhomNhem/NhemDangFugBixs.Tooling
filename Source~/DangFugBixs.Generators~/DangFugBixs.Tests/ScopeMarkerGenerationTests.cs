@@ -27,6 +27,7 @@ public sealed class GameplayLifetimeScope : LifetimeScope {
         var (_, generated) = GeneratorTestHost.Run(source);
         Assert.That(generated, Does.Contain("PhaseStateMachine"));
         Assert.That(generated, Does.Contain("AsImplementedInterfaces()"));
-        Assert.That(generated, Does.Contain("RegisterGameplay("));
+        Assert.That(generated, Does.Contain("NhemGeneratedGameplayScopeInstaller"));
+        Assert.That(generated, Does.Contain("RegisterGeneratedFor<TScope>"));
     }
 }

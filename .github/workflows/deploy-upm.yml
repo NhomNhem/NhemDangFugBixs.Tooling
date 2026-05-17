@@ -28,52 +28,62 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Prepare deploy directory
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf deploy
-          mkdir -p deploy
+       - name: Prepare deploy directory
+         shell: bash
+         run: |
+           set -euo pipefail
+           rm -rf deploy
+           mkdir -p deploy
 
-          cp package.json deploy/
-          cp README.md deploy/
-          if [ -f CHANGELOG.md ]; then
-            cp CHANGELOG.md deploy/
-          else
-            echo "# Changelog" > deploy/CHANGELOG.md
-            echo "" >> deploy/CHANGELOG.md
-            echo "Release notes are tracked via GitHub Releases." >> deploy/CHANGELOG.md
-          fi
+           copy_file_if_exists() {
+             if [ -f "$1" ]; then
+               cp "$1" "$2"
+             fi
+           }
 
-          if [ -f LICENSE.md ]; then cp LICENSE.md deploy/; fi
-          if [ -f LICENSE ]; then cp LICENSE deploy/; fi
-          if [ -f "Third Party Notices.md" ]; then cp "Third Party Notices.md" deploy/; fi
+           copy_dir_if_exists() {
+             if [ -d "$1" ]; then
+               cp -R "$1" "$2"
+             fi
+           }
 
-          if [ -d Runtime ]; then cp -R Runtime deploy/; fi
-          if [ -d Editor ]; then cp -R Editor deploy/; fi
-          if [ -d Analyzers ]; then cp -R Analyzers deploy/; fi
-          if [ -d Tests ]; then cp -R Tests deploy/; fi
-          if [ -d Samples ]; then cp -R Samples deploy/; fi
-          if [ -d Documentation ]; then cp -R Documentation deploy/; fi
-          if [ -d Samples~ ]; then cp -R Samples~ deploy/Samples; fi
-          if [ -d Documentation~ ]; then cp -R Documentation~ deploy/Documentation; fi
-          rm -rf deploy/Samples~ deploy/Documentation~
+           copy_dir_if_exists Runtime deploy/
+           copy_file_if_exists Runtime.meta deploy/
+           copy_dir_if_exists Editor deploy/
+           copy_file_if_exists Editor.meta deploy/
+           copy_dir_if_exists Analyzers deploy/
+           copy_file_if_exists Analyzers.meta deploy/
+           copy_dir_if_exists Assets deploy/
+           copy_file_if_exists Assets.meta deploy/
 
-          # Remove AI/dev-only artifacts from deploy branch.
-          rm -rf deploy/openspec deploy/.agent deploy/.codex deploy/.github deploy/scripts deploy/Source~ deploy/.githooks || true
-          rm -f deploy/AGENTS.md deploy/QWEN.md deploy/GEMINI.md deploy/.openspec.yaml deploy/CONTRIBUTING.md || true
+           copy_file_if_exists package.json deploy/
+           copy_file_if_exists package.json.meta deploy/
+           copy_file_if_exists README.md deploy/
+           copy_file_if_exists README.md.meta deploy/
+           copy_file_if_exists CHANGELOG.md deploy/
+           copy_file_if_exists CHANGELOG.md.meta deploy/
+           copy_file_if_exists LICENSE.md deploy/
+           copy_file_if_exists LICENSE.md.meta deploy/
+           copy_file_if_exists LICENSE deploy/
+           copy_file_if_exists LICENSE.meta deploy/
+           copy_file_if_exists "Third Party Notices.md" deploy/
+           copy_file_if_exists "Third Party Notices.md.meta" deploy/
 
-          # Hard whitelist validation for package branch.
-          for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers; do
-            test -e "deploy/$required"
-          done
+           # Remove AI/dev-only artifacts from deploy branch.
+           rm -rf deploy/openspec deploy/.agent deploy/.codex deploy/.github deploy/scripts deploy/Source~ deploy/.githooks || true
+           rm -f deploy/AGENTS.md deploy/QWEN.md deploy/GEMINI.md deploy/.openspec.yaml deploy/CONTRIBUTING.md || true
 
-          # Ensure deploy output is clean from AI/dev artifacts.
-          test ! -e deploy/openspec
-          test ! -e deploy/.agent
-          test ! -e deploy/.codex
-          test ! -e deploy/Source~
-          test ! -e deploy/AGENTS.md
+           # Hard whitelist validation for package branch.
+           for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers; do
+             test -e "deploy/$required"
+           done
+
+           # Ensure deploy output is clean from AI/dev artifacts.
+           test ! -e deploy/openspec
+           test ! -e deploy/.agent
+           test ! -e deploy/.codex
+           test ! -e deploy/Source~
+           test ! -e deploy/AGENTS.md
 
       - name: Publish deploy branch
         uses: peaceiris/actions-gh-pages@v4

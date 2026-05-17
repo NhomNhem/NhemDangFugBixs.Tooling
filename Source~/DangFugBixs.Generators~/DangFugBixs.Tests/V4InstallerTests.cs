@@ -79,7 +79,7 @@ public class EarlyInstaller : IVContainerInstaller {
     }
 
     [Test]
-    public void Installer_MixedWithCallbacks_GeneratesInCorrectSequence() {
+    public void Installer_MixedWithCallbacks_DoesNotEmitLegacyResolveCallbackPath() {
         var source = @"
 using NhemDangFugBixs.Attributes;
 using VContainer;
@@ -107,10 +107,9 @@ public class MyService { }
         
         int installerPos = generatedCode.IndexOf("new global::MyInstaller().Install(builder);");
         int servicePos = generatedCode.IndexOf("builder.Register<global::MyService>");
-        int callbackPos = generatedCode.IndexOf("builder.RegisterBuildCallback");
-        
         Assert.That(installerPos, Is.LessThan(servicePos), "Installer should be before service");
-        Assert.That(servicePos, Is.LessThan(callbackPos), "Service should be before callback registration");
+        Assert.That(generatedCode, Does.Not.Contain("builder.RegisterBuildCallback"));
+        Assert.That(generatedCode, Does.Not.Contain("Resolve<global::MyCallback>"));
     }
 
     [Test]

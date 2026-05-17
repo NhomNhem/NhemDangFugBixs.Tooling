@@ -7,13 +7,22 @@ slug: docs
 import DocsHero from '../../components/DocsHero.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
 
-<DocsHero eyebrow="Unity · VContainer · Source Generator · Analyzer" title="Compile-time DI safety for Unity projects." description="NhemDangFugBixs.Tooling keeps VContainer registrations explicit, generated, and architecture-aware across asmdef boundaries." primaryHref="/NhemDangFugBixs.Tooling/docs/quick-start/" primaryLabel="Quick Start" secondaryHref="/NhemDangFugBixs.Tooling/docs/installation/" secondaryLabel="Install Package" />
+<DocsHero eyebrow="Unity · VContainer · Source Generator · Analyzer" title="Compile-time DI safety for Unity projects." description="Marker-first VContainer generation with user-owned LifetimeScopes, stateless installers, and analyzer guardrails." primaryHref="/NhemDangFugBixs.Tooling/docs/quick-start/" primaryLabel="Quick Start" secondaryHref="/NhemDangFugBixs.Tooling/docs/installation/" secondaryLabel="Install Package" />
 
-## One-line definition
+## Current shipped API (Phase 1/2)
 
-`NhemDangFugBixs.Tooling` is a compile-time VContainer workflow toolkit for Unity.
+- `AutoRegisterIn<TScope>`
+- `As<TContract>` and `AsSelf`
+- `LifetimeScopeFor<TScope>`
+- `EntryPoint`
+- `RegisterComponentInHierarchy`
+- `builder.RegisterGeneratedFor<TScope>()`
 
-It does not replace VContainer. It adds source generation, analyzer guardrails, and reporting around VContainer workflows.
+## Required namespace for generated extension
+
+```csharp
+using NhemDangFugBixs.VContainer;
+```
 
 ## Core value
 
@@ -28,19 +37,19 @@ It lets your architecture become compile-time checked.
     items={[
         {
             title: 'Attribute-driven registration',
-            description: 'Declare service intent with AutoRegisterIn, As, EntryPoint, SceneComponent, and marker mappings.',
+            description: 'Declare registration intent directly on services with AutoRegisterIn, As, EntryPoint, and RegisterComponentInHierarchy.',
         },
         {
-            title: 'Source-generated installers',
-            description: 'Emit readable VContainer registration code instead of scaling manual LifetimeScope.Configure methods.',
+            title: 'One installer per scope',
+            description: 'Emit one stateless generated installer per scope marker plus one generated dispatch extension.',
         },
         {
-            title: 'Scope marker architecture',
-            description: 'Keep lower layers independent from Composition by registering against marker types, not concrete scopes.',
+            title: 'User-owned LifetimeScopes',
+            description: 'Keep concrete LifetimeScope classes in user code. The generator does not create scope MonoBehaviours by default.',
         },
         {
             title: 'Analyzer guardrails',
-            description: 'Catch architecture mistakes early: missing mappings, bad injection style, wrong lifetimes, resolver misuse.',
+            description: 'Catch invalid contracts, invalid markers, missing mappings, wrong generated calls, and resolver misuse early.',
         },
     ]}
 />
@@ -48,14 +57,21 @@ It lets your architecture become compile-time checked.
 ## Concept example
 
 ```csharp
+using NhemDangFugBixs.Attributes;
+using NhemDangFugBixs.VContainer;
+using VContainer;
+using VContainer.Unity;
+
+public interface IScopeMarker { }
+public interface IGameplayScope : IScopeMarker { }
+public interface IDayPhaseMechanicsService { }
+
 [AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
 [As<IDayPhaseMechanicsService>]
 public sealed class DayPhaseMechanicsService : IDayPhaseMechanicsService
 {
 }
-```
 
-```csharp
 [LifetimeScopeFor<IGameplayScope>]
 public sealed class GameplayLifetimeScope : LifetimeScope
 {
@@ -65,18 +81,6 @@ public sealed class GameplayLifetimeScope : LifetimeScope
     }
 }
 ```
-
-This keeps dependency direction clean:
-
-- Application -> Shared markers
-- Composition -> Shared markers + concrete `LifetimeScope`
-
-## Who should use this
-
-- Teams using VContainer with asmdef-separated architecture.
-- Projects where `LifetimeScope.Configure()` is growing too fast.
-- Teams that want CI validation (`di-smoke`) before Play Mode.
-- Teams using AI coding agents and wanting stronger DI safety rails.
 
 ## Recommended reading order
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.1.0 - 2026-05-17
+
+### Changed
+- Deploy workflow now copies the package metadata files alongside the main Unity package folders.
+- Package version aligned with the generator assembly version.
+
 ## 6.1.0 - 2026-05-13
 
 ### Added

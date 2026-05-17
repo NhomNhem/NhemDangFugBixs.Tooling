@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -305,11 +307,71 @@ namespace NhemDangFugBixs.Editor {
                 : value.Split('.').Last();
         }
 
-        private sealed record ReportEntry(string Scope, string Service, string Lifetime, string Kind, string MessageType);
-        private sealed record ScopeMapping(string Marker, string Scope, string Alias);
-        private sealed record ReportConsumer(string Scope, string Service, string Role, string MessageType);
-        private sealed record LoggerRoot(string Scope, bool HasLoggerFactory, bool HasLoggerAdapter);
-        private sealed record LoggerConsumer(string Scope, string Service, string CategoryType);
+        private sealed class ReportEntry {
+            public string Scope { get; }
+            public string Service { get; }
+            public string Lifetime { get; }
+            public string Kind { get; }
+            public string MessageType { get; }
+
+            public ReportEntry(string scope, string service, string lifetime, string kind, string messageType) {
+                Scope = scope;
+                Service = service;
+                Lifetime = lifetime;
+                Kind = kind;
+                MessageType = messageType;
+            }
+        }
+
+        private sealed class ScopeMapping {
+            public string Marker { get; }
+            public string Scope { get; }
+            public string Alias { get; }
+
+            public ScopeMapping(string marker, string scope, string alias) {
+                Marker = marker;
+                Scope = scope;
+                Alias = alias;
+            }
+        }
+
+        private sealed class ReportConsumer {
+            public string Scope { get; }
+            public string Service { get; }
+            public string Role { get; }
+            public string MessageType { get; }
+
+            public ReportConsumer(string scope, string service, string role, string messageType) {
+                Scope = scope;
+                Service = service;
+                Role = role;
+                MessageType = messageType;
+            }
+        }
+
+        private sealed class LoggerRoot {
+            public string Scope { get; }
+            public bool HasLoggerFactory { get; }
+            public bool HasLoggerAdapter { get; }
+
+            public LoggerRoot(string scope, bool hasLoggerFactory, bool hasLoggerAdapter) {
+                Scope = scope;
+                HasLoggerFactory = hasLoggerFactory;
+                HasLoggerAdapter = hasLoggerAdapter;
+            }
+        }
+
+        private sealed class LoggerConsumer {
+            public string Scope { get; }
+            public string Service { get; }
+            public string CategoryType { get; }
+
+            public LoggerConsumer(string scope, string service, string categoryType) {
+                Scope = scope;
+                Service = service;
+                CategoryType = categoryType;
+            }
+        }
 
         private sealed class ReportSnapshot {
             public string DisplayName { get; }

@@ -43,6 +43,7 @@ public class MissingContractRegistrationRule : DiagnosticAnalyzer {
         // Extract AsImplementedInterfaces setting
         var asImplementedInterfaces = true; // default
         var asTypesCount = 0;
+        var explicitContractCount = 0;
 
         foreach (var namedArg in attr.NamedArguments) {
             if (namedArg.Key == "AsImplementedInterfaces" && namedArg.Value.Value is bool value) {
@@ -50,6 +51,19 @@ public class MissingContractRegistrationRule : DiagnosticAnalyzer {
             }
             else if (namedArg.Key == "AsTypes" && namedArg.Value.Values != null) {
                 asTypesCount = namedArg.Value.Values.Length;
+            }
+        }
+
+        foreach (var attribute in typeSymbol.GetAttributes()) {
+            var attributeType = attribute.AttributeClass;
+            if (attributeType is null) {
+                continue;
+            }
+
+            var displayName = attributeType.ToDisplayString();
+            if (displayName == "NhemDangFugBixs.Attributes.AsAttribute" ||
+                (attributeType.IsGenericType && attributeType.OriginalDefinition.ToDisplayString() == "NhemDangFugBixs.Attributes.AsAttribute`1")) {
+                explicitContractCount++;
             }
         }
 
@@ -72,7 +86,7 @@ public class MissingContractRegistrationRule : DiagnosticAnalyzer {
             .ToList();
 
         // Check if any interfaces won't be registered
-        if (implementedInterfaces.Count > 0 && !asImplementedInterfaces && asTypesCount == 0) {
+        if (implementedInterfaces.Count > 0 && !asImplementedInterfaces && asTypesCount == 0 && explicitContractCount == 0) {
             // User has interfaces but disabled auto-detection without specifying explicit contracts
             foreach (var iface in implementedInterfaces.Take(3)) { // Report up to 3 interfaces
                 var properties = ImmutableDictionary<string, string>.Empty

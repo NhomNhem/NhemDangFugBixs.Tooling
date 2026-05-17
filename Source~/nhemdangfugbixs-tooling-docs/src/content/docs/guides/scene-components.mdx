@@ -1,37 +1,27 @@
 ---
 title: Scene Components
-description: Safe MonoBehaviour registration and injection patterns.
+description: Register existing MonoBehaviour scene components through generated VContainer installers.
 slug: docs/guides/scene-components
 ---
 
-`MonoBehaviour` registration differs from plain C# services.
-
-## Existing Scene Object
+Use `RegisterComponentInHierarchy` intent for scene-owned `MonoBehaviour` types.
 
 ```csharp
-[SceneComponent<IGameplayScope>]
+[AutoRegisterIn<IGameplayScope>(Lifetime = NhemLifetime.Scoped)]
+[RegisterComponentInHierarchy]
 [As<IPlayerView>]
 public sealed class PlayerView : MonoBehaviour, IPlayerView { }
 ```
 
-## Legacy Compatibility
+Generated intent:
 
 ```csharp
-[AutoRegisterIn(typeof(IGameplayScope), RegisterInHierarchy = true)]
-public sealed class CameraController : MonoBehaviour { }
+builder.RegisterComponentInHierarchy<PlayerView>()
+    .As<IPlayerView>();
 ```
 
-## Injection Style
+## Notes
 
-Do:
-
-```csharp
-[Inject]
-private void Construct(IPlayerPresenter presenter) { }
-```
-
-Avoid:
-
-- Constructor injection in `MonoBehaviour` (`NDF020`)
-- `[Inject]` public fields (`NDF021`)
-- `[Inject]` async methods (`NDF023`)
+- This guide covers existing scene components only.
+- User `LifetimeScope` classes remain user-owned.
+- Constructor injection in `MonoBehaviour` is still a bad fit; prefer method/property injection where needed.

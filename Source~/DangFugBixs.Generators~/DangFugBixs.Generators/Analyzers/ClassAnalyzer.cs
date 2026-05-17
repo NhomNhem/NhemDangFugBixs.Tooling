@@ -224,12 +224,16 @@ internal class ClassAnalyzer {
         lifetime = ExtractLifetime(context, attr, cancellationToken, lifetime);
         var asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
         var asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
-        var asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
+        var asTypes = MergeContractTypes(
+            ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken),
+            ExtractExplicitContractTypes(context, typeDecl, cancellationToken));
+        NormalizeExplicitContractBehavior(attr, typeDecl, ref asImplementedInterfaces, ref asSelf, ref asTypes);
         var (interfaceNames, _, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder) = ExtractClassInfo(context, typeDecl, cancellationToken);
         var metadata = ExtractMessagePipeConsumerMetadata(context, typeDecl, cancellationToken);
         foreach (var pair in ExtractLoggerConsumerMetadata(context, typeDecl, cancellationToken)) {
             metadata[pair.Key] = pair.Value;
         }
+        ApplyKeyedMetadata(context, typeDecl, cancellationToken, metadata);
 
         if (IsAttributeMatch(attr, "SceneComponent")) {
             metadata["ComponentMode"] = "Hierarchy";
@@ -308,12 +312,16 @@ internal class ClassAnalyzer {
         var asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
         var asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
         var registerInHierarchy = ExtractBooleanProperty(context, attr, "RegisterInHierarchy", false, cancellationToken);
-        var asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
+        var asTypes = MergeContractTypes(
+            ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken),
+            ExtractExplicitContractTypes(context, typeDecl, cancellationToken));
+        NormalizeExplicitContractBehavior(attr, typeDecl, ref asImplementedInterfaces, ref asSelf, ref asTypes);
         var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder) = ExtractClassInfo(context, typeDecl, cancellationToken);
         var metadata = ExtractMessagePipeConsumerMetadata(context, typeDecl, cancellationToken);
         foreach (var pair in ExtractLoggerConsumerMetadata(context, typeDecl, cancellationToken)) {
             metadata[pair.Key] = pair.Value;
         }
+        ApplyKeyedMetadata(context, typeDecl, cancellationToken, metadata);
         ApplyBehaviorAttributes(context, typeDecl, cancellationToken, ref isEntryPoint, ref registerInHierarchy, metadata);
 
         return new ServiceInfo(
@@ -477,7 +485,10 @@ internal class ClassAnalyzer {
         bool asImplementedInterfaces = ExtractBooleanProperty(context, attr, "AsImplementedInterfaces", true, cancellationToken);
         bool asSelf = ExtractBooleanProperty(context, attr, "AsSelf", true, cancellationToken);
         bool registerInHierarchy = ExtractBooleanProperty(context, attr, "RegisterInHierarchy", false, cancellationToken);
-        string[] asTypes = ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken);
+        string[] asTypes = MergeContractTypes(
+            ExtractTypeArrayProperty(context, attr, "AsTypes", cancellationToken),
+            ExtractExplicitContractTypes(context, typeDecl, cancellationToken));
+        NormalizeExplicitContractBehavior(attr, typeDecl, ref asImplementedInterfaces, ref asSelf, ref asTypes);
 
         // Extract interfaces and component info
         var (interfaceNames, isComponent, isEntryPoint, isExceptionHandler, isBuildCallback, isInstaller, installerOrder) = ExtractClassInfo(context, typeDecl, cancellationToken);
@@ -485,6 +496,7 @@ internal class ClassAnalyzer {
         foreach (var pair in ExtractLoggerConsumerMetadata(context, typeDecl, cancellationToken)) {
             metadata[pair.Key] = pair.Value;
         }
+        ApplyKeyedMetadata(context, typeDecl, cancellationToken, metadata);
         ApplyBehaviorAttributes(context, typeDecl, cancellationToken, ref isEntryPoint, ref registerInHierarchy, metadata);
 
         return new ServiceInfo(
@@ -507,7 +519,7 @@ internal class ClassAnalyzer {
             if (IsAttributeMatch(attr, "EntryPoint") || IsAttributeMatch(attr, "AsyncEntryPoint")) {
                 isEntryPoint = true;
                 metadata["ExplicitEntryPoint"] = "true";
-            } else if (IsAttributeMatch(attr, "SceneComponent")) {
+            } else if (IsAttributeMatch(attr, "SceneComponent") || IsAttributeMatch(attr, "RegisterComponentInHierarchy")) {
                 registerInHierarchy = true;
                 metadata["ComponentMode"] = "Hierarchy";
             } else if (IsAttributeMatch(attr, "NewGameObjectComponent")) {
@@ -642,6 +654,132 @@ internal class ClassAnalyzer {
         }
 
         return metadata;
+    }
+
+    private static void NormalizeExplicitContractBehavior(
+        AttributeSyntax autoRegisterAttribute,
+        TypeDeclarationSyntax typeDecl,
+        ref bool asImplementedInterfaces,
+        ref bool asSelf,
+        ref string[] asTypes)
+    {
+        bool hasExplicitContracts = asTypes.Length > 0;
+        if (!hasExplicitContracts) {
+            return;
+        }
+
+        asImplementedInterfaces = false;
+        if (!HasNamedProperty(autoRegisterAttribute, "AsSelf") && !HasAttribute(typeDecl, "AsSelf")) {
+            asSelf = false;
+        }
+    }
+
+    private static bool HasAttribute(TypeDeclarationSyntax typeDecl, string simpleName) {
+        return typeDecl.AttributeLists
+            .SelectMany(list => list.Attributes)
+            .Any(attr => IsAttributeMatch(attr, simpleName));
+    }
+
+    private static bool HasNamedProperty(AttributeSyntax attr, string propertyName) {
+        return attr.ArgumentList?.Arguments.Any(arg =>
+            arg.NameEquals?.Name.Identifier.Text == propertyName ||
+            arg.NameColon?.Name.Identifier.Text == propertyName) == true;
+    }
+
+    private static string[] MergeContractTypes(string[] implicitTypes, string[] explicitTypes) {
+        return implicitTypes
+            .Concat(explicitTypes)
+            .Where(typeName => !string.IsNullOrWhiteSpace(typeName))
+            .Distinct(System.StringComparer.Ordinal)
+            .ToArray();
+    }
+
+    private static string[] ExtractExplicitContractTypes(
+        GeneratorSyntaxContext context,
+        TypeDeclarationSyntax typeDecl,
+        CancellationToken cancellationToken)
+    {
+        var contracts = new List<string>();
+
+        foreach (var attr in typeDecl.AttributeLists.SelectMany(list => list.Attributes)) {
+            if (!IsAttributeMatch(attr, "As")) {
+                continue;
+            }
+
+            if (attr.Name is GenericNameSyntax genericName && genericName.TypeArgumentList.Arguments.Count > 0) {
+                var typeArg = genericName.TypeArgumentList.Arguments[0];
+                var symbol = context.SemanticModel.GetTypeInfo(typeArg, cancellationToken).Type;
+                if (symbol != null) {
+                    contracts.Add(symbol.ToDisplayString());
+                }
+                continue;
+            }
+
+            if (attr.Name is QualifiedNameSyntax qn && qn.Right is GenericNameSyntax qualifiedGeneric && qualifiedGeneric.TypeArgumentList.Arguments.Count > 0) {
+                var typeArg = qualifiedGeneric.TypeArgumentList.Arguments[0];
+                var symbol = context.SemanticModel.GetTypeInfo(typeArg, cancellationToken).Type;
+                if (symbol != null) {
+                    contracts.Add(symbol.ToDisplayString());
+                }
+                continue;
+            }
+
+            if (attr.ArgumentList == null || attr.ArgumentList.Arguments.Count == 0) {
+                continue;
+            }
+
+            var arg = attr.ArgumentList.Arguments[0].Expression;
+            if (arg is TypeOfExpressionSyntax typeOfExpr) {
+                var symbol = context.SemanticModel.GetTypeInfo(typeOfExpr.Type, cancellationToken).Type;
+                if (symbol != null) {
+                    contracts.Add(symbol.ToDisplayString());
+                }
+            }
+        }
+
+        return contracts.Distinct(System.StringComparer.Ordinal).ToArray();
+    }
+
+    private static void ApplyKeyedMetadata(
+        GeneratorSyntaxContext context,
+        TypeDeclarationSyntax typeDecl,
+        CancellationToken cancellationToken,
+        Dictionary<string, string> metadata) {
+        var keyedAttr = typeDecl.AttributeLists
+            .SelectMany(x => x.Attributes)
+            .FirstOrDefault(x => IsAttributeMatch(x, "Keyed"));
+
+        if (keyedAttr == null || keyedAttr.ArgumentList == null || keyedAttr.ArgumentList.Arguments.Count == 0) {
+            return;
+        }
+
+        var expr = keyedAttr.ArgumentList.Arguments[0].Expression;
+        var symbolInfo = context.SemanticModel.GetSymbolInfo(expr, cancellationToken).Symbol;
+        if (symbolInfo is IFieldSymbol enumField && enumField.ContainingType?.TypeKind == TypeKind.Enum) {
+            metadata["KeyedExpression"] = $"global::{enumField.ContainingType.ToDisplayString()}.{enumField.Name}";
+            return;
+        }
+
+        var constant = context.SemanticModel.GetConstantValue(expr, cancellationToken);
+        if (constant.HasValue) {
+            if (constant.Value is string s) {
+                metadata["KeyedExpression"] = $"\"{s.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"";
+                return;
+            }
+
+            if (constant.Value is int or long or short or byte or uint or ulong or ushort or sbyte or bool or char or float or double or decimal) {
+                metadata["KeyedExpression"] = constant.Value!.ToString()!;
+                return;
+            }
+        }
+
+        if (expr is TypeOfExpressionSyntax typeOfExpr) {
+            var keyType = context.SemanticModel.GetTypeInfo(typeOfExpr.Type, cancellationToken).Type;
+            if (keyType != null) {
+                metadata["KeyedExpression"] = $"typeof(global::{keyType.ToDisplayString()})";
+                return;
+            }
+        }
     }
 
     private static Dictionary<string, string> ExtractLoggerConsumerMetadata(
