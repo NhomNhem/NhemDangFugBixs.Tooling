@@ -236,7 +236,7 @@ internal static class RegistrationEmitter {
 
         if (svc.IsEntryPoint) {
             string suffix = GetSmartEntryPointSuffix(svc);
-            writer.WriteLine($"builder.RegisterEntryPoint<{fullName}>(){keyed}{suffix};");
+            writer.WriteLine($"builder.RegisterEntryPoint<{fullName}>({lifetime}){keyed}{suffix};");
             return;
         }
 
