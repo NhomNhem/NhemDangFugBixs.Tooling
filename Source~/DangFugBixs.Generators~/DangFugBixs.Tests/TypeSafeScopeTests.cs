@@ -284,6 +284,29 @@ public class UIService { }
     }
 
     [Test]
+    public void AutoRegisterIn_WithScopeNameAlias_PreservesLegacyUiAlias() {
+        var source = @"
+using NhemDangFugBixs.Attributes;
+using VContainer.Unity;
+
+public interface CrossLayerIdentity { }
+
+[ScopeName(""UI"")]
+[LifetimeScopeFor(typeof(CrossLayerIdentity))]
+public class UserInterfaceLifetimeScope : LifetimeScope { }
+
+[AutoRegisterIn(typeof(UserInterfaceLifetimeScope))]
+public class UIService { }
+";
+
+        var result = RunGenerator(source);
+        var generatedCode = result.GeneratedTrees[0].ToString();
+
+        Assert.That(generatedCode, Does.Contain("RegisterUI("));
+        Assert.That(generatedCode, Does.Contain("RegisterGeneratedForCrossLayerIdentity"));
+    }
+
+    [Test]
     public void AutoRegisterInScope_WithAlias_MapsToLifetimeScopeRegistration() {
         var source = @"
 using NhemDangFugBixs.Attributes;

@@ -170,10 +170,12 @@ internal static class RegistrationEmitter {
             writer.WriteLine();
 
             foreach (var installer in installerModels) {
-                using (writer.Block($"public static void {installer.LegacyMethodName}(global::VContainer.IContainerBuilder builder)")) {
-                    writer.WriteLine($"{installer.InstallerClassName}.Register(builder);");
+                foreach (var methodName in installer.LegacyMethodNames) {
+                    using (writer.Block($"public static void {methodName}(global::VContainer.IContainerBuilder builder)")) {
+                        writer.WriteLine($"{installer.InstallerClassName}.Register(builder);");
+                    }
+                    writer.WriteLine();
                 }
-                writer.WriteLine();
 
                 if (installer.MarkerTypeName != null) {
                     var markerSimpleName = GetSimpleName(installer.MarkerTypeName);
@@ -308,26 +310,53 @@ internal static class RegistrationEmitter {
     }
 
     private static InstallerModel CreateInstallerModel(string scopeKey, List<ServiceInfo> services, List<ScopeMappingInfo>? scopeMappings, string generatedNamespace) {
-        ScopeMappingInfo? matchedMapping = null;
+        var matchedMappings = new List<ScopeMappingInfo>();
         if (scopeMappings != null) {
             foreach (var mapping in scopeMappings) {
-                if (mapping.IdentityTypeName == scopeKey || mapping.AliasName == scopeKey || mapping.ClassName == scopeKey) {
-                    matchedMapping = mapping;
-                    break;
+                if (mapping.IdentityTypeName == scopeKey ||
+                    mapping.AliasName == scopeKey ||
+                    mapping.ClassName == scopeKey ||
+                    mapping.OriginalClassName == scopeKey ||
+                    mapping.OriginalFullName == scopeKey ||
+                    mapping.FullName == scopeKey) {
+                    matchedMappings.Add(mapping);
                 }
             }
         }
 
+        ScopeMappingInfo? matchedMapping = matchedMappings
+            .OrderByDescending(mapping => mapping.OriginalClassName == scopeKey)
+            .ThenByDescending(mapping => mapping.AliasName == scopeKey)
+            .ThenByDescending(mapping => mapping.ClassName == scopeKey)
+            .ThenByDescending(mapping => mapping.IdentityTypeName == scopeKey)
+            .FirstOrDefault();
+
         var markerTypeName = matchedMapping?.IdentityTypeName;
 
-        string scopeStem = GetInstallerStem(markerTypeName ?? scopeKey);
+        string scopeStem = GetInstallerStem(scopeKey);
         string installerClassName = $"NhemGenerated{scopeStem}Installer";
         var legacyScopeName = matchedMapping?.AliasName ?? matchedMapping?.ClassName ?? scopeKey;
+        var legacyMethodNames = new List<string> { GetLegacyMethodName(legacyScopeName) };
+        foreach (var mapping in matchedMappings) {
+            if (!string.IsNullOrWhiteSpace(mapping.AliasName)) {
+                var aliasMethodName = GetLegacyMethodName(mapping.AliasName);
+                if (!legacyMethodNames.Any(name => string.Equals(name, aliasMethodName, System.StringComparison.Ordinal))) {
+                    legacyMethodNames.Add(aliasMethodName);
+                }
+            }
+
+            var mappedMethodName = GetLegacyMethodName(mapping.ClassName);
+            if (!legacyMethodNames.Any(name => string.Equals(name, mappedMethodName, System.StringComparison.Ordinal))) {
+                legacyMethodNames.Add(mappedMethodName);
+            }
+        }
+
         return new InstallerModel(
             scopeKey,
             installerClassName,
             GetLegacyMethodName(legacyScopeName),
             markerTypeName,
+            legacyMethodNames,
             generatedNamespace,
             services.Where(s => !s.IsComponent && !s.IsEntryPoint && !s.IsExceptionHandler && !s.IsBuildCallback).OrderBy(s => s.ClassName, System.StringComparer.Ordinal).ToList(),
             services.Where(s => s.IsEntryPoint && !s.IsExceptionHandler && !s.IsBuildCallback).OrderBy(s => s.ClassName, System.StringComparer.Ordinal).ToList(),
@@ -386,6 +415,7 @@ internal static class RegistrationEmitter {
             string installerClassName,
             string legacyMethodName,
             string? markerTypeName,
+            List<string> legacyMethodNames,
             string generatedNamespace,
             List<ServiceInfo> services,
             List<ServiceInfo> entryPoints,
@@ -395,6 +425,7 @@ internal static class RegistrationEmitter {
             InstallerClassName = installerClassName;
             LegacyMethodName = legacyMethodName;
             MarkerTypeName = markerTypeName;
+            LegacyMethodNames = legacyMethodNames;
             GeneratedNamespace = generatedNamespace;
             Services = services;
             EntryPoints = entryPoints;
@@ -406,6 +437,7 @@ internal static class RegistrationEmitter {
         public string InstallerClassName { get; }
         public string LegacyMethodName { get; }
         public string? MarkerTypeName { get; }
+        public List<string> LegacyMethodNames { get; }
         public string GeneratedNamespace { get; }
         public List<ServiceInfo> Services { get; }
         public List<ServiceInfo> EntryPoints { get; }

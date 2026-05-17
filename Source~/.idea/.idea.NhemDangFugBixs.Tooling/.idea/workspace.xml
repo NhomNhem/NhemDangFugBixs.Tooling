@@ -20,9 +20,14 @@
     <list default="true" id="dc06f1ad-3592-4846-8f4b-159da851c6b6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Analyzers.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Analyzers/NhemDangFugBixs.Generators.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Attributes.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Attributes.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Runtime.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Runtime/NhemDangFugBixs.Runtime.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NhemDangFugBixs.Tooling/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Generators/Emitters/RegistrationEmitter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Tests/TypeSafeScopeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DangFugBixs.Generators~/DangFugBixs.Tests/TypeSafeScopeTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +37,7 @@
   <component name="CopilotChats">
     <option name="panelChat">
       <chat>
-        <option name="activeSessionId" value="bd47658d-74fb-4bae-a654-fd7c4ee95afd" />
+        <option name="activeSessionId" value="f5a630ff-ea99-4c7f-9d50-9a5e39dcdf84" />
         <option name="sessions">
           <session>
             <option name="chatType" value="PANEL" />
@@ -93,7 +98,7 @@
         <entry key="$PROJECT_DIR$/../../../.." value="main" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/nhemdangfugbixs-tooling-docs" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
     <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -161,13 +166,13 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kronk.content.tree.expanded.paths&quot;: &quot;|Docs|Docs/guides|Docs/reference&quot;,
+    &quot;kronk.content.tree.expanded.paths&quot;: &quot;&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;ts.external.directory.path&quot;: &quot;J:\\Rider\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -324,6 +329,10 @@
       <workItem from="1773619999734" duration="53000" />
       <workItem from="1778618494139" duration="1620000" />
       <workItem from="1778620178553" duration="11564000" />
+      <workItem from="1778670563441" duration="220000" />
+      <workItem from="1778976367814" duration="1422000" />
+      <workItem from="1778985003299" duration="1381000" />
+      <workItem from="1778989375628" duration="423000" />
     </task>
     <task id="LOCAL-00001" summary="add initial project files and implement VContainer auto-registration generator">
       <option name="closed" value="true" />
@@ -437,7 +446,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778668994406</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="feat: add NHEM Studio logo assets and update workspace.xml for task management">
+      <option name="closed" value="true" />
+      <created>1778670721887</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1778670721888</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -460,7 +477,8 @@
     <MESSAGE value="feat: Add documentation for various tooling concepts and installation instructions" />
     <MESSAGE value="feat: Update documentation slugs for improved navigation and consistency" />
     <MESSAGE value="fix: update workspace.xml for improved task management and consistency" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: update workspace.xml for improved task management and consistency" />
+    <MESSAGE value="feat: add NHEM Studio logo assets and update workspace.xml for task management" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add NHEM Studio logo assets and update workspace.xml for task management" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
