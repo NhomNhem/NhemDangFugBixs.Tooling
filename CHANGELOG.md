@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.3.1 - 2026-05-18
+
+### Fixed
+- Added the missing Unity `.meta` file for the Tooling Diagnostics editor menu asset.
+- Ensured deploy output includes `docs/assets.meta` with the shipped documentation assets.
+- Removed analyzer `.pdb` files from deploy output to avoid immutable UPM import warnings.
+
 ## 7.3.0 - 2026-05-17
 
 ### Added
