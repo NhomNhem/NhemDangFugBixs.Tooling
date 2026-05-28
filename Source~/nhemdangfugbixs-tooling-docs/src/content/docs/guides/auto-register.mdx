@@ -15,7 +15,7 @@ public sealed class PhaseStateMachine : IPhaseStateMachine { }
 ## Binding Options
 
 - Explicit contract: `[As<IService>]`
-- Multiple contracts: `[BindAs(typeof(IA), typeof(IB))]`
+- Multiple contracts: `[As(typeof(IA), typeof(IB))]`
 - Self only: `[AsSelf]`
 - Broad contracts: `[AsImplementedInterfaces]`
 
