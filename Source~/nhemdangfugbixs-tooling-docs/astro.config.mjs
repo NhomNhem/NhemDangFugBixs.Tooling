@@ -99,12 +99,6 @@ export default defineConfig({
             { label: 'Roadmap', slug: 'docs/roadmap' },
           ],
         },
-        {
-          label: 'Design System',
-          items: [
-            { label: 'Claude Editorial System', slug: 'docs/design-system/claude-editorial-system' },
-          ],
-        },
       ],
     }),
   ],
