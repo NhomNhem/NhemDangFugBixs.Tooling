@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+    tags: ['v*']
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore Source~/NhemDangFugBixs.Tooling.sln
+
+      - name: Build
+        run: dotnet build Source~/NhemDangFugBixs.Tooling.sln --no-restore --configuration Release
+
+      - name: Test — Generator
+        run: |
+          dotnet test Source~/DangFugBixs.Generators~/DangFugBixs.Tests/DangFugBixs.Tests.csproj \
+            --no-build --configuration Release \
+            --logger "console;verbosity=minimal"
+
+      - name: Test — di-smoke
+        run: |
+          dotnet test Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj \
+            --no-build --configuration Release \
+            --logger "console;verbosity=minimal"
+
+      - name: Test — Analyzers
+        run: |
+          dotnet test Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers.Tests/DangFugBixs.Analyzers.Tests.csproj \
+            --no-build --configuration Release \
+            --logger "console;verbosity=minimal"
+
+      - name: Pack CLI
+        run: |
+          dotnet pack Source~/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj \
+            --no-build --configuration Release
+
+  cross-asmdef-validation:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build di-smoke CLI
+        run: |
+          dotnet build Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation/DangFugBixs.DiSmokeValidation.csproj \
+            --configuration Release
+
+      - name: Validate — Multi-assembly smoke test
+        run: |
+          # Build test assemblies for cross-asmdef validation
+          dotnet test Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj \
+            --filter "CrossAsmdefCompositionValidatorTests" \
+            --configuration Release \
+            --logger "console;verbosity=minimal"
