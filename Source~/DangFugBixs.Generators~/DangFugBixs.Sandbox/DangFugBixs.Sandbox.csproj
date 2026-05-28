@@ -6,13 +6,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
-          <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(IntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="Generated\**" />
-        <Compile Remove="obj\Generated\**" />
+        <Compile Remove="Generated/**" />
+        <Compile Remove="obj/Generated/**" />
       <ProjectReference Include="..\..\DangFugBixs.Attributes~\NhemDangFugBixs.Attributes.csproj" />
   </ItemGroup>
 
