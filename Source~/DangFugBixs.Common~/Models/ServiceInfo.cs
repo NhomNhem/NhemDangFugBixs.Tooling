@@ -27,6 +27,7 @@ internal readonly struct ServiceInfo {
     public string? MessageType { get; }
     public MessagePipeType MessagePipeKind { get; }
     public Dictionary<string, string> Metadata { get; }
+    public bool IsFromCurrentCompilation { get; }
 
     public string FullName => string.IsNullOrEmpty(Namespace) ? ClassName : $"{Namespace}.{ClassName}";
 
@@ -52,7 +53,8 @@ internal readonly struct ServiceInfo {
         bool isMessagePipeBroker = false,
         string? messageType = null,
         MessagePipeType messagePipeKind = MessagePipeType.Publisher,
-        Dictionary<string, string>? metadata = null)
-        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope, IsExceptionHandler, IsBuildCallback, IsInstaller, InstallerOrder, IsMessagePipeBroker, MessageType, MessagePipeKind, Metadata) =
-           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder, isMessagePipeBroker, messageType, messagePipeKind, metadata ?? new Dictionary<string, string>());
+        Dictionary<string, string>? metadata = null,
+        bool isFromCurrentCompilation = false)
+        => (Namespace, ClassName, Lifetime, ScopeName, InterfaceNames, IsComponent, AsImplementedInterfaces, AsSelf, RegisterInHierarchy, AsTypes, IsEntryPoint, IsFactory, ScopeTypeName, UsesTypeSafeScope, IsExceptionHandler, IsBuildCallback, IsInstaller, InstallerOrder, IsMessagePipeBroker, MessageType, MessagePipeKind, Metadata, IsFromCurrentCompilation) =
+           (ns, className, lifetime, scopeName, interfaceNames, isComponent, asImplementedInterfaces, asSelf, registerInHierarchy, asTypes, isEntryPoint, isFactory, scopeTypeName, usesTypeSafeScope, isExceptionHandler, isBuildCallback, isInstaller, installerOrder, isMessagePipeBroker, messageType, messagePipeKind, metadata ?? new Dictionary<string, string>(), isFromCurrentCompilation);
 }

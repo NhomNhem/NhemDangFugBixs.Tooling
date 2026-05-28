@@ -28,6 +28,7 @@ $summary = [ordered]@{
     DocsCheck = "PENDING"
     UnitySampleDotnetBuild = "PENDING"
     UnitySampleCompile = "PENDING"
+    CrossAsmdefValidation = "PENDING"
 }
 
 function Find-UnityFailureText {
@@ -386,6 +387,8 @@ try {
     Write-Host ("Selected Unity executable: {0}" -f $(if ($unitySelection.SelectedPath) { $unitySelection.SelectedPath } else { "<none>" }))
     Write-Host ("Selection source: {0}" -f $(if ($unitySelection.SelectionSource) { $unitySelection.SelectionSource } else { "<none>" }))
 
+    $diSmokeProject = Join-Path $repoRoot "Source~\DangFugBixs.Tools~\DangFugBixs.DiSmokeValidation\DangFugBixs.DiSmokeValidation.csproj"
+
     if (-not $unitySelection.SelectedPath) {
         $ciUnityRequired = Test-TruthyEnvironmentValue -Name "CI_UNITY_REQUIRED"
         if ($ciUnityRequired) {
@@ -454,6 +457,34 @@ try {
         }
     }
 
+    # Cross-asmdef composition validation for composition-only generation (Tasks 6.1-6.3)
+    if ((Test-Path -LiteralPath $diSmokeProject) -and (-not [string]::IsNullOrWhiteSpace($unityProjectRoot))) {
+        Invoke-Step "Cross-asmdef validation (di-smoke)" {
+            $asmPaths = Get-ChildItem -LiteralPath $unityProjectRoot -Filter "*.dll" -Recurse -File -ErrorAction SilentlyContinue |
+                Where-Object { $_.FullName -like "*Library\ScriptAssemblies*" } |
+                Select-Object -ExpandProperty FullName
+
+            if ($asmPaths.Count -gt 0) {
+                $diSmokeExe = Join-Path $repoRoot "Source~\DangFugBixs.Tools~\DangFugBixs.DiSmokeValidation\bin\Debug\net10.0\DangFugBixs.DiSmokeValidation.dll"
+                if (-not (Test-Path -LiteralPath $diSmokeExe)) {
+                    dotnet build $diSmokeProject --nologo | Out-Null
+                }
+
+                $argsList = @($diSmokeExe) + $asmPaths
+                $result = & dotnet $argsList 2>&1
+                Write-Host $result
+            } else {
+                Write-Host "No ScriptAssemblies found. Skipping cross-asmdef validation." -ForegroundColor Yellow
+            }
+        }
+        $summary.CrossAsmdefValidation = "PASS"
+    } else {
+        $summary.CrossAsmdefValidation = "SKIPPED"
+        Write-Host ""
+        Write-Host "== Cross-asmdef validation (di-smoke) ==" -ForegroundColor Cyan
+        Write-Host "Cross-asmdef validation: SKIPPED (di-smoke project or Unity project root not found)" -ForegroundColor Yellow
+    }
+
     Write-Summary
     exit 0
 }
@@ -475,6 +506,7 @@ catch {
             $summary.UnitySampleCompile = "FAIL"
         }
     }
+    elseif ($summary.CrossAsmdefValidation -eq "PENDING") { $summary.CrossAsmdefValidation = "FAIL" }
 
     if ($summary.UnitySampleCompile -eq "FAIL" -and (Test-Path -LiteralPath $unityLogPath)) {
         Write-Host ""

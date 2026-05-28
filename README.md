@@ -366,6 +366,68 @@ Quick fixes:
 
 ---
 
+## Migration: Per-Assembly to Composition-Only Generation
+
+If your project currently generates installers in every assembly (per-assembly mode), you can migrate to **composition-only generation** for cleaner architecture and faster builds.
+
+### What changes
+
+**Before (per-assembly):**
+- Every asmdef that contains `[AutoRegisterIn]` also emits its own `VContainerRegistration` partial class.
+- Application assemblies reference VContainer and Composition directly.
+- Multiple generated installers across the project.
+
+**After (composition-only):**
+- Only Composition asmdefs emit `VContainerRegistration`.
+- Service asmdefs declare intent via `[AutoRegisterIn<IGameplayScope>]` but emit nothing.
+- Composition asmdefs discover and register services from referenced assemblies.
+
+### Migration steps
+
+1. **Identify your Composition asmdefs**
+   - These are the assemblies that contain `LifetimeScope` subclasses.
+   - Add `[LifetimeScopeFor<IScopeMarker>]` to each `LifetimeScope` if not already present.
+
+2. **Add VContainer reference to Composition asmdefs**
+   - Ensure Composition asmdefs reference `VContainer`.
+   - Remove VContainer references from pure Service asmdefs if they only need attributes.
+
+3. **Verify scope markers**
+   - Service asmdefs should reference scope markers (e.g., `IGameplayScope`) from a Shared/Contracts assembly.
+   - Composition asmdefs map those markers to real `LifetimeScope` types.
+
+4. **Clean stale generated files**
+   - Delete `**/Generated/*.g.cs` in Service-only asmdefs.
+   - Rebuild so only Composition asmdefs generate installers.
+
+5. **Validate with di-smoke**
+   ```bash
+   dotnet di-smoke preflight Composition.dll Services.dll Shared.dll
+   ```
+   The new cross-asmdef validator will report:
+   - Duplicate composition targets for the same scope (NDFG005 at di-smoke level)
+   - Services with no reachable composition target (orphan detection)
+
+6. **Update CI gates**
+   - Run `di-smoke` across all assemblies before Play Mode or build.
+   - Treat orphan-service warnings as errors in CI.
+
+### Diagnostics reference
+
+| Code | Level | Trigger | Where caught |
+|------|-------|---------|--------------|
+| NDFG005 | Error | Multiple `[LifetimeScopeFor]` for same scope in one assembly | Source generator (compile-time) |
+| NDFG006 | Warning | Same service discovered from multiple referenced assemblies | Source generator (compile-time) |
+| NDFG007 | Error | Composition target cannot resolve VContainer symbols | Source generator (compile-time) |
+| Cross-asmdef duplicate | Error | Duplicate `[LifetimeScopeFor]` across separate Unity asmdefs | di-smoke (post-build) |
+| Orphan service | Error | Service scope marker has no composition target anywhere | di-smoke (post-build) |
+
+### Rollback
+
+If you need to rollback, service-only assemblies will continue to compile. The only requirement is that at least one Composition assembly exists to discover and register them. You can temporarily add a Composition target in any assembly that references VContainer.
+
+---
+
 ## Release Process
 
 1. Update `package.json`.

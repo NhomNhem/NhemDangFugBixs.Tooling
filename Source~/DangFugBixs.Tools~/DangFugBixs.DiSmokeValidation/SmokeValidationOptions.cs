@@ -6,12 +6,12 @@ internal enum SmokeValidationOutputFormat {
 }
 
 internal sealed class SmokeValidationOptions {
-    public string? AssemblyPath { get; init; }
+    public IReadOnlyList<string> AssemblyPaths { get; init; } = Array.Empty<string>();
     public bool ShowHelp { get; init; }
     public SmokeValidationOutputFormat Format { get; init; } = SmokeValidationOutputFormat.Text;
 
     public static SmokeValidationOptions Parse(string[] args) {
-        string? assemblyPath = null;
+        var assemblyPaths = new List<string>();
         var showHelp = false;
         var format = SmokeValidationOutputFormat.Text;
 
@@ -33,7 +33,9 @@ internal sealed class SmokeValidationOptions {
                 continue;
             }
 
-            assemblyPath ??= arg;
+            if (!arg.StartsWith("--")) {
+                assemblyPaths.Add(arg);
+            }
         }
 
         if (args.Length == 0) {
@@ -41,7 +43,7 @@ internal sealed class SmokeValidationOptions {
         }
 
         return new SmokeValidationOptions {
-            AssemblyPath = assemblyPath,
+            AssemblyPaths = assemblyPaths,
             ShowHelp = showHelp,
             Format = format
         };

@@ -76,4 +76,28 @@ internal static class Diagnostics {
         category: "Setup",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor DuplicateCompositionTarget = new(
+        id: "NDFG005",
+        title: "Duplicate composition target for scope",
+        messageFormat: "Multiple LifetimeScope classes map to the same scope marker '{0}' in this assembly. Only one composition target per scope is supported.",
+        category: "Architecture",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor DuplicateDiscoveredRegistration = new(
+        id: "NDFG006",
+        title: "Duplicate discovered registration",
+        messageFormat: "Service '{0}' is discovered from multiple referenced assemblies. Consider deduplicating or using explicit contracts. Registration may be ambiguous.",
+        category: "Architecture",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor MissingVContainerReference = new(
+        id: "NDFG007",
+        title: "Composition target missing VContainer reference",
+        messageFormat: "Composition target assembly '{0}' cannot resolve required VContainer types (LifetimeScope or IContainerBuilder). Ensure the composition asmdef references VContainer.",
+        category: "Setup",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 }

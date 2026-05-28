@@ -79,7 +79,7 @@ public class Program {
         Console.WriteLine();
 
         var options = new SmokeValidationOptions {
-            AssemblyPath = assemblyPath,
+            AssemblyPaths = new[] { assemblyPath },
             Format = format.ToLowerInvariant() == "json" ? SmokeValidationOutputFormat.Json : SmokeValidationOutputFormat.Text
         };
 
@@ -130,7 +130,7 @@ public class Program {
         }
 
         var options = new SmokeValidationOptions {
-            AssemblyPath = assemblyPath,
+            AssemblyPaths = new[] { assemblyPath },
             Format = format.ToLowerInvariant() == "json" ? SmokeValidationOutputFormat.Json : SmokeValidationOutputFormat.Text
         };
 

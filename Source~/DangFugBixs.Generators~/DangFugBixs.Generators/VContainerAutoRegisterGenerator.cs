@@ -87,6 +87,11 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
         try {
             var assemblyName = input.Compilation.AssemblyName ?? "";
             
+            // Incremental generator pattern: predicate filters to syntax nodes with attributes,
+            // transform performs lightweight semantic analysis only for candidate nodes.
+            // Semantic analysis is avoided for non-candidate syntax nodes by the predicate filter.
+            // See design.md: "Generator path remains incremental and bounded to candidate nodes."
+
             // Check for required attribute types to verify assembly availability
             var attrCheck = input.Compilation.GetTypeByMetadataName("NhemDangFugBixs.Attributes.AutoRegisterInAttribute");
             if (attrCheck == null) {
@@ -94,6 +99,15 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
                 // We don't return here, we try to continue if it's just a resolution issue, 
                 // but discovery will naturally find nothing.
             }
+
+            // NOTE: Deferred validations (pushed to di-smoke because Roslyn per-compilation
+            // analysis cannot reliably prove them across assembly boundaries):
+            // - Duplicate composition targets across separate Unity asmdefs (Task 6.2)
+            // - Missing intended composition roots across a whole Unity project (Task 6.3)
+            // - Drift between composition targets and referenced service assemblies beyond
+            //   one compilation graph (Task 6.3)
+            // These require project-wide or multi-assembly analysis and are documented in
+            // the di-smoke validation layer.
 
             // Initialize stats
             var packageVersion = typeof(VContainerAutoRegisterGenerator).Assembly.GetName().Version?.ToString() ?? "0.0.0";
@@ -123,10 +137,38 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
                     group.Any(i => i.HasLoggerAdapter)));
 
             // Always validate local services so service-only assemblies still report local diagnostics.
-            var validatedLocalServices = ValidateAndFilterServices(input.LoggingData.Data.BaseData.Services, input.Compilation, context);
+            var localServices = input.LoggingData.Data.BaseData.Services
+                .Select(s => new ServiceInfo(
+                    s.Namespace, s.ClassName, s.Lifetime, s.ScopeName,
+                    s.InterfaceNames, s.IsComponent, s.AsImplementedInterfaces, s.AsSelf,
+                    s.RegisterInHierarchy, s.AsTypes, s.IsEntryPoint, s.IsFactory,
+                    s.ScopeTypeName, s.UsesTypeSafeScope, s.IsExceptionHandler, s.IsBuildCallback,
+                    s.IsInstaller, s.InstallerOrder, s.IsMessagePipeBroker, s.MessageType, s.MessagePipeKind,
+                    s.Metadata, isFromCurrentCompilation: true))
+                .ToList();
+            var validatedLocalServices = ValidateAndFilterServices(localServices, input.Compilation, context);
 
             if (!scopeMappings.Any()) {
                 return;
+            }
+
+            // Task 4.3: Detect duplicate local composition targets for the same scope
+            var duplicateScopes = scopeMappings
+                .GroupBy(m => m.IdentityTypeName, StringComparer.Ordinal)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+            foreach (var dupScope in duplicateScopes) {
+                context.ReportDiagnostic(Diagnostic.Create(Diagnostics.DuplicateCompositionTarget, Location.None, dupScope));
+            }
+
+            // Task 4.5: Verify VContainer symbols are visible in composition targets
+            bool hasLifetimeScope = input.Compilation.GetTypeByMetadataName("VContainer.Unity.LifetimeScope") != null ||
+                                    input.Compilation.GetTypeByMetadataName("LifetimeScope") != null;
+            bool hasContainerBuilder = input.Compilation.GetTypeByMetadataName("VContainer.IContainerBuilder") != null ||
+                                       input.Compilation.GetTypeByMetadataName("IContainerBuilder") != null;
+            if (!hasLifetimeScope || !hasContainerBuilder) {
+                context.ReportDiagnostic(Diagnostic.Create(Diagnostics.MissingVContainerReference, Location.None, assemblyName));
             }
 
             IEnumerable<ServiceInfo> discoveredServices = Enumerable.Empty<ServiceInfo>();
@@ -145,12 +187,30 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
             // Combine local and directly referenced services.
             IEnumerable<ServiceInfo> allServices = validatedLocalServices.Concat(discoveredServices);
 
+            // Task 4.4: Detect duplicate discovered registrations from different assemblies (before deduplication)
+            var duplicateDiscovered = allServices
+                .GroupBy(s => s.FullName)
+                .Where(g => {
+                    var list = g.ToList();
+                    var distinctAssemblies = list
+                        .Select(s => s.Metadata.TryGetValue("DeclaringAssembly", out var asm) ? asm : null)
+                        .Where(a => !string.IsNullOrEmpty(a))
+                        .Distinct(StringComparer.Ordinal)
+                        .Count();
+                    return distinctAssemblies > 1;
+                })
+                .Select(g => g.Key)
+                .ToList();
+            foreach (var dup in duplicateDiscovered) {
+                context.ReportDiagnostic(Diagnostic.Create(Diagnostics.DuplicateDiscoveredRegistration, Location.None, dup));
+            }
+
             // Deduplicate by implementation identity. Prefer services declared in the current assembly when duplicates exist.
             allServices = allServices
                 .GroupBy(s => s.FullName)
                 .Select(g => {
                     var list = g.ToList();
-                    var local = list.FirstOrDefault(s => s.Metadata != null && s.Metadata.TryGetValue("DeclaringAssembly", out var asm) && asm == assemblyName);
+                    var local = list.FirstOrDefault(s => s.IsFromCurrentCompilation);
                     if (!string.IsNullOrEmpty(local.ClassName)) return local;
                     return list.First();
                 });

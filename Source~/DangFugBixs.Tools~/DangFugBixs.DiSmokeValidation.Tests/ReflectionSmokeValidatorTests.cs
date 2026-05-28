@@ -9,7 +9,7 @@ public class ReflectionSmokeValidatorTests {
     [Fact]
     public void Validate_MissingAssembly_ReportsError() {
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = "missing.dll" });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { "missing.dll" } });
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e.Contains("Assembly not found", StringComparison.Ordinal));
@@ -44,7 +44,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e.Contains("Multiple generated VContainerRegistration types", StringComparison.Ordinal));
@@ -75,7 +75,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.True(result.IsSuccess, result.ToHumanReadableText());
     }
@@ -106,7 +106,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.True(result.IsSuccess, result.ToHumanReadableText());
     }
@@ -138,7 +138,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.True(result.IsSuccess, result.ToHumanReadableText());
     }
@@ -166,7 +166,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e.Contains("Duplicate registration entry found", StringComparison.Ordinal));
@@ -195,7 +195,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e.Contains("Missing registration method for scope: RegisterGame", StringComparison.Ordinal));
@@ -226,7 +226,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e.Contains("Type 'PlayerSubscriber' in scope 'GameplayLifetimeScope' depends on MessagePipe Subscriber<PlayerJoined>", StringComparison.Ordinal));
@@ -262,7 +262,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.True(result.IsSuccess, result.ToHumanReadableText());
     }
@@ -296,7 +296,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e.Contains("depends on ILogger<PlayerService>", StringComparison.Ordinal));
@@ -331,7 +331,7 @@ namespace NhemDangFugBixs.Generated.Demo {
 """);
 
         var validator = new ReflectionSmokeValidator();
-        var result = validator.Validate(new SmokeValidationOptions { AssemblyPath = assemblyPath });
+        var result = validator.Validate(new SmokeValidationOptions { AssemblyPaths = new[] { assemblyPath } });
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e.Contains("depends on ILogger<PlayerService>", StringComparison.Ordinal));

@@ -6,19 +6,21 @@ internal sealed class ReflectionSmokeValidator {
     public SmokeValidationResult Validate(SmokeValidationOptions options) {
         var result = new SmokeValidationResult();
 
-        if (string.IsNullOrWhiteSpace(options.AssemblyPath)) {
+        if (options.AssemblyPaths.Count == 0 || string.IsNullOrWhiteSpace(options.AssemblyPaths[0])) {
             result.AddError("No assembly path was provided.");
             return result;
         }
 
-        if (!File.Exists(options.AssemblyPath)) {
-            result.AddError($"Assembly not found: {options.AssemblyPath}");
+        var assemblyPath = options.AssemblyPaths[0];
+
+        if (!File.Exists(assemblyPath)) {
+            result.AddError($"Assembly not found: {assemblyPath}");
             return result;
         }
 
         Assembly assembly;
         try {
-            assembly = Assembly.LoadFrom(options.AssemblyPath);
+            assembly = Assembly.LoadFrom(assemblyPath);
         } catch (Exception ex) {
             result.AddError($"Failed to load assembly: {ex.Message}");
             return result;
