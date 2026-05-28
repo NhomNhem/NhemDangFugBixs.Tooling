@@ -14,7 +14,7 @@
         <RootNamespace>NhemDangFugBixs.Generators</RootNamespace>
         <PackageId>NhemDangFugBixs.Generators</PackageId>
         <AssemblyName>NhemDangFugBixs.Generators</AssemblyName>
-        <Version>7.3.1</Version>
+        <Version>7.4.0</Version>
         <DefineConstants>$(DefineConstants);NDF_INTERNAL_ATTRIBUTES</DefineConstants>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>

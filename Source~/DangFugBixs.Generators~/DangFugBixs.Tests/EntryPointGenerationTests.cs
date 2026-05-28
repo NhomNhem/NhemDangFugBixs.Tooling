@@ -18,6 +18,6 @@ public sealed class PhaseFlowEntryPoint : ITickable { public void Tick() { } }
 """;
 
         var (_, generated) = GeneratorTestHost.Run(source);
-        Assert.That(generated, Does.Contain("RegisterEntryPoint<global::PhaseFlowEntryPoint>()"));
+        Assert.That(generated, Does.Contain("RegisterEntryPoint<global::PhaseFlowEntryPoint>(global::VContainer.Lifetime.Scoped)"));
     }
 }

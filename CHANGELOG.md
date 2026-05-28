@@ -1,5 +1,21 @@
 # Changelog
 
+## 7.4.0 - 2026-05-28
+
+### Added
+- Composition-only generation mode: only assemblies containing `[LifetimeScopeFor<T>]` emit generated installers.
+- Cross-asmdef validation via `di-smoke` CLI tool.
+- Diagnostics NDFG005 (duplicate composition target), NDFG006 (duplicate discovered registration), NDFG007 (missing VContainer reference).
+- `SmokeValidationOptions.AssemblyPaths` supports multiple assembly paths.
+- Release-gate cross-asmdef validation with exit code check.
+
+### Changed
+- `RegisterEntryPoint<T>()` generator output now includes `Lifetime` parameter: `RegisterEntryPoint<T>(Lifetime.Scoped)`.
+
+### Fixed
+- CI build failures from stale generated files in Sandbox.
+- Missing Unity asmdef files for Runtime, Attributes, and Analyzers.
+
 ## 7.3.1 - 2026-05-18
 
 ### Fixed
