@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
 
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>$(IntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <ItemGroup>

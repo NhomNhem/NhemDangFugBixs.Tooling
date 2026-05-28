@@ -411,6 +411,7 @@ FodyWeavers.xsd
 
 # Bỏ qua các file code tự sinh
 **/GeneratedFiles/
+**/Generated/
 
 # GitHub configuration
 .github/*
