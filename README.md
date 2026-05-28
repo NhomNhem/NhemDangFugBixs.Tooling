@@ -17,8 +17,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/NhomNhem/NhemDangFugBixs.Tooling/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/NhomNhem/NhemDangFugBixs.Tooling/ci.yml?branch=main&style=flat-square&label=CI" alt="CI Status">
+  <a href="https://github.com/NhomNhem/NhemDangFugBixs.Tooling/actions/workflows/ci-validation.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/NhomNhem/NhemDangFugBixs.Tooling/ci-validation.yml?branch=master&style=flat-square&label=CI" alt="CI Status">
   </a>
   <a href="https://github.com/NhomNhem/NhemDangFugBixs.Tooling/releases">
     <img src="https://img.shields.io/github/v/release/NhomNhem/NhemDangFugBixs.Tooling?style=flat-square&label=Release" alt="Release">
