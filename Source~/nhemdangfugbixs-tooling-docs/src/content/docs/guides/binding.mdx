@@ -9,13 +9,13 @@ Binding answers: "How should this service be resolved from the container?"
 | Situation | Recommended binding | Why |
 | --- | --- | --- |
 | Single interface service | `[As<IService>]` | Explicit and stable |
-| Multi-role service | `[BindAs(typeof(IA), typeof(IB))]` | Clear intent |
+| Multi-role service | `[As(typeof(IA), typeof(IB))]` | Clear intent |
 | Internal helper | `[AsSelf]` | Avoid unnecessary interface surface |
 | Adapter implementing many interfaces | `[AsImplementedInterfaces]` | Convenient when intentional |
 
 ## Precedence
 
-1. `BindAs` / `As<T>`
+1. `As<T>` / `As(typeof(TA), typeof(TB))`
 2. `AsImplementedInterfaces`
 3. Legacy `AutoRegisterIn` binding options
 4. Default conservative behavior
