@@ -78,6 +78,10 @@ jobs:
            rm -f deploy/AGENTS.md deploy/QWEN.md deploy/GEMINI.md deploy/.openspec.yaml deploy/CONTRIBUTING.md || true
            rm -f deploy/Analyzers/*.pdb || true
 
+           # Hybrid packaging: Runtime ships source .cs + .asmdef, Analyzers ship .dll only
+           find deploy/Runtime -type f \( -name '*.dll' -o -name '*.dll.meta' \) -delete
+           find deploy/Analyzers -type f \( -name '*.asmdef' -o -name '*.asmdef.meta' \) -delete
+
            # Hard whitelist validation for package branch.
            for required in package.json README.md CHANGELOG.md Runtime Editor Analyzers docs/assets; do
              test -e "deploy/$required"

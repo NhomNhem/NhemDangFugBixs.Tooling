@@ -430,3 +430,10 @@ QWEN.md.meta
 GEMINI.md
 GEMINI.md.meta
 .openspec.yaml
+
+# Hybrid packaging: Runtime ships source .cs, Analyzers ship .dll
+# Do not commit precompiled runtime DLLs or analyzer asmdefs
+Runtime/**/*.dll
+Runtime/**/*.dll.meta
+Analyzers/**/*.asmdef
+Analyzers/**/*.asmdef.meta

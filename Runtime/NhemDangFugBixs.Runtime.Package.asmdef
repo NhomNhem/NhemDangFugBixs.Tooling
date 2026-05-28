@@ -7,10 +7,7 @@
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": true,
-    "precompiledReferences": [
-        "NhemDangFugBixs.Runtime.dll"
-    ],
+    "overrideReferences": false,
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

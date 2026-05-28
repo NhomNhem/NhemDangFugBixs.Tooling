@@ -53,14 +53,16 @@
     <Message Condition="'$(UnityProjectRoot)' != ''" Importance="high" Text="[UPM-Package] Deploying Runtime to: $(ExternalRuntimePath)" />
     
     <ItemGroup Condition="'$(UnityProjectRoot)' != ''">
-        <RuntimeDlls Include="$(FinalRuntimePath)**\*.dll" />
+        <RuntimeSources Include="$(FinalRuntimePath)**\*.cs" />
         <RuntimeMetas Include="$(FinalRuntimePath)**\*.meta" />
+        <RuntimeAsmdefs Include="$(FinalRuntimePath)**\*.asmdef" />
     </ItemGroup>
 
-    <Message Condition="'$(UnityProjectRoot)' != ''" Importance="high" Text="[UPM-Package] Runtime files: @(RuntimeDlls->Count()) DLLs" />
+    <Message Condition="'$(UnityProjectRoot)' != ''" Importance="high" Text="[UPM-Package] Runtime files: @(RuntimeSources->Count()) .cs sources" />
 
-    <Copy Condition="'$(UnityProjectRoot)' != ''" SourceFiles="@(RuntimeDlls)" DestinationFolder="$(ExternalRuntimePath)" SkipUnchangedFiles="false" />
-    <Copy Condition="'$(UnityProjectRoot)' != ''" SourceFiles="@(RuntimeMetas)" DestinationFolder="$(ExternalRuntimePath)" SkipUnchangedFiles="false" />
+    <Copy Condition="'$(UnityProjectRoot)' != ''" SourceFiles="@(RuntimeSources)" DestinationFolder="$(ExternalRuntimePath)" SkipUnchangedFiles="true" />
+    <Copy Condition="'$(UnityProjectRoot)' != ''" SourceFiles="@(RuntimeMetas)" DestinationFolder="$(ExternalRuntimePath)" SkipUnchangedFiles="true" />
+    <Copy Condition="'$(UnityProjectRoot)' != ''" SourceFiles="@(RuntimeAsmdefs)" DestinationFolder="$(ExternalRuntimePath)" SkipUnchangedFiles="true" />
     
     <Message Condition="'$(UnityProjectRoot)' != ''" Importance="high" Text="[UPM-Package] Done deploying to: $(ExternalRuntimePath)" />
   </Target>

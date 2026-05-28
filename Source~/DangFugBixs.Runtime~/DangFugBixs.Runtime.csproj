@@ -13,9 +13,4 @@
         <ProjectReference Include="..\DangFugBixs.Attributes~\NhemDangFugBixs.Attributes.csproj" />
     </ItemGroup>
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(FinalRuntimePath)" />
-        <Copy SourceFiles="$(PackageRoot)Source~/MetaTemplates/$(AssemblyName).dll.meta" DestinationFolder="$(FinalRuntimePath)" ContinueOnError="true" />
-    </Target>
-
 </Project>
