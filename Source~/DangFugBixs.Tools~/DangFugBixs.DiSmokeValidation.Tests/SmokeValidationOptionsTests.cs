@@ -25,4 +25,18 @@ public class SmokeValidationOptionsTests {
         Assert.Equal("bin/Debug/Test.dll", options.AssemblyPaths[0]);
         Assert.Equal(SmokeValidationOutputFormat.Json, options.Format);
     }
+
+    [Fact]
+    public void Parse_MultipleAssemblyPaths_UsesAllPaths() {
+        var options = SmokeValidationOptions.Parse([
+            "Game.Shared.dll",
+            "Game.Application.dll",
+            "Game.Composition.dll"
+        ]);
+
+        Assert.Equal(3, options.AssemblyPaths.Count);
+        Assert.Equal("Game.Shared.dll", options.AssemblyPaths[0]);
+        Assert.Equal("Game.Application.dll", options.AssemblyPaths[1]);
+        Assert.Equal("Game.Composition.dll", options.AssemblyPaths[2]);
+    }
 }
