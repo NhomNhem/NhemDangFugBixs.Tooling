@@ -1,0 +1,45 @@
+{
+  "name": "com.nhemdangfugbixs.tooling",
+  "version": "7.3.1",
+  "displayName": "Nhem Dang Fug Bixs Tooling",
+  "description": "VContainer Auto-Registration Source Generator and Roslyn Analyzers with Type-Safe Scopes.",
+  "unity": "2021.3",
+  "documentationUrl": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling#readme",
+  "changelogUrl": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/NhomNhem/NhemDangFugBixs.Tooling/blob/main/LICENSE",
+  "author": "NhomNhem",
+  "keywords": [
+    "vcontainer",
+    "source-generator",
+    "analyzer",
+    "dependency-injection",
+    "messagepipe",
+    "di-smoke"
+  ],
+  "files": [
+    "Runtime",
+    "Runtime.meta",
+    "Editor",
+    "Editor.meta",
+    "Analyzers",
+    "Analyzers.meta",
+    "package.json",
+    "package.json.meta",
+    "README.md",
+    "README.md.meta",
+    "CHANGELOG.md",
+    "CHANGELOG.md.meta",
+    "LICENSE",
+    "LICENSE.meta",
+    "docs",
+    "docs.meta"
+  ],
+  "dependencies": {
+    "jp.hadashikick.vcontainer": "1.17.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NhomNhem/NhemDangFugBixs.Tooling.git"
+  },
+  "license": "ISC"
+}
