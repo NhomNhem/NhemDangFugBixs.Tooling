@@ -1,0 +1,2718 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "DangFugBixs.Generators",
+    "languages": [
+      "csharp",
+      "csproj",
+      "txt"
+    ],
+    "frameworks": [
+      "Roslyn",
+      "BenchmarkDotNet",
+      "NUnit"
+    ],
+    "description": "Roslyn source generator, benchmarks, sandbox, and tests for VContainer auto-registration.",
+    "analyzedAt": "2026-05-28T11:20:30.090Z",
+    "gitCommitHash": "155288a2c2168115316423ecf006be9b1fb6bee0"
+  },
+  "nodes": [
+    {
+      "id": "module:DangFugBixs.GeneratorsWorkspace",
+      "type": "module",
+      "name": "DangFugBixs.GeneratorsWorkspace",
+      "filePath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~",
+      "summary": "Workspace scope for the generator core, benchmarks, sandbox, tests, and support docs.",
+      "tags": [
+        "module",
+        "workspace"
+      ]
+    },
+    {
+      "id": "module:DangFugBixs.GeneratorsCore",
+      "type": "module",
+      "name": "DangFugBixs.GeneratorsCore",
+      "filePath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators",
+      "summary": "Core Roslyn generator and helper project.",
+      "tags": [
+        "module",
+        "generator"
+      ]
+    },
+    {
+      "id": "module:DangFugBixs.GeneratorsBenchmarks",
+      "type": "module",
+      "name": "DangFugBixs.GeneratorsBenchmarks",
+      "filePath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators.Benchmarks",
+      "summary": "Benchmark project for generator performance experiments.",
+      "tags": [
+        "module",
+        "benchmark"
+      ]
+    },
+    {
+      "id": "module:DangFugBixs.Sandbox",
+      "type": "module",
+      "name": "DangFugBixs.Sandbox",
+      "filePath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Sandbox",
+      "summary": "Sandbox sample project for generated registration and stat code.",
+      "tags": [
+        "module",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "module:DangFugBixs.Tests",
+      "type": "module",
+      "name": "DangFugBixs.Tests",
+      "filePath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Tests",
+      "summary": "NUnit regression suite for the generator and sandbox samples.",
+      "tags": [
+        "module",
+        "test"
+      ]
+    },
+    {
+      "id": "module:DangFugBixs.SupportDocs",
+      "type": "module",
+      "name": "DangFugBixs.SupportDocs",
+      "filePath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/docs-text",
+      "summary": "Reference text files and inventory lists used by the scoped analysis.",
+      "tags": [
+        "module",
+        "docs"
+      ]
+    },
+    {
+      "id": "config:DangFugBixs.Generators.Benchmarks/DangFugBixs.Generators.Benchmarks.csproj",
+      "type": "config",
+      "name": "DangFugBixs.Generators.Benchmarks.csproj",
+      "filePath": "DangFugBixs.Generators.Benchmarks/DangFugBixs.Generators.Benchmarks.csproj",
+      "summary": "Build configuration for the DangFugBixs.Generators.Benchmarks project.",
+      "tags": [
+        "config",
+        "benchmark",
+        "build"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators.Benchmarks/GeneratorBenchmarks.cs",
+      "type": "file",
+      "name": "GeneratorBenchmarks.cs",
+      "filePath": "DangFugBixs.Generators.Benchmarks/GeneratorBenchmarks.cs",
+      "summary": "BenchmarkDotNet benchmark for generator-related performance comparisons.",
+      "tags": [
+        "file",
+        "benchmark"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators.Benchmarks/Program.cs",
+      "type": "file",
+      "name": "Program.cs",
+      "filePath": "DangFugBixs.Generators.Benchmarks/Program.cs",
+      "summary": "Console entry point for running generator benchmarks.",
+      "tags": [
+        "file",
+        "benchmark"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "type": "file",
+      "name": "ClassAnalyzer.cs",
+      "filePath": "DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "summary": "Extracts registration, scope, component, and entry-point metadata from attributed syntax trees.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+      "type": "file",
+      "name": "ReferencedAssemblyScanner.cs",
+      "filePath": "DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+      "summary": "Scans referenced assemblies for additional services and records unresolved assembly warnings.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "config:DangFugBixs.Generators/DangFugBixs.Generators.csproj",
+      "type": "config",
+      "name": "DangFugBixs.Generators.csproj",
+      "filePath": "DangFugBixs.Generators/DangFugBixs.Generators.csproj",
+      "summary": "Build configuration for the DangFugBixs.Generators project.",
+      "tags": [
+        "config",
+        "generator",
+        "build"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "file",
+      "name": "Diagnostics.cs",
+      "filePath": "DangFugBixs.Generators/Diagnostics.cs",
+      "summary": "Defines generator and analyzer diagnostic descriptors.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "type": "file",
+      "name": "RegistrationEmitter.cs",
+      "filePath": "DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "summary": "Generates VContainer installer source, compatibility facades, and component registration code.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+      "type": "file",
+      "name": "ReportEmitter.cs",
+      "filePath": "DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+      "summary": "Generates companion registration reports for emitted service metadata.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/GeneratorBenchmarks.cs",
+      "type": "file",
+      "name": "GeneratorBenchmarks.cs",
+      "filePath": "DangFugBixs.Generators/GeneratorBenchmarks.cs",
+      "summary": "GeneratorBenchmarks source file.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "file",
+      "name": "StatGenerator.cs",
+      "filePath": "DangFugBixs.Generators/StatGenerator.cs",
+      "summary": "Generates stat-related source artifacts from annotated models.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "type": "file",
+      "name": "IndentedTextWriterExtensions.cs",
+      "filePath": "DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "summary": "Adds scoped block helpers for IndentedTextWriter-based code generation.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "type": "file",
+      "name": "InterfaceUtils.cs",
+      "filePath": "DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "summary": "Contains interface helpers used to classify VContainer entry-point contracts.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "type": "file",
+      "name": "RoslynExtensions.cs",
+      "filePath": "DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "summary": "Provides Roslyn syntax helpers such as namespace extraction.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "file",
+      "name": "VContainerAutoRegisterGenerator.cs",
+      "filePath": "DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "summary": "Incremental source generator that discovers attributed services, validates scope metadata, and emits registration code.",
+      "tags": [
+        "file",
+        "generator"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/CrossLayerTestingFixtures.cs",
+      "type": "file",
+      "name": "CrossLayerTestingFixtures.cs",
+      "filePath": "DangFugBixs.Sandbox/CrossLayerTestingFixtures.cs",
+      "summary": "Cross-layer test fixtures that exercise scope mapping and service registration.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "config:DangFugBixs.Sandbox/DangFugBixs.Sandbox.csproj",
+      "type": "config",
+      "name": "DangFugBixs.Sandbox.csproj",
+      "filePath": "DangFugBixs.Sandbox/DangFugBixs.Sandbox.csproj",
+      "summary": "Build configuration for the DangFugBixs.Sandbox project.",
+      "tags": [
+        "config",
+        "sandbox",
+        "build"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.StatGenerator/HeroStats_Stats.g.cs",
+      "type": "file",
+      "name": "HeroStats_Stats.g.cs",
+      "filePath": "DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.StatGenerator/HeroStats_Stats.g.cs",
+      "summary": "HeroStats Stats.G source file.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "type": "file",
+      "name": "DangFugBixs.Sandbox.Report.g.cs",
+      "filePath": "DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "summary": "DangFugBixs.Sandbox.Report.G source file.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "type": "file",
+      "name": "DangFugBixs.Sandbox.g.cs",
+      "filePath": "DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "summary": "DangFugBixs.Sandbox.G source file.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/HeroStats.cs",
+      "type": "file",
+      "name": "HeroStats.cs",
+      "filePath": "DangFugBixs.Sandbox/HeroStats.cs",
+      "summary": "Example model used by generated stat code in the sandbox.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "file",
+      "name": "Mocks.cs",
+      "filePath": "DangFugBixs.Sandbox/Mocks.cs",
+      "summary": "Mocks VContainer and Unity API surface needed to compile sandbox samples without the full runtime.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Program.cs",
+      "type": "file",
+      "name": "Program.cs",
+      "filePath": "DangFugBixs.Sandbox/Program.cs",
+      "summary": "Minimal console entry point for the sandbox executable.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "type": "file",
+      "name": "LifetimeScopes.cs",
+      "filePath": "DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "summary": "Defines sandbox lifetime scopes and maps generated installers into the sample hierarchy.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "type": "file",
+      "name": "GameServices.cs",
+      "filePath": "DangFugBixs.Sandbox/Services/GameServices.cs",
+      "summary": "Game-scope sample services showing singleton registration and entry-point usage.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "type": "file",
+      "name": "GameplayServices.cs",
+      "filePath": "DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "summary": "Gameplay-scope sample services demonstrating scoped registrations and interfaces.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Sandbox/Services/UIServices.cs",
+      "type": "file",
+      "name": "UIServices.cs",
+      "filePath": "DangFugBixs.Sandbox/Services/UIServices.cs",
+      "summary": "UI-scope sample services demonstrating scoped UI wiring.",
+      "tags": [
+        "file",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "file",
+      "name": "BindingGenerationTests.cs",
+      "filePath": "DangFugBixs.Tests/BindingGenerationTests.cs",
+      "summary": "Regression test suite for BindingGenerationTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "file",
+      "name": "ComponentGenerationTests.cs",
+      "filePath": "DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "summary": "Regression test suite for ComponentGenerationTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "file",
+      "name": "CrossAssemblyGenerationTests.cs",
+      "filePath": "DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "summary": "Regression test suite for CrossAssemblyGenerationTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "config:DangFugBixs.Tests/DangFugBixs.Tests.csproj",
+      "type": "config",
+      "name": "DangFugBixs.Tests.csproj",
+      "filePath": "DangFugBixs.Tests/DangFugBixs.Tests.csproj",
+      "summary": "Build configuration for the DangFugBixs.Tests project.",
+      "tags": [
+        "config",
+        "test",
+        "build"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "file",
+      "name": "EntryPointGenerationTests.cs",
+      "filePath": "DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "summary": "Regression test suite for EntryPointGenerationTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "file",
+      "name": "GeneratedOutputSnapshotTests.cs",
+      "filePath": "DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "summary": "Regression test suite for GeneratedOutputSnapshotTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "file",
+      "name": "ImportRegressionTests.cs",
+      "filePath": "DangFugBixs.Tests/ImportRegressionTests.cs",
+      "summary": "Regression test suite for ImportRegressionTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "file",
+      "name": "PerformanceSmokeTests.cs",
+      "filePath": "DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "summary": "Regression test suite for PerformanceSmokeTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "file",
+      "name": "ScopeMarkerGenerationTests.cs",
+      "filePath": "DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "summary": "Regression test suite for ScopeMarkerGenerationTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/StatSystemTests.cs",
+      "type": "file",
+      "name": "StatSystemTests.cs",
+      "filePath": "DangFugBixs.Tests/StatSystemTests.cs",
+      "summary": "Regression test suite for StatSystemTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "file",
+      "name": "GeneratorTestHost.cs",
+      "filePath": "DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "summary": "Shared test harness that compiles snippets and runs the source generator.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "file",
+      "name": "TypeSafeScopeTests.cs",
+      "filePath": "DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "summary": "Regression test suite for TypeSafeScopeTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "file",
+      "name": "UnitTest1.cs",
+      "filePath": "DangFugBixs.Tests/UnitTest1.cs",
+      "summary": "UnitTest1 source file.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "file",
+      "name": "V4InstallerTests.cs",
+      "filePath": "DangFugBixs.Tests/V4InstallerTests.cs",
+      "summary": "Regression test suite for V4InstallerTests.",
+      "tags": [
+        "file",
+        "test"
+      ]
+    },
+    {
+      "id": "document:exhaustive_list.txt",
+      "type": "document",
+      "name": "exhaustive_list.txt",
+      "filePath": "exhaustive_list.txt",
+      "summary": "Repository inventory and file listing reference document.",
+      "tags": [
+        "document",
+        "docs"
+      ]
+    },
+    {
+      "id": "document:file_list.txt",
+      "type": "document",
+      "name": "file_list.txt",
+      "filePath": "file_list.txt",
+      "summary": "Repository inventory and file listing reference document.",
+      "tags": [
+        "document",
+        "docs"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "module:DangFugBixs.GeneratorsBenchmarks",
+      "target": "config:DangFugBixs.Generators.Benchmarks/DangFugBixs.Generators.Benchmarks.csproj",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsBenchmarks",
+      "target": "file:DangFugBixs.Generators.Benchmarks/GeneratorBenchmarks.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsBenchmarks",
+      "target": "file:DangFugBixs.Generators.Benchmarks/Program.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "config:DangFugBixs.Generators/DangFugBixs.Generators.csproj",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/GeneratorBenchmarks.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsCore",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/CrossLayerTestingFixtures.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "config:DangFugBixs.Sandbox/DangFugBixs.Sandbox.csproj",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.StatGenerator/HeroStats_Stats.g.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/HeroStats.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Program.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Sandbox",
+      "target": "file:DangFugBixs.Sandbox/Services/UIServices.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "config:DangFugBixs.Tests/DangFugBixs.Tests.csproj",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/StatSystemTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.Tests",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.SupportDocs",
+      "target": "document:exhaustive_list.txt",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.SupportDocs",
+      "target": "document:file_list.txt",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "module:DangFugBixs.GeneratorsCore",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "module:DangFugBixs.GeneratorsBenchmarks",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "module:DangFugBixs.Sandbox",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "module:DangFugBixs.Tests",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "module:DangFugBixs.SupportDocs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "config:DangFugBixs.Generators.Benchmarks/DangFugBixs.Generators.Benchmarks.csproj",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators.Benchmarks/GeneratorBenchmarks.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators.Benchmarks/Program.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "config:DangFugBixs.Generators/DangFugBixs.Generators.csproj",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/GeneratorBenchmarks.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/CrossLayerTestingFixtures.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "config:DangFugBixs.Sandbox/DangFugBixs.Sandbox.csproj",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.StatGenerator/HeroStats_Stats.g.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/HeroStats.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Program.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Sandbox/Services/UIServices.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "config:DangFugBixs.Tests/DangFugBixs.Tests.csproj",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/StatSystemTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "module:DangFugBixs.GeneratorsWorkspace",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "contains",
+      "weight": 1
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+      "target": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators.Benchmarks/Program.cs",
+      "target": "file:DangFugBixs.Generators.Benchmarks/GeneratorBenchmarks.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Sandbox/CrossLayerTestingFixtures.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Services/UIServices.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Sandbox/CrossLayerTestingFixtures.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "target": "file:DangFugBixs.Sandbox/Services/UIServices.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "target": "file:DangFugBixs.Sandbox/CrossLayerTestingFixtures.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "target": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "target": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+      "target": "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/UIServices.cs",
+      "target": "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Services/UIServices.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/UnitTest1.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/StatSystemTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.StatGenerator/HeroStats_Stats.g.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/StatSystemTests.cs",
+      "target": "file:DangFugBixs.Sandbox/HeroStats.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "target": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "target": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "target": "file:DangFugBixs.Generators/Diagnostics.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "target": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "target": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "target": "file:DangFugBixs.Sandbox/Mocks.cs",
+      "type": "imports",
+      "weight": 0.7
+    },
+    {
+      "source": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "imports",
+      "weight": 0.6
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+      "target": "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+      "target": "file:DangFugBixs.Tests/V4InstallerTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "target": "file:DangFugBixs.Tests/StatSystemTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/StatGenerator.cs",
+      "target": "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+      "target": "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+      "target": "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "target": "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+      "target": "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+      "type": "tested_by",
+      "weight": 0.5
+    },
+    {
+      "source": "file:DangFugBixs.Sandbox/Program.cs",
+      "target": "module:DangFugBixs.Sandbox",
+      "type": "contains",
+      "weight": 1
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:generator-core",
+      "name": "Generator Core",
+      "description": "Roslyn generator, analyzers, emitters, and helper utilities.",
+      "nodeIds": [
+        "config:DangFugBixs.Generators/DangFugBixs.Generators.csproj",
+        "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+        "file:DangFugBixs.Generators/Analyzers/ReferencedAssemblyScanner.cs",
+        "file:DangFugBixs.Generators/Diagnostics.cs",
+        "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs",
+        "file:DangFugBixs.Generators/Emitters/ReportEmitter.cs",
+        "file:DangFugBixs.Generators/GeneratorBenchmarks.cs",
+        "file:DangFugBixs.Generators/StatGenerator.cs",
+        "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+        "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs",
+        "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+        "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs"
+      ]
+    },
+    {
+      "id": "layer:benchmark-suite",
+      "name": "Benchmark Suite",
+      "description": "BenchmarkDotNet entry points and performance harnesses.",
+      "nodeIds": [
+        "config:DangFugBixs.Generators.Benchmarks/DangFugBixs.Generators.Benchmarks.csproj",
+        "file:DangFugBixs.Generators.Benchmarks/GeneratorBenchmarks.cs",
+        "file:DangFugBixs.Generators.Benchmarks/Program.cs"
+      ]
+    },
+    {
+      "id": "layer:sandbox-samples",
+      "name": "Sandbox Samples",
+      "description": "Sandbox executable, mocks, generated outputs, and sample services.",
+      "nodeIds": [
+        "file:DangFugBixs.Sandbox/CrossLayerTestingFixtures.cs",
+        "config:DangFugBixs.Sandbox/DangFugBixs.Sandbox.csproj",
+        "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.StatGenerator/HeroStats_Stats.g.cs",
+        "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.g.cs",
+        "file:DangFugBixs.Sandbox/Generated/NhemDangFugBixs.Generators/NhemDangFugBixs.Generators.VContainerAutoRegisterGenerator/DangFugBixs.Sandbox.Report.g.cs",
+        "file:DangFugBixs.Sandbox/HeroStats.cs",
+        "file:DangFugBixs.Sandbox/Mocks.cs",
+        "file:DangFugBixs.Sandbox/Program.cs",
+        "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+        "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+        "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+        "file:DangFugBixs.Sandbox/Services/UIServices.cs"
+      ]
+    },
+    {
+      "id": "layer:test-suite",
+      "name": "Test Suite",
+      "description": "NUnit regression tests and shared test harnesses.",
+      "nodeIds": [
+        "file:DangFugBixs.Tests/BindingGenerationTests.cs",
+        "file:DangFugBixs.Tests/ComponentGenerationTests.cs",
+        "file:DangFugBixs.Tests/CrossAssemblyGenerationTests.cs",
+        "config:DangFugBixs.Tests/DangFugBixs.Tests.csproj",
+        "file:DangFugBixs.Tests/EntryPointGenerationTests.cs",
+        "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+        "file:DangFugBixs.Tests/ImportRegressionTests.cs",
+        "file:DangFugBixs.Tests/PerformanceSmokeTests.cs",
+        "file:DangFugBixs.Tests/ScopeMarkerGenerationTests.cs",
+        "file:DangFugBixs.Tests/StatSystemTests.cs",
+        "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+        "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+        "file:DangFugBixs.Tests/UnitTest1.cs",
+        "file:DangFugBixs.Tests/V4InstallerTests.cs"
+      ]
+    },
+    {
+      "id": "layer:support-docs",
+      "name": "Support Docs",
+      "description": "Reference text files that describe or inventory the project.",
+      "nodeIds": [
+        "document:exhaustive_list.txt",
+        "document:file_list.txt"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Start with the generator core",
+      "description": "Follow the incremental generator through analysis, validation, and emission.",
+      "nodeIds": [
+        "file:DangFugBixs.Generators/VContainerAutoRegisterGenerator.cs",
+        "file:DangFugBixs.Generators/Analyzers/ClassAnalyzer.cs",
+        "file:DangFugBixs.Generators/Emitters/RegistrationEmitter.cs"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Understand helper utilities",
+      "description": "Inspect the Roslyn and code-generation helpers that keep emitted source stable.",
+      "nodeIds": [
+        "file:DangFugBixs.Generators/Utils/RoslynExtensions.cs",
+        "file:DangFugBixs.Generators/Utils/IndentedTextWriterExtensions.cs",
+        "file:DangFugBixs.Generators/Utils/InterfaceUtils.cs"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "See the sample sandbox",
+      "description": "The sandbox shows how generated installers and sample services fit together.",
+      "nodeIds": [
+        "file:DangFugBixs.Sandbox/Scopes/LifetimeScopes.cs",
+        "file:DangFugBixs.Sandbox/Services/GameServices.cs",
+        "file:DangFugBixs.Sandbox/Services/GameplayServices.cs",
+        "file:DangFugBixs.Sandbox/Services/UIServices.cs"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Trace the test suite",
+      "description": "The NUnit tests lock in scope mapping, binding generation, and snapshot behavior.",
+      "nodeIds": [
+        "file:DangFugBixs.Tests/TestHost/GeneratorTestHost.cs",
+        "file:DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs",
+        "file:DangFugBixs.Tests/TypeSafeScopeTests.cs",
+        "file:DangFugBixs.Tests/V4InstallerTests.cs"
+      ]
+    }
+  ]
+}

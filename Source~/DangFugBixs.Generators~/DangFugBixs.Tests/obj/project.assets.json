@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {
       "coverlet.collector/6.0.4": {
@@ -780,7 +780,7 @@
           "bin/placeholder/NhemDangFugBixs.Attributes.dll": {}
         }
       },
-      "NhemDangFugBixs.Generators/7.3.0": {
+      "NhemDangFugBixs.Generators/7.3.1": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
@@ -2466,7 +2466,7 @@
       "path": "../../DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj",
       "msbuildProject": "../../DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj"
     },
-    "NhemDangFugBixs.Generators/7.3.0": {
+    "NhemDangFugBixs.Generators/7.3.1": {
       "type": "project",
       "path": "../DangFugBixs.Generators/DangFugBixs.Generators.csproj",
       "msbuildProject": "../DangFugBixs.Generators/DangFugBixs.Generators.csproj"
@@ -2485,25 +2485,25 @@
       "NUnit >= 4.3.2",
       "NUnit.Analyzers >= 4.7.0",
       "NUnit3TestAdapter >= 5.0.0",
-      "NhemDangFugBixs.Generators >= 7.3.0",
+      "NhemDangFugBixs.Generators >= 7.3.1",
       "NhemDangFugBixs.Runtime >= 1.0.0",
       "coverlet.collector >= 6.0.4"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\truon\\.nuget\\packages\\": {}
+    "/Users/myte/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Tests\\DangFugBixs.Tests.csproj",
+      "projectUniqueName": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Tests/DangFugBixs.Tests.csproj",
       "projectName": "DangFugBixs.Tests",
-      "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Tests\\DangFugBixs.Tests.csproj",
-      "packagesPath": "C:\\Users\\truon\\.nuget\\packages\\",
-      "outputPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Tests\\obj\\",
+      "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Tests/DangFugBixs.Tests.csproj",
+      "packagesPath": "/Users/myte/.nuget/packages/",
+      "outputPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Tests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\truon\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/myte/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -2513,13 +2513,14 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj": {
-              "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj"
+            "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators/DangFugBixs.Generators.csproj": {
+              "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators/DangFugBixs.Generators.csproj"
             },
-            "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Runtime~\\DangFugBixs.Runtime.csproj": {
-              "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Runtime~\\DangFugBixs.Runtime.csproj"
+            "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj": {
+              "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj"
             }
           }
         }
@@ -2534,10 +2535,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "MessagePipe": {
@@ -2585,7 +2587,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

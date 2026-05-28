@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {
       "Microsoft.CodeAnalysis.Analyzers/3.3.4": {
@@ -1801,19 +1801,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\truon\\.nuget\\packages\\": {}
+    "/Users/myte/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.DiSmokeValidation.Tests\\DangFugBixs.DiSmokeValidation.Tests.csproj",
+      "projectUniqueName": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj",
       "projectName": "DangFugBixs.DiSmokeValidation.Tests",
-      "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.DiSmokeValidation.Tests\\DangFugBixs.DiSmokeValidation.Tests.csproj",
-      "packagesPath": "C:\\Users\\truon\\.nuget\\packages\\",
-      "outputPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.DiSmokeValidation.Tests\\obj\\",
+      "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj",
+      "packagesPath": "/Users/myte/.nuget/packages/",
+      "outputPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\truon\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/myte/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -1823,13 +1823,14 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.Cli\\DangFugBixs.Cli.csproj": {
-              "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.Cli\\DangFugBixs.Cli.csproj"
+            "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj": {
+              "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Tools~/DangFugBixs.Cli/DangFugBixs.Cli.csproj"
             },
-            "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.DiSmokeValidation\\DangFugBixs.DiSmokeValidation.csproj": {
-              "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.DiSmokeValidation\\DangFugBixs.DiSmokeValidation.csproj"
+            "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation/DangFugBixs.DiSmokeValidation.csproj": {
+              "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation/DangFugBixs.DiSmokeValidation.csproj"
             }
           }
         }
@@ -1844,10 +1845,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "Microsoft.CodeAnalysis.CSharp": {
@@ -1885,7 +1887,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "svgKa+83xqI=",
+  "dgSpecHash": "icCk7a3knO8=",
   "success": true,
-  "projectFilePath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Tools~\\DangFugBixs.DiSmokeValidation\\DangFugBixs.DiSmokeValidation.csproj",
+  "projectFilePath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation/DangFugBixs.DiSmokeValidation.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\truon\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
-    "C:\\Users\\truon\\.nuget\\packages\\microsoft.codeanalysis.common\\4.3.0\\microsoft.codeanalysis.common.4.3.0.nupkg.sha512",
-    "C:\\Users\\truon\\.nuget\\packages\\microsoft.codeanalysis.csharp\\4.3.0\\microsoft.codeanalysis.csharp.4.3.0.nupkg.sha512"
+    "/Users/myte/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.3/microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
+    "/Users/myte/.nuget/packages/microsoft.codeanalysis.common/4.3.0/microsoft.codeanalysis.common.4.3.0.nupkg.sha512",
+    "/Users/myte/.nuget/packages/microsoft.codeanalysis.csharp/4.3.0/microsoft.codeanalysis.csharp.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }
