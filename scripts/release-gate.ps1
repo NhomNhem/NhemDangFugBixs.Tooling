@@ -473,6 +473,10 @@ try {
                 $argsList = @($diSmokeExe) + $asmPaths
                 $result = & dotnet $argsList 2>&1
                 Write-Host $result
+
+                if ($LASTEXITCODE -ne 0) {
+                    throw "Cross-asmdef validation failed. See output above for details."
+                }
             } else {
                 Write-Host "No ScriptAssemblies found. Skipping cross-asmdef validation." -ForegroundColor Yellow
             }

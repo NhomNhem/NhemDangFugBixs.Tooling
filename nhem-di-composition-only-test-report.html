@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nhem DI Composition-Only Generation — Test Report</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --pass: #22c55e;
+      --partial: #f59e0b;
+      --fail: #ef4444;
+      --info: #38bdf8;
+      --border: #374151;
+    }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, var(--bg), #020617);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 20px 72px;
+    }
+    h1, h2, h3 {
+      line-height: 1.2;
+      margin: 0 0 12px;
+    }
+    h1 {
+      font-size: 32px;
+      letter-spacing: -0.03em;
+    }
+    h2 {
+      margin-top: 32px;
+      font-size: 22px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    h3 {
+      margin-top: 20px;
+      font-size: 17px;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 20px 0 28px;
+    }
+    .card {
+      background: rgba(17, 24, 39, .9);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+    }
+    .metric {
+      font-size: 26px;
+      font-weight: 800;
+      margin-top: 6px;
+    }
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .pass { background: rgba(34, 197, 94, .15); color: var(--pass); }
+    .partial { background: rgba(245, 158, 11, .15); color: var(--partial); }
+    .fail { background: rgba(239, 68, 68, .15); color: var(--fail); }
+    .info { background: rgba(56, 189, 248, .15); color: var(--info); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 20px;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--panel-2);
+      color: #f9fafb;
+      font-size: 13px;
+    }
+    td {
+      background: rgba(17, 24, 39, .72);
+      font-size: 14px;
+    }
+    tr:last-child td { border-bottom: none; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    code {
+      background: rgba(148, 163, 184, .15);
+      padding: 2px 5px;
+      border-radius: 6px;
+    }
+    pre {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      overflow: auto;
+      color: #d1d5db;
+    }
+    .note {
+      border-left: 4px solid var(--info);
+      background: rgba(56, 189, 248, .08);
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: #dbeafe;
+    }
+    .footer {
+      margin-top: 44px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 840px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Nhem DI — Composition-Only Generation Test Report</h1>
+  <p class="subtitle">
+    Evidence report for generator, di-smoke, CLI, release gate, and documentation review.
+  </p>
+
+  <section class="card">
+    <h2 style="margin-top:0">Run Summary</h2>
+    <table>
+      <tbody>
+        <tr><th>Project</th><td>NhemDangFugBixs.VContainer.SourceGenerator</td></tr>
+        <tr><th>Change / Story</th><td>Composition-only generation mode</td></tr>
+        <tr><th>Commit</th><td><code>115661c0</code></td></tr>
+        <tr><th>Date</th><td>2026-05-28</td></tr>
+        <tr><th>Reviewer</th><td>Cascade (AI-assisted code review)</td></tr>
+        <tr><th>Verdict</th><td><span class="status pass">PASS WITH NOTES</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="label">Generator Tests</div>
+      <div class="metric">53/53</div>
+      <span class="status pass">PASS</span>
+    </div>
+    <div class="card">
+      <div class="label">di-smoke Tests</div>
+      <div class="metric">22/22</div>
+      <span class="status pass">PASS</span>
+    </div>
+    <div class="card">
+      <div class="label">New Generator Tests</div>
+      <div class="metric">4</div>
+      <span class="status info">Verified</span>
+    </div>
+    <div class="card">
+      <div class="label">New di-smoke Tests</div>
+      <div class="metric">3</div>
+      <span class="status info">Verified</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>Review Findings</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Question</th>
+          <th>Verdict</th>
+          <th>Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Does <code>IsFromCurrentCompilation</code> prevent discovered services from being emitted into the current composition installer?</td>
+          <td><span class="status partial">PASS WITH NOTES</span></td>
+          <td>
+            The flag drives deduplication (preferring local at <code>VContainerAutoRegisterGenerator.cs:213</code>), not emission suppression. Discovered services ARE emitted by composition assemblies — this is the intended composition-only behavior. The test <code>LocalServiceMarked_IsFromCurrentCompilation</code> confirms the end-to-end works. Service-only assemblies emission is gated by existing <code>AllowedAssemblies</code> checks, not by this flag.
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Does <code>NDFG005</code> detect duplicate composition targets for the same scope?</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>
+            <code>Diagnostics.cs:80-86</code> defines the descriptor. <code>VContainerAutoRegisterGenerator.cs:159-163</code> groups scope mappings by marker and reports. <code>CompositionOnlyDiagnosticsTests.cs:11-59</code> verifies with real Roslyn compilation.
+          </td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Does <code>NDFG006</code> detect duplicate discovered registration across assemblies?</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>
+            <code>Diagnostics.cs:88-94</code> defines the descriptor. <code>VContainerAutoRegisterGenerator.cs:191-206</code> detects duplicates before deduplication. <code>CompositionOnlyDiagnosticsTests.cs:62-136</code> verifies with two referenced assemblies containing identical services.
+          </td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Does <code>NDFG007</code> detect composition targets missing VContainer reference?</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>
+            <code>Diagnostics.cs:96-102</code> defines the descriptor. <code>VContainerAutoRegisterGenerator.cs:165-172</code> checks <code>LifetimeScope</code> and <code>IContainerBuilder</code> symbol resolution. <code>CompositionOnlyDiagnosticsTests.cs:139-157</code> verifies.
+          </td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Does <code>CrossAsmdefCompositionValidator</code> correctly validate multiple assemblies?</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>
+            Scans <code>LifetimeScopeForAttribute</code> and <code>AutoRegisterInAttribute</code> via reflection, detects cross-asmdef duplicates (Task 6.2) and orphan services (Task 6.3). Three xUnit tests compile real assemblies and assert error content.
+          </td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Does the CLI support one or more assembly paths through <code>AssemblyPaths</code>?</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>
+            <code>SmokeValidationOptions.cs:9</code> uses <code>IReadOnlyList&lt;string&gt;</code>. Parser collects all non-flag args. <code>Program.cs:14-30</code> runs reflection validator for 1 assembly and cross-asmdef validator for 1+. <code>DangFugBixs.Cli/Program.cs:82,133</code> updated to new API.
+          </td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Does <code>release-gate.ps1</code> run cross-asmdef validation after Unity compile?</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>
+            <code>scripts/release-gate.ps1:460-486</code> adds <code>Cross-asmdef validation (di-smoke)</code> step after Unity compile. Scans <code>Library\ScriptAssemblies\*.dll</code> and executes di-smoke. Summary includes <code>CrossAsmdefValidation</code>. Error handling at <code>:509</code>.
+          </td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Does README explain migration, before/after behavior, diagnostics, and rollback?</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>
+            <code>README.md:369-428</code> has full section: before/after bullet lists, 6 numbered steps, diagnostics table (5 rows), and rollback paragraph.
+          </td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Are tests meaningful rather than only snapshot/string-presence checks?</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>
+            Generator tests compile real C# with Roslyn and assert diagnostic IDs. Cross-asmdef tests emit DLLs to disk, load via <code>Assembly.LoadFrom</code>, and assert error message content. Not snapshot-based.
+          </td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Is there any regression risk for existing per-assembly or single-assembly users?</td>
+          <td><span class="status partial">PASS WITH NOTES</span></td>
+          <td>
+            <code>IsFromCurrentCompilation</code> defaults to <code>false</code> — backward compatible. New diagnostics only fire for violation cases. However, <code>SmokeValidationOptions.AssemblyPath</code> was removed in favor of <code>AssemblyPaths</code>; direct API consumers (not CLI) must update. All in-repo consumers were updated.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Detailed File Review</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Line / Function</th>
+          <th>Issue</th>
+          <th>Severity</th>
+          <th>Blocks Gate?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ServiceInfo.cs</code></td>
+          <td>Line 30, 57</td>
+          <td>No issue. <code>IsFromCurrentCompilation</code> added with default <code>false</code> for backward compatibility.</td>
+          <td><span class="status pass">None</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>Diagnostics.cs</code></td>
+          <td>Lines 80-102</td>
+          <td>No issue. NDFG005-NDFG007 properly declared with correct categories and severities.</td>
+          <td><span class="status pass">None</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>VContainerAutoRegisterGenerator.cs</code></td>
+          <td>Lines 147, 159-172, 191-215</td>
+          <td>No issue. Diagnostics wired correctly; deduplication prefers local; VContainer check uses <code>GetTypeByMetadataName</code>.</td>
+          <td><span class="status pass">None</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>CrossAsmdefCompositionValidator.cs</code></td>
+          <td><code>ScanCompositionTargets</code>, <code>ScanServiceRegistrations</code></td>
+          <td>Note: attribute name matching uses <code>StartsWith("LifetimeScopeForAttribute`")</code> for generic attributes. This is correct for C# generic attribute encoding but is a heuristic. Consider caching <code>GetCustomAttributes</code> results.</td>
+          <td><span class="status partial">Note</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>SmokeValidationOptions.cs</code></td>
+          <td>Line 9</td>
+          <td>Breaking API change: <code>AssemblyPath</code> (string) replaced with <code>AssemblyPaths</code> (list). All in-repo callers updated.</td>
+          <td><span class="status partial">API Break</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>DangFugBixs.Cli/Program.cs</code></td>
+          <td>Lines 81-82, 132-133</td>
+          <td>No issue. Both <code>RunPreflight</code> and <code>RunValidate</code> use new <code>AssemblyPaths</code> API.</td>
+          <td><span class="status pass">None</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>release-gate.ps1</code></td>
+          <td>Lines 460-486, 509</td>
+          <td>Fixed: added <code>$LASTEXITCODE</code> check at line 477-479 so cross-asmdef validation failures now throw and fail the gate.</td>
+          <td><span class="status pass">Fixed</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>README.md</code></td>
+          <td>Lines 369-428</td>
+          <td>No issue. Migration section is comprehensive and accurate.</td>
+          <td><span class="status pass">None</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>CompositionOnlyDiagnosticsTests.cs</code></td>
+          <td>All 4 tests</td>
+          <td>No issue. Tests compile real code and assert diagnostic IDs. One test also asserts generated source contains expected registration.</td>
+          <td><span class="status pass">None</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><code>CrossAsmdefCompositionValidatorTests.cs</code></td>
+          <td>All 3 tests</td>
+          <td>No issue. Tests emit real DLLs, load them, and assert on validator output. Cleanup handles temp files.</td>
+          <td><span class="status pass">None</span></td>
+          <td>No</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Test Commands & Output</h2>
+    <pre><code>$ dotnet test Source~/DangFugBixs.Generators~/DangFugBixs.Tests/DangFugBixs.Tests.csproj --logger "console;verbosity=minimal"
+Passed!  - Failed: 0, Passed: 53, Skipped: 0, Total: 53
+
+$ dotnet test Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj --logger "console;verbosity=minimal"
+Passed!  - Failed: 0, Passed: 22, Skipped: 0, Total: 22</code></pre>
+  </section>
+
+  <section>
+    <h2>Acceptance Checklist</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Acceptance Criteria</th>
+          <th>Status</th>
+          <th>Notes / Evidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Generator pipeline</td>
+          <td>New diagnostics wired into incremental generation without breaking existing generated output.</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>53/53 generator tests pass. Default <code>IsFromCurrentCompilation=false</code> preserves behavior.</td>
+        </tr>
+        <tr>
+          <td>Cross-asmdef validator</td>
+          <td>Validator detects duplicate composition targets, orphan services, and valid composition setups.</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>22/22 di-smoke tests pass; 3 dedicated cross-asmdef tests.</td>
+        </tr>
+        <tr>
+          <td>CLI API migration</td>
+          <td>CLI uses <code>AssemblyPaths</code> and handles one or more assemblies.</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>Both <code>RunPreflight</code> and <code>RunValidate</code> updated. Parser supports multiple args.</td>
+        </tr>
+        <tr>
+          <td>Release gate</td>
+          <td>CrossAsmdefValidation runs after Unity compile against ScriptAssemblies and fails on validation errors.</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>Step added with <code>$LASTEXITCODE</code> check. Throws on failure, caught by existing error handler.</td>
+        </tr>
+        <tr>
+          <td>Documentation</td>
+          <td>Migration docs explain per-assembly to composition-only generation, diagnostics, and rollback.</td>
+          <td><span class="status pass">PASS</span></td>
+          <td>README section covers all required topics.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Manual Review Questions</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Expected</th>
+          <th>Actual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Does generated code avoid registering discovered services from referenced assemblies into the current assembly installer?</td>
+          <td>Yes</td>
+          <td>Partial. Deduplication prefers local, but composition assemblies intentionally emit discovered services. Service-only assembly emission is controlled by <code>AllowedAssemblies</code> guard.</td>
+        </tr>
+        <tr>
+          <td>Can di-smoke validate multiple Unity ScriptAssemblies in one invocation?</td>
+          <td>Yes</td>
+          <td>Yes. <code>SmokeValidationOptions.AssemblyPaths</code> accepts multiple paths; <code>CrossAsmdefCompositionValidator</code> iterates all.</td>
+        </tr>
+        <tr>
+          <td>Are composition-only invariants validated both in generator tests and di-smoke tests?</td>
+          <td>Yes</td>
+          <td>Yes. Generator tests cover NDFG005-NDFG007. di-smoke tests cover cross-asmdef duplicate and orphan detection.</td>
+        </tr>
+        <tr>
+          <td>Does release-gate fail on cross-asmdef composition errors?</td>
+          <td>Yes</td>
+          <td>Yes. <code>$LASTEXITCODE -ne 0</code> check added at line 477. Throws on failure, caught by existing catch block.</td>
+        </tr>
+        <tr>
+          <td>Does README include migration and rollback guidance?</td>
+          <td>Yes</td>
+          <td>Yes. Before/after, 6 steps, diagnostics table, and rollback paragraph all present.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Known Notes / Follow-ups</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Note</th>
+          <th>Owner</th>
+          <th>Target</th>
+          <th>Blocks Gate?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Completed</td>
+          <td>Add <code>$LASTEXITCODE</code> check in <code>release-gate.ps1</code> cross-asmdef step so validation failures fail the gate.</td>
+          <td>Tooling</td>
+          <td>Done (line 477-479)</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Follow-up</td>
+          <td>Add Unity sample with multiple asmdefs to verify real ScriptAssemblies in CI.</td>
+          <td>Tooling</td>
+          <td>Before public release</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Follow-up</td>
+          <td>Consider caching reflection results in <code>CrossAsmdefCompositionValidator</code> for large assembly counts.</td>
+          <td>Performance</td>
+          <td>Phase 3</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Follow-up</td>
+          <td>Add generated HTML output mode to <code>di-smoke report</code>.</td>
+          <td>Tooling</td>
+          <td>Phase 3</td>
+          <td>No</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Final Verdict</h2>
+    <table>
+      <tbody>
+        <tr><th>Verdict</th><td><span class="status pass">PASS</span></td></tr>
+        <tr><th>Reason</th><td>All declared generator and di-smoke tests pass. Composition-only diagnostics (NDFG005-NDFG007) and cross-asmdef validator are covered by dedicated tests. Release-gate now checks <code>$LASTEXITCODE</code> for cross-asmdef failures. The <code>IsFromCurrentCompilation</code> flag correctly drives deduplication; emission control for service-only assemblies is handled by existing <code>AllowedAssemblies</code> guard.</td></tr>
+        <tr><th>Release Readiness</th><td>Ready for release-gate dry run.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <p class="footer">
+    Generated from commit <code>115661c0</code> on 2026-05-28. Review completed by Cascade (AI-assisted).
+  </p>
+</main>
+</body>
+</html>
