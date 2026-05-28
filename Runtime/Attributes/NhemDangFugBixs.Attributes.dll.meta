@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: c8c3aa7e603708544ab5a04e22bd334c
+labels: []
+PluginImporter:
+  serializedVersion: 2
+  iconMap: {}
+  executionOrder: {}
+  defineConstraints: []
+  isPreloaded: 0
+  isAutoReferenced: 1
+  validateReferences: 1
+  platformData:
+  - first:
+      Any: 
+    second:
+      enabled: 1
+  - first:
+      Editor: 
+    second:
+      enabled: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
