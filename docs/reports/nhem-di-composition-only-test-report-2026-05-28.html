@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en" class="bg-slate-950">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nhem DI Composition-Only Generation — Test Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-black text-slate-100 antialiased">
+  <main class="mx-auto max-w-6xl px-5 py-10 lg:py-14">
+    <header class="mb-8">
+      <div class="mb-3 inline-flex rounded-full border border-sky-400/30 bg-sky-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sky-300">
+        Nhem DI Evidence Report
+      </div>
+      <h1 class="text-3xl font-black tracking-tight text-white md:text-4xl">
+        Composition-Only Generation Test Report
+      </h1>
+      <p class="mt-3 max-w-3xl text-slate-400">
+        Evidence report for validating generator, di-smoke, CLI, release gate, and documentation changes after commits
+        <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">115661c0</code> &rarr;
+        <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">dcfd7049</code> &rarr;
+        <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">652c5630</code> &rarr;
+        <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ccfb30fa</code>.
+      </p>
+    </header>
+
+    <section class="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-2xl shadow-black/20">
+      <h2 class="mb-4 text-xl font-bold text-white">Run Summary</h2>
+      <div class="overflow-hidden rounded-xl border border-slate-700">
+        <table class="w-full text-left text-sm">
+          <tbody class="divide-y divide-slate-700">
+            <tr class="bg-slate-900/80">
+              <th class="w-56 bg-slate-800 px-4 py-3 font-semibold text-slate-200">Project</th>
+              <td class="px-4 py-3 text-slate-300">NhemDangFugBixs.VContainer.SourceGenerator</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <th class="bg-slate-800 px-4 py-3 font-semibold text-slate-200">Change / Story</th>
+              <td class="px-4 py-3 text-slate-300">Composition-only generation mode (Tasks 2.1, 4.3-4.6, 5.1, 6.1-6.3, 8.3, 9.12)</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <th class="bg-slate-800 px-4 py-3 font-semibold text-slate-200">Commits</th>
+              <td class="px-4 py-3">
+                <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">115661c0</code> implementation<br/>
+                <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">dcfd7049</code> fix release-gate $LASTEXITCODE<br/>
+                <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">652c5630</code> Tailwind report<br/>
+                <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ccfb30fa</code> test coverage A1, A2, C4
+              </td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <th class="bg-slate-800 px-4 py-3 font-semibold text-slate-200">Date</th>
+              <td class="px-4 py-3 text-slate-300">2026-05-28</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <th class="bg-slate-800 px-4 py-3 font-semibold text-slate-200">Reviewer</th>
+              <td class="px-4 py-3 text-slate-300">Cascade (AI-assisted code review)</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <th class="bg-slate-800 px-4 py-3 font-semibold text-slate-200">Verdict</th>
+              <td class="px-4 py-3">
+                <span class="inline-flex rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-emerald-300">PASS</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-lg">
+        <div class="text-sm text-slate-400">Generator Tests</div>
+        <div class="mt-2 text-3xl font-black text-white">55/55</div>
+        <div class="mt-3 inline-flex rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-emerald-300">PASS</div>
+      </div>
+      <div class="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-lg">
+        <div class="text-sm text-slate-400">di-smoke Tests</div>
+        <div class="mt-2 text-3xl font-black text-white">23/23</div>
+        <div class="mt-3 inline-flex rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-emerald-300">PASS</div>
+      </div>
+      <div class="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-lg">
+        <div class="text-sm text-slate-400">New Generator Tests</div>
+        <div class="mt-2 text-3xl font-black text-white">6</div>
+        <div class="mt-3 inline-flex rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-emerald-300">PASS</div>
+      </div>
+      <div class="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-lg">
+        <div class="text-sm text-slate-400">New di-smoke Tests</div>
+        <div class="mt-2 text-3xl font-black text-white">4</div>
+        <div class="mt-3 inline-flex rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-emerald-300">PASS</div>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="border-b border-slate-700 pb-2 text-2xl font-bold text-white">Scope Guardrails</h2>
+      <div class="mt-4 overflow-hidden rounded-2xl border border-slate-700">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-800 text-slate-100">
+            <tr>
+              <th class="px-4 py-3">Guardrail</th>
+              <th class="px-4 py-3">Expected</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Evidence</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 font-medium text-white">Composition-only generation</td>
+              <td class="px-4 py-3 text-slate-300">Only composition/current-compilation targets emit generated installers.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ServiceInfo.IsFromCurrentCompilation</code> drives deduplication; <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">AllowedAssemblies</code> gate controls emission.</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 font-medium text-white">Discovered services are not emitted locally</td>
+              <td class="px-4 py-3 text-slate-300">Referenced assembly services are discovered for validation/reporting but not duplicated locally.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300">Generator deduplicates before emission (preferring local). Cross-asmdef validator tests confirm no duplication. Service-only assemblies emit nothing via <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">!scopeMappings.Any()</code> guard.</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 font-medium text-white">No duplicate composition target</td>
+              <td class="px-4 py-3 text-slate-300">Same scope must not have multiple composition targets.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">NDFG005</code> diagnostic (compile-time) + cross-asmdef validator (post-build).</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 font-medium text-white">No duplicate discovered registration</td>
+              <td class="px-4 py-3 text-slate-300">Duplicate discovered registrations across assemblies are detected.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">NDFG006</code> diagnostic coverage before deduplication.</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 font-medium text-white">Composition target requires VContainer</td>
+              <td class="px-4 py-3 text-slate-300">Composition target must reference VContainer to emit/register correctly.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">NDFG007</code> diagnostic checks <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">LifetimeScope</code> and <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">IContainerBuilder</code> symbol resolution.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="border-b border-slate-700 pb-2 text-2xl font-bold text-white">Diagnostic Verification</h2>
+      <div class="mt-4 overflow-hidden rounded-2xl border border-slate-700">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-800 text-slate-100">
+            <tr>
+              <th class="px-4 py-3">Code</th>
+              <th class="px-4 py-3">Severity</th>
+              <th class="px-4 py-3">Trigger</th>
+              <th class="px-4 py-3">Expected Result</th>
+              <th class="px-4 py-3">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">NDFG005</code></td>
+              <td class="px-4 py-3 text-red-300">Error</td>
+              <td class="px-4 py-3 text-slate-300">Duplicate composition target for same scope</td>
+              <td class="px-4 py-3 text-slate-300">Compilation diagnostic emitted; release gate should fail.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">NDFG006</code></td>
+              <td class="px-4 py-3 text-amber-300">Warning</td>
+              <td class="px-4 py-3 text-slate-300">Duplicate discovered registration across assemblies</td>
+              <td class="px-4 py-3 text-slate-300">Warning emitted; report/preflight flags risk.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">NDFG007</code></td>
+              <td class="px-4 py-3 text-red-300">Error</td>
+              <td class="px-4 py-3 text-slate-300">Composition target missing VContainer reference</td>
+              <td class="px-4 py-3 text-slate-300">Compilation diagnostic emitted; release gate should fail.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="border-b border-slate-700 pb-2 text-2xl font-bold text-white">Test Commands & Output</h2>
+      <pre class="mt-4 overflow-x-auto rounded-2xl border border-slate-700 bg-black p-4 text-sm text-slate-300"><code>$ dotnet test Source~/DangFugBixs.Generators~/DangFugBixs.Tests/DangFugBixs.Tests.csproj --logger "console;verbosity=minimal"
+Passed!  - Failed: 0, Passed: 55, Skipped: 0, Total: 55, Duration: 2 s
+
+$ dotnet test Source~/DangFugBixs.Tools~/DangFugBixs.DiSmokeValidation.Tests/DangFugBixs.DiSmokeValidation.Tests.csproj --logger "console;verbosity=minimal"
+Passed!  - Failed: 0, Passed: 23, Skipped: 0, Total: 23, Duration: 331 ms</code></pre>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="border-b border-slate-700 pb-2 text-2xl font-bold text-white">Code Changes</h2>
+      <div class="mt-4 overflow-hidden rounded-2xl border border-slate-700">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-800 text-slate-100">
+            <tr>
+              <th class="px-4 py-3">Commit</th>
+              <th class="px-4 py-3">Files</th>
+              <th class="px-4 py-3">Description</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">115661c0</code></td>
+              <td class="px-4 py-3 text-slate-300">14 files, +786 -30</td>
+              <td class="px-4 py-3 text-slate-300">Implementation: IsFromCurrentCompilation, NDFG005-NDFG007, CrossAsmdefCompositionValidator, SmokeValidationOptions.AssemblyPaths, migration docs, release-gate cross-asmdef step.</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">dcfd7049</code></td>
+              <td class="px-4 py-3 text-slate-300">2 files, +538</td>
+              <td class="px-4 py-3 text-slate-300">Fix: Add $LASTEXITCODE check in release-gate.ps1 cross-asmdef step. HTML evidence report.</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">652c5630</code></td>
+              <td class="px-4 py-3 text-slate-300">1 file, +411 -512</td>
+              <td class="px-4 py-3 text-slate-300">Replace HTML report with Tailwind CSS styled version. Fill all placeholders with actual review data.</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ccfb30fa</code></td>
+              <td class="px-4 py-3 text-slate-300">3 files, +102</td>
+              <td class="px-4 py-3 text-slate-300">Test coverage: ServiceOnlyAssembly_DoesNotEmit, CompositionAssembly_EmitsDiscoveredServices, SmokeValidationOptions multiple paths. InternalsVisibleTo for Common.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="border-b border-slate-700 pb-2 text-2xl font-bold text-white">File-by-File Review</h2>
+      <div class="mt-4 overflow-hidden rounded-2xl border border-slate-700">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-800 text-slate-100">
+            <tr>
+              <th class="px-4 py-3">File</th>
+              <th class="px-4 py-3">Line / Function</th>
+              <th class="px-4 py-3">Finding</th>
+              <th class="px-4 py-3">Severity</th>
+              <th class="px-4 py-3">Blocks Gate?</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ServiceInfo.cs</code></td>
+              <td class="px-4 py-3 text-slate-300">Line 30, 57</td>
+              <td class="px-4 py-3 text-slate-300">No issue. <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">IsFromCurrentCompilation</code> added with default <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">false</code> for backward compatibility.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">None</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">Diagnostics.cs</code></td>
+              <td class="px-4 py-3 text-slate-300">Lines 80-102</td>
+              <td class="px-4 py-3 text-slate-300">NDFG005-NDFG007 properly declared with correct categories and severities.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">None</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">VContainerAutoRegisterGenerator.cs</code></td>
+              <td class="px-4 py-3 text-slate-300">Lines 147, 151-153, 159-172, 191-215</td>
+              <td class="px-4 py-3 text-slate-300">Diagnostics wired correctly; deduplication prefers local; VContainer check uses <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">GetTypeByMetadataName</code>; early return for service-only assemblies at line 151-153.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">None</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">CrossAsmdefCompositionValidator.cs</code></td>
+              <td class="px-4 py-3 text-slate-200"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ScanCompositionTargets</code>, <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ScanServiceRegistrations</code></td>
+              <td class="px-4 py-3 text-slate-300">Generic attribute name matching uses <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">StartsWith("...`")</code> heuristic. Correct for C# generic attribute encoding. Consider caching reflection results for large counts.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">Note</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">SmokeValidationOptions.cs</code></td>
+              <td class="px-4 py-3 text-slate-300">Line 9</td>
+              <td class="px-4 py-3 text-slate-300">Breaking API change: <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">AssemblyPath</code> replaced with <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">AssemblyPaths</code>. All in-repo callers updated.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">API Break</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">DangFugBixs.Cli/Program.cs</code></td>
+              <td class="px-4 py-3 text-slate-300">Lines 81-82, 132-133</td>
+              <td class="px-4 py-3 text-slate-300">Both <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">RunPreflight</code> and <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">RunValidate</code> use new <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">AssemblyPaths</code> API.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">None</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">release-gate.ps1</code></td>
+              <td class="px-4 py-3 text-slate-300">Lines 460-486, 509</td>
+              <td class="px-4 py-3 text-slate-300">Fixed: added <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">$LASTEXITCODE</code> check at line 477-479 so cross-asmdef validation failures now throw and fail the gate.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">Fixed</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">README.md</code></td>
+              <td class="px-4 py-3 text-slate-300">Lines 369-428</td>
+              <td class="px-4 py-3 text-slate-300">Migration section is comprehensive and accurate.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">None</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">CompositionOnlyDiagnosticsTests.cs</code></td>
+              <td class="px-4 py-3 text-slate-300">6 tests (was 4)</td>
+              <td class="px-4 py-3 text-slate-300">Added <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ServiceOnlyAssembly_DoesNotEmit</code> and <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">CompositionAssembly_EmitsDiscoveredServices</code>. Tests compile real code and assert diagnostic IDs / generated source content.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">None</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">CrossAsmdefCompositionValidatorTests.cs</code></td>
+              <td class="px-4 py-3 text-slate-300">3 tests</td>
+              <td class="px-4 py-3 text-slate-300">Tests emit real DLLs, load them, and assert on validator output. Cleanup handles temp files.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">None</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">SmokeValidationOptionsTests.cs</code></td>
+              <td class="px-4 py-3 text-slate-300">4 tests (was 3)</td>
+              <td class="px-4 py-3 text-slate-300">Added <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">Parse_MultipleAssemblyPaths_UsesAllPaths</code> verifying CLI options parser handles multiple assembly paths.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">None</span></td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="border-b border-slate-700 pb-2 text-2xl font-bold text-white">Acceptance Checklist</h2>
+      <div class="mt-4 overflow-hidden rounded-2xl border border-slate-700">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-800 text-slate-100">
+            <tr>
+              <th class="px-4 py-3">Item</th>
+              <th class="px-4 py-3">Acceptance Criteria</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Notes / Evidence</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 font-medium text-white">Generator pipeline</td>
+              <td class="px-4 py-3 text-slate-300">New diagnostics wired without breaking existing generated output.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300">55/55 generator tests pass. Default <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">IsFromCurrentCompilation=false</code> preserves behavior.</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 font-medium text-white">Cross-asmdef validator</td>
+              <td class="px-4 py-3 text-slate-300">Detects duplicate composition targets, orphan services, and valid composition setups.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300">23/23 di-smoke tests pass; 3 dedicated cross-asmdef tests.</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 font-medium text-white">CLI API migration</td>
+              <td class="px-4 py-3 text-slate-300">CLI uses <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">AssemblyPaths</code> and handles one or more assemblies.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300">Both <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">RunPreflight</code> and <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">RunValidate</code> updated. Parser supports multiple args. New test verifies multiple paths.</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 font-medium text-white">Release gate</td>
+              <td class="px-4 py-3 text-slate-300">CrossAsmdefValidation runs after Unity compile against ScriptAssemblies and fails on validation errors.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300">Step added with <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">$LASTEXITCODE</code> check. Throws on failure, caught by existing error handler.</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 font-medium text-white">Documentation</td>
+              <td class="px-4 py-3 text-slate-300">Migration docs explain per-assembly to composition-only generation, diagnostics, and rollback.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300">README migration section covers all required topics.</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 font-medium text-white">Test coverage</td>
+              <td class="px-4 py-3 text-slate-300">Service-only emission suppression and composition assembly discovered-service emission are tested.</td>
+              <td class="px-4 py-3"><span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">PASS</span></td>
+              <td class="px-4 py-3 text-slate-300"><code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ServiceOnlyAssembly_DoesNotEmit</code> and <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">CompositionAssembly_EmitsDiscoveredServices</code> both pass.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="border-b border-slate-700 pb-2 text-2xl font-bold text-white">Manual Review Questions</h2>
+      <div class="mt-4 rounded-2xl border border-sky-400/30 bg-sky-400/10 p-4 text-sky-100">
+        Any "No" should become a follow-up task before public release. All questions answered Yes.
+      </div>
+      <div class="mt-4 overflow-hidden rounded-2xl border border-slate-700">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-800 text-slate-100">
+            <tr>
+              <th class="px-4 py-3">Question</th>
+              <th class="px-4 py-3">Expected</th>
+              <th class="px-4 py-3">Actual</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 text-slate-300">Does generated code avoid registering discovered services from referenced assemblies into the current assembly installer?</td>
+              <td class="px-4 py-3 text-emerald-300">Yes</td>
+              <td class="px-4 py-3 text-emerald-300">Yes. Deduplication prefers local; composition assemblies intentionally emit discovered services. Service-only assembly emission is controlled by <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">AllowedAssemblies</code> guard and early return at <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">!scopeMappings.Any()</code>.</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 text-slate-300">Can di-smoke validate multiple Unity ScriptAssemblies in one invocation?</td>
+              <td class="px-4 py-3 text-emerald-300">Yes</td>
+              <td class="px-4 py-3 text-emerald-300">Yes. <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">SmokeValidationOptions.AssemblyPaths</code> accepts multiple paths; <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">CrossAsmdefCompositionValidator</code> iterates all.</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 text-slate-300">Are composition-only invariants validated in both generator tests and di-smoke tests?</td>
+              <td class="px-4 py-3 text-emerald-300">Yes</td>
+              <td class="px-4 py-3 text-emerald-300">Yes. Generator tests cover NDFG005-NDFG007 + emission behavior. di-smoke tests cover cross-asmdef duplicate and orphan detection.</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 text-slate-300">Does release-gate fail on cross-asmdef composition errors?</td>
+              <td class="px-4 py-3 text-emerald-300">Yes</td>
+              <td class="px-4 py-3 text-emerald-300">Yes. <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">$LASTEXITCODE -ne 0</code> check added at line 477. Throws on failure, caught by existing catch block.</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 text-slate-300">Does README include migration and rollback guidance?</td>
+              <td class="px-4 py-3 text-emerald-300">Yes</td>
+              <td class="px-4 py-3 text-emerald-300">Yes. Before/after, 6 steps, diagnostics table, and rollback paragraph all present.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="border-b border-slate-700 pb-2 text-2xl font-bold text-white">Known Notes / Follow-ups</h2>
+      <div class="mt-4 overflow-hidden rounded-2xl border border-slate-700">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-800 text-slate-100">
+            <tr>
+              <th class="px-4 py-3">Type</th>
+              <th class="px-4 py-3">Note</th>
+              <th class="px-4 py-3">Owner</th>
+              <th class="px-4 py-3">Target</th>
+              <th class="px-4 py-3">Blocks Gate?</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 text-emerald-300">Completed</td>
+              <td class="px-4 py-3 text-slate-300">Add <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">$LASTEXITCODE</code> check in <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">release-gate.ps1</code> cross-asmdef step so validation failures fail the gate.</td>
+              <td class="px-4 py-3 text-slate-300">Tooling</td>
+              <td class="px-4 py-3 text-slate-300">Done (line 477-479)</td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 text-slate-300">Follow-up</td>
+              <td class="px-4 py-3 text-slate-300">Add Unity sample with multiple asmdefs to verify real ScriptAssemblies in CI.</td>
+              <td class="px-4 py-3 text-slate-300">Tooling</td>
+              <td class="px-4 py-3 text-slate-300">Before public release</td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/80">
+              <td class="px-4 py-3 text-slate-300">Follow-up</td>
+              <td class="px-4 py-3 text-slate-300">Consider caching reflection results in <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">CrossAsmdefCompositionValidator</code> for large assembly counts.</td>
+              <td class="px-4 py-3 text-slate-300">Performance</td>
+              <td class="px-4 py-3 text-slate-300">Phase 3</td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+            <tr class="bg-slate-900/60">
+              <td class="px-4 py-3 text-slate-300">Follow-up</td>
+              <td class="px-4 py-3 text-slate-300">Add generated HTML output mode to <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">di-smoke report</code>.</td>
+              <td class="px-4 py-3 text-slate-300">Tooling</td>
+              <td class="px-4 py-3 text-slate-300">Phase 3</td>
+              <td class="px-4 py-3 text-slate-300">No</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-8 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-5">
+      <h2 class="text-2xl font-bold text-white">Final Verdict</h2>
+      <div class="mt-4 grid gap-4 md:grid-cols-3">
+        <div>
+          <div class="text-sm text-emerald-200">Verdict</div>
+          <div class="mt-1 inline-flex rounded-full bg-emerald-400/10 px-3 py-1 text-sm font-bold uppercase tracking-wide text-emerald-300">PASS</div>
+        </div>
+        <div class="md:col-span-2">
+          <div class="text-sm text-emerald-200">Reason</div>
+          <p class="mt-1 text-slate-200">
+            All declared generator and di-smoke tests pass (55/55 + 23/23). Composition-only diagnostics (NDFG005-NDFG007) and cross-asmdef validator are covered by dedicated tests. Release-gate now checks <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">$LASTEXITCODE</code> for cross-asmdef failures. Service-only assembly emission suppression and composition assembly discovered-service emission are both tested. The <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">IsFromCurrentCompilation</code> flag correctly drives deduplication; emission control for service-only assemblies is handled by existing <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">AllowedAssemblies</code> guard.
+          </p>
+        </div>
+      </div>
+      <p class="mt-4 text-sm text-emerald-100">
+        Release readiness: Ready for release-gate dry run.
+      </p>
+    </section>
+
+    <footer class="mt-10 text-sm text-slate-500">
+      Generated from commits <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">115661c0</code> &rarr; <code class="rounded bg-slate-800 px-1.5 py-0.5 text-sky-200">ccfb30fa</code> on 2026-05-28. Review completed by Cascade (AI-assisted).
+    </footer>
+  </main>
+</body>
+</html>
