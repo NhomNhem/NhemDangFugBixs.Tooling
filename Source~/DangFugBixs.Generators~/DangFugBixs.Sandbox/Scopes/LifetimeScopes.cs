@@ -42,7 +42,6 @@ public class GameplayLifetimeScope : LifetimeScope {
 /// UI-specific lifetime scope with custom name override.
 /// </summary>
 [ScopeName("UI")]
-[NhemDangFugBixs.Attributes.LifetimeScopeFor(typeof(CrossLayerIdentity))] // Just for testing multiple mappings
 public class UserInterfaceLifetimeScope : LifetimeScope {
     protected override void Configure(IContainerBuilder builder) {
         NhemDangFugBixs.Generated.DangFugBixs_Sandbox.VContainerRegistration.RegisterUI(builder);
