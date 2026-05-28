@@ -44,6 +44,6 @@ public class GameplayLifetimeScope : LifetimeScope {
 [ScopeName("UI")]
 public class UserInterfaceLifetimeScope : LifetimeScope {
     protected override void Configure(IContainerBuilder builder) {
-        NhemDangFugBixs.Generated.DangFugBixs_Sandbox.VContainerRegistration.RegisterUI(builder);
+        // UI scope configuration
     }
 }
