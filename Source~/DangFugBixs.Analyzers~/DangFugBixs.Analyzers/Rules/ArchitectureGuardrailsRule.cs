@@ -86,7 +86,6 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         context.EnableConcurrentExecution();
         context.RegisterCompilationStartAction(static startContext => {
             var autoRegistered = new List<INamedTypeSymbol>();
-            var scopeMappings = new Dictionary<string, List<INamedTypeSymbol>>();
             var gate = new object();
 
             startContext.RegisterSymbolAction(symbolContext => {
@@ -95,22 +94,9 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
 
                 var attrs = type.GetAttributes();
                 foreach (var attr in attrs) {
-                    var name = attr.AttributeClass?.Name ?? "";
-                    if (name == "AutoRegisterInAttribute") {
+                    if (attr.AttributeClass?.Name == "AutoRegisterInAttribute") {
                         lock (gate) {
                             autoRegistered.Add(type);
-                        }
-                    }
-
-                    if (name == "LifetimeScopeForAttribute") {
-                        var id = TryGetIdentityName(attr);
-                        if (string.IsNullOrWhiteSpace(id)) continue;
-                        lock (gate) {
-                            if (!scopeMappings.TryGetValue(id!, out var list)) {
-                                list = new List<INamedTypeSymbol>();
-                                scopeMappings[id!] = list;
-                            }
-                            list.Add(type);
                         }
                     }
                 }
@@ -120,10 +106,53 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
             }, SymbolKind.NamedType);
 
             startContext.RegisterCompilationEndAction(endContext => {
+                var scopeMappings = CollectScopeMappings(endContext.Compilation);
                 AnalyzeScopeMapping(endContext, autoRegistered, scopeMappings);
                 AnalyzeLifetimeArchitecture(endContext, autoRegistered);
             });
         });
+    }
+
+    private static Dictionary<string, List<INamedTypeSymbol>> CollectScopeMappings(Compilation compilation) {
+        var result = new Dictionary<string, List<INamedTypeSymbol>>();
+        foreach (var type in GetAllNamedTypes(compilation.GlobalNamespace)) {
+            if (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Interface) continue;
+            foreach (var attr in type.GetAttributes()) {
+                if (attr.AttributeClass?.Name == "LifetimeScopeForAttribute") {
+                    var id = TryGetIdentityName(attr);
+                    if (string.IsNullOrWhiteSpace(id)) continue;
+                    if (!result.TryGetValue(id!, out var list)) {
+                        list = new List<INamedTypeSymbol>();
+                        result[id!] = list;
+                    }
+                    list.Add(type);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static IEnumerable<INamedTypeSymbol> GetAllNamedTypes(INamespaceSymbol namespaceSymbol) {
+        foreach (var type in namespaceSymbol.GetTypeMembers()) {
+            yield return type;
+            foreach (var nested in GetNestedTypes(type)) {
+                yield return nested;
+            }
+        }
+        foreach (var nestedNs in namespaceSymbol.GetNamespaceMembers()) {
+            foreach (var type in GetAllNamedTypes(nestedNs)) {
+                yield return type;
+            }
+        }
+    }
+
+    private static IEnumerable<INamedTypeSymbol> GetNestedTypes(INamedTypeSymbol type) {
+        foreach (var nested in type.GetTypeMembers()) {
+            yield return nested;
+            foreach (var deeper in GetNestedTypes(nested)) {
+                yield return deeper;
+            }
+        }
     }
 
     private static void AnalyzeScopeMapping(CompilationAnalysisContext context, List<INamedTypeSymbol> services, Dictionary<string, List<INamedTypeSymbol>> mappings) {
