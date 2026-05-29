@@ -44,6 +44,37 @@ namespace NhemDangFugBixs.Attributes {
     }
 
     [Fact]
+    public async Task PrivateInjectMethod_ReportsNDF022() {
+        var test = """
+using VContainer;
+
+public class MyService {
+    [Inject] private void {|#0:Construct|}(IService service) { }
+}
+public interface IService { }
+
+namespace VContainer { public class InjectAttribute : System.Attribute {} }
+""";
+        var expected = Verifier.Diagnostic("NDF022").WithLocation(0).WithArguments("Construct");
+        await Verifier.VerifyAnalyzerAsync(test, expected);
+    }
+
+    [Fact]
+    public async Task PublicInjectMethod_DoesNotWarn() {
+        var test = """
+using VContainer;
+
+public class MyService {
+    [Inject] public void Construct(IService service) { }
+}
+public interface IService { }
+
+namespace VContainer { public class InjectAttribute : System.Attribute {} }
+""";
+        await Verifier.VerifyAnalyzerAsync(test);
+    }
+
+    [Fact]
     public async Task InjectionAndSubjectRules_ReportDiagnostics() {
         var test = """
 using VContainer;
@@ -73,7 +104,6 @@ namespace NhemDangFugBixs.Attributes {
             test,
             Verifier.Diagnostic("NDF020").WithLocation(4).WithArguments("PlayerView"),
             Verifier.Diagnostic("NDF021").WithLocation(1).WithArguments("value"),
-            Verifier.Diagnostic("NDF022").WithLocation(2).WithArguments("Constructs"),
             Verifier.Diagnostic("NDF023").WithLocation(2).WithArguments("Constructs"),
             Verifier.Diagnostic("NDF024").WithLocation(2).WithArguments("Constructs"),
             Verifier.Diagnostic("NDF070").WithLocation(3).WithArguments("OnValue"),

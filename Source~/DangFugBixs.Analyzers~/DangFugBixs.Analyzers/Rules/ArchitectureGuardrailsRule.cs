@@ -29,9 +29,9 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         "Injection", DiagnosticSeverity.Error, true);
 
     public static readonly DiagnosticDescriptor NDF022 = new(
-        "NDF022", "Public [Inject] method",
-        "Method '{0}' uses [Inject] and should be non-public.",
-        "Injection", DiagnosticSeverity.Warning, true);
+        "NDF022", "Private [Inject] method",
+        "Private [Inject] method '{0}' is not compatible with VContainer Source Generator. Use public.",
+        "Injection", DiagnosticSeverity.Error, true);
 
     public static readonly DiagnosticDescriptor NDF023 = new(
         "NDF023", "Async [Inject] method",
@@ -208,7 +208,7 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
                 context.ReportDiagnostic(Diagnostic.Create(NDF021, field.Locations.FirstOrDefault(), field.Name));
             }
             if (member is IMethodSymbol method && method.MethodKind == MethodKind.Ordinary && HasInject(method.GetAttributes())) {
-                if (method.DeclaredAccessibility == Accessibility.Public) {
+                if (method.DeclaredAccessibility == Accessibility.Private) {
                     context.ReportDiagnostic(Diagnostic.Create(NDF022, method.Locations.FirstOrDefault(), method.Name));
                 }
                 if (method.IsAsync || method.ReturnType.Name == "Task" || method.ReturnType.Name == "ValueTask") {
