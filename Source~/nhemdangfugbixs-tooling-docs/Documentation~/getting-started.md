@@ -83,6 +83,7 @@ In your composition assemblies, map the scope markers to actual LifetimeScope im
 ```csharp
 // SolarPhobia.Composition.Scopes.GameplayLifetimeScope.cs
 using NhemDangFugBixs.Tooling.Attributes;
+using NhemDangFugBixs.VContainer;
 using VContainer;
 
 namespace SolarPhobia.Composition.Scopes;

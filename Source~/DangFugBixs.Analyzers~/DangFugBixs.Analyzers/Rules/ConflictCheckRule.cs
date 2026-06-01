@@ -42,6 +42,7 @@ public class ConflictCheckRule : DiagnosticAnalyzer {
             ?? symbolInfo.CandidateSymbols.OfType<IMethodSymbol>().FirstOrDefault();
 
         if (methodSymbol == null || !IsVContainerRegistrationMethod(methodSymbol)) return;
+        if (IsGeneratedRegistrationPath(methodSymbol, invocation)) return;
 
         // Extract the generic type T from Register<T>
         var genericName = memberAccess.Name as GenericNameSyntax;
@@ -83,6 +84,19 @@ public class ConflictCheckRule : DiagnosticAnalyzer {
         var containingNamespace = containingType.ContainingNamespace?.ToDisplayString();
         return containingNamespace == "VContainer" ||
                containingNamespace?.StartsWith("VContainer.") == true;
+    }
+
+    private static bool IsGeneratedRegistrationPath(IMethodSymbol methodSymbol, InvocationExpressionSyntax invocation) {
+        var containingType = methodSymbol.ContainingType;
+        if (containingType?.Name.StartsWith("NhemGenerated", System.StringComparison.Ordinal) == true &&
+            containingType.Name.EndsWith("Installer", System.StringComparison.Ordinal)) {
+            return true;
+        }
+
+        var containingClass = invocation.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+        var className = containingClass?.Identifier.Text;
+        return className?.StartsWith("NhemGenerated", System.StringComparison.Ordinal) == true &&
+               className.EndsWith("Installer", System.StringComparison.Ordinal);
     }
 
     private static bool HasAutoRegisterAttribute(ITypeSymbol typeSymbol) {

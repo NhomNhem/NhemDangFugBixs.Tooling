@@ -29,8 +29,17 @@ Generated code should resemble handwritten VContainer registration.
 3. Validate and deduplicate.
 4. Emit stable installer code and optional report metadata.
 
+In 8.0, every `[LifetimeScopeFor<TScope>]` mapping emits a generated route. If no services are discovered for the marker, the generated installer is a no-op so `builder.RegisterGeneratedFor<TScope>()` stays available and deterministic.
+
+Composition files that call generated routes need the extension namespace:
+
+```csharp
+using NhemDangFugBixs.VContainer;
+```
+
 ## Debugging Tips
 
 - Confirm marker mapping exists via `[LifetimeScopeFor]`.
 - Confirm service assembly references runtime attributes assembly.
+- Confirm the composition assembly references the service assemblies it should compose.
 - Check diagnostics in [Reference: Diagnostics](/NhemDangFugBixs.Tooling/docs/reference/diagnostics/).

@@ -29,10 +29,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Remove="StatSystemTests.cs"
+                 Condition="!Exists('..\DangFugBixs.Sandbox\Generated\NhemDangFugBixs.Generators\NhemDangFugBixs.Generators.StatGenerator\HeroStats_Stats.g.cs')" />
         <Compile Include="..\DangFugBixs.Sandbox\HeroStats.cs" Link="Sandbox\HeroStats.cs" />
         <Compile Include="..\DangFugBixs.Sandbox\Mocks.cs" Link="Sandbox\Mocks.cs" />
         <Compile Include="..\DangFugBixs.Sandbox\Generated\NhemDangFugBixs.Generators\NhemDangFugBixs.Generators.StatGenerator\HeroStats_Stats.g.cs"
-                 Link="Sandbox\Generated\HeroStats_Stats.g.cs" />
+                 Link="Sandbox\Generated\HeroStats_Stats.g.cs"
+                 Condition="Exists('..\DangFugBixs.Sandbox\Generated\NhemDangFugBixs.Generators\NhemDangFugBixs.Generators.StatGenerator\HeroStats_Stats.g.cs')" />
     </ItemGroup>
 
 </Project>

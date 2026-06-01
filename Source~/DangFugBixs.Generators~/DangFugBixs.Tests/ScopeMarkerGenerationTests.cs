@@ -29,5 +29,33 @@ public sealed class GameplayLifetimeScope : LifetimeScope {
         Assert.That(generated, Does.Contain("AsImplementedInterfaces()"));
         Assert.That(generated, Does.Contain("NhemGeneratedGameplayScopeInstaller"));
         Assert.That(generated, Does.Contain("RegisterGeneratedFor<TScope>"));
+        Assert.That(generated, Does.Contain("RegisterGeneratedForIGameplayScope"));
+        Assert.That(generated, Does.Contain("RegisterGameplay"));
+    }
+
+    [Test]
+    public void LifetimeScopeFor_WithNoServices_GeneratesNoOpRegistrationRoute() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+using VContainer;
+using VContainer.Unity;
+
+public interface IProjectScope { }
+
+[LifetimeScopeFor(typeof(IProjectScope))]
+public sealed class ProjectRootLifetimeScope : LifetimeScope {
+    protected override void Configure(IContainerBuilder builder) { }
+}
+""";
+
+        var (_, generated) = GeneratorTestHost.Run(source);
+
+        Assert.That(generated, Does.Contain("NhemGeneratedProjectScopeInstaller"));
+        Assert.That(generated, Does.Contain("if (marker == typeof(global::IProjectScope))"));
+        Assert.That(generated, Does.Contain("RegisterGeneratedForIProjectScope"));
+        Assert.That(generated, Does.Contain("RegisterProjectRoot"));
+        Assert.That(generated, Does.Contain("GeneratedInstallers"));
+        Assert.That(generated, Does.Contain("IProjectScope|NhemGeneratedProjectScopeInstaller|True"));
+        Assert.That(generated, Does.Contain("## Mapped Scopes"));
     }
 }

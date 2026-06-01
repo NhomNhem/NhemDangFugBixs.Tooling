@@ -8,6 +8,7 @@ internal static class DiagnosticIds {
     public const string MissingGeneratedCall = "NHEM_DI_011";
     public const string WrongGeneratedCall = "NHEM_DI_012";
     public const string DuplicateGeneratedInvocation = "NHEM_DI_022";
+    public const string CrossScopeDependency = "ND006";
     public const string InvalidEntryPoint = "NHEM_DI_040";
     public const string ResolverInjection = "NHEM_DI_050";
     public const string DuplicateContractExposure = "NHEM_DI_061";

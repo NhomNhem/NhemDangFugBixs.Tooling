@@ -1,3 +1,14 @@
+## Release 8.0.0
+
+### DI Architecture Ownership
+
+| Rule ID | Owner | Severity | Notes |
+|---------|-------|----------|-------|
+| ND006 | Analyzer | Warning | Reports cross-scope dependencies only when current-compilation graph evidence proves both services and scopes. |
+| ND005 | Analyzer | Error | Reports duplicate manual VContainer registrations for auto-registered services; generated registration routes and generated installer bodies are ignored. |
+| NHEM_DI_011 | Analyzer | Warning | Reports missing generated registration calls only when the current compilation proves the composition root and expected marker. |
+| NDFG014-class missing mapping | Smoke validation | Error in CI gate | Project-wide missing mapping checks require Unity assembly/reference evidence and are not reported by per-compilation analyzers. |
+
 ## Release 5.2.0
 
 ### New Rules

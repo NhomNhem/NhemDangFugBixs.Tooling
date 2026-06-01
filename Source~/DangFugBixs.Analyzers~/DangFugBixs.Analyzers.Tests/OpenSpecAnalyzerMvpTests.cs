@@ -99,6 +99,23 @@ namespace NhemDangFugBixs.Attributes {
     }
 
     [Fact]
+    public void ServiceOnlyAssembly_DoesNotReportNhemDi011() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+[AutoRegisterIn(typeof(IGameplayScope))]
+public sealed class CombatCore {}
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new ScopeMappingAnalyzer());
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_011");
+    }
+
+    [Fact]
     public void LifetimeScopeWithoutRegisterGeneratedFor_ReportsNhemDi011() {
         const string source = """
 using NhemDangFugBixs.Attributes;
@@ -122,6 +139,35 @@ namespace NhemDangFugBixs.Attributes {
 
         var diagnostics = AnalyzerTestHost.Run(source, new ScopeMappingAnalyzer());
         Assert.Contains(diagnostics, d => d.Id == "NHEM_DI_011");
+    }
+
+    [Fact]
+    public void LifetimeScopeWithCorrectRegisterGeneratedFor_DoesNotReportNhemDi011() {
+        const string source = """
+using NhemDangFugBixs.Attributes;
+using NhemDangFugBixs.VContainer;
+using VContainer;
+using VContainer.Unity;
+public interface IScopeMarker {}
+public interface IGameplayScope : IScopeMarker {}
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public sealed class GameplayLifetimeScope : LifetimeScope {
+    protected override void Configure(IContainerBuilder builder) {
+        builder.RegisterGeneratedFor<IGameplayScope>();
+    }
+}
+namespace VContainer { public interface IContainerBuilder {} }
+namespace VContainer.Unity { public abstract class LifetimeScope { protected abstract void Configure(global::VContainer.IContainerBuilder builder); } }
+namespace NhemDangFugBixs.VContainer {
+  public static class NhemGeneratedVContainerExtensions { public static void RegisterGeneratedFor<T>(this global::VContainer.IContainerBuilder builder) {} }
+}
+namespace NhemDangFugBixs.Attributes {
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
+}
+""";
+
+        var diagnostics = AnalyzerTestHost.Run(source, new ScopeMappingAnalyzer());
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NHEM_DI_011");
     }
 
     [Fact]

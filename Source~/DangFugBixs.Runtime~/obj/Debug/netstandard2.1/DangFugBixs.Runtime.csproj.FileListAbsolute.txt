@@ -26,3 +26,17 @@ I:/unityVers/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/obj/Debug/nets
 /Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/obj/Debug/netstandard2.1/DangFugB.C82558F8.Up2Date
 /Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/obj/Debug/netstandard2.1/NhemDangFugBixs.Runtime.dll
 /Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/obj/Debug/netstandard2.1/NhemDangFugBixs.Runtime.pdb
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Debug\netstandard2.1\NhemDangFugBixs.Runtime.deps.json
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Debug\netstandard2.1\NhemDangFugBixs.Runtime.dll
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Debug\netstandard2.1\NhemDangFugBixs.Runtime.pdb
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Debug\netstandard2.1\NhemDangFugBixs.Attributes.dll
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\bin\Debug\netstandard2.1\NhemDangFugBixs.Attributes.pdb
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\DangFugBixs.Runtime.csproj.AssemblyReference.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\DangFugBixs.Runtime.GeneratedMSBuildEditorConfig.editorconfig
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\DangFugBixs.Runtime.AssemblyInfoInputs.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\DangFugBixs.Runtime.AssemblyInfo.cs
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\DangFugBixs.Runtime.csproj.CoreCompileInputs.cache
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\DangFugBixs.Runtime.sourcelink.json
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\DangFugB.C82558F8.Up2Date
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\NhemDangFugBixs.Runtime.dll
+I:\unityVers\NhemDangFugBixs.Tooling\Source~\DangFugBixs.Runtime~\obj\Debug\netstandard2.1\NhemDangFugBixs.Runtime.pdb

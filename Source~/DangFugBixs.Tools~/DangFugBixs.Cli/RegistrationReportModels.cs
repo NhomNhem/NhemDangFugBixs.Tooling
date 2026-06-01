@@ -23,6 +23,18 @@ public sealed record RegistrationLoggerConsumer(
     string Service,
     string CategoryType);
 
+public sealed record RegistrationGeneratedInstaller(
+    string Scope,
+    string Installer,
+    bool IsNoOp);
+
+public sealed record RegistrationGraphEvidence(
+    string Scope,
+    string Service,
+    string SourceAssembly,
+    string CompositionAssembly,
+    string ReferencePath);
+
 public sealed record RegistrationReportSnapshot(
     string AssemblyPath,
     IReadOnlyList<string> Scopes,
@@ -30,4 +42,6 @@ public sealed record RegistrationReportSnapshot(
     IReadOnlyList<RegistrationReportConsumer> Consumers,
     IReadOnlyList<RegistrationLoggerRoot> LoggerRoots,
     IReadOnlyList<RegistrationLoggerConsumer> LoggerConsumers,
+    IReadOnlyList<RegistrationGeneratedInstaller> GeneratedInstallers,
+    IReadOnlyList<RegistrationGraphEvidence> GraphEvidence,
     string Markdown);

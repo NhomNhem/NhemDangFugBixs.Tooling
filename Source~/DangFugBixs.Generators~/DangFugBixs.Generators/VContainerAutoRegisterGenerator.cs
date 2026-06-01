@@ -6,6 +6,7 @@ using NhemDangFugBixs.Generators.Analyzers;
 using NhemDangFugBixs.Generators.Emitters;
 using NhemDangFugBixs.Generators.Utils;
 using NhemDangFugBixs.Common.Models;
+using NhemDangFugBixs.Common.Models.DiContractGraph;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -217,19 +218,19 @@ public class VContainerAutoRegisterGenerator : IIncrementalGenerator {
 
             var validatedServices = ValidateAndFilterServices(allServices, input.Compilation, context);
             stats.ServiceCount = validatedServices.Count;
+            var contractGraph = DiContractGraphFactory.FromLegacy(assemblyName, validatedServices, scopeMappings);
 
             // Guard: only emit for allowed assemblies OR if we found services (opt-in via attribute)
             bool assemblyAllowed = AllowedAssemblies.Contains(assemblyName);
-            if (!assemblyAllowed && validatedServices.Count == 0) return;
+            if (!assemblyAllowed && validatedServices.Count == 0 && !scopeMappings.Any()) return;
 
             var validSceneServices = input.LoggingData.Data.BaseData.SceneServices
                 .Where(s => s.HasValue)
                 .Select(s => s!.Value);
 
-            if (validatedServices.Count == 0 && !validSceneServices.Any()) return;
-
+            _ = contractGraph;
             var sourceCode = RegistrationEmitter.GenerateSource(validatedServices, validSceneServices, assemblyName, scopeMappings, stats);
-            var reportCode = ReportEmitter.GenerateSource(validatedServices, rootLogging, scopeMappings, assemblyName, packageVersion);
+            var reportCode = ReportEmitter.GenerateSource(validatedServices, rootLogging, scopeMappings, assemblyName, packageVersion, contractGraph);
 
             // phase 3: Encapsulation
             // Generate ONE file per assembly containing everything including the global usings

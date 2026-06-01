@@ -68,7 +68,9 @@ public static class RegistrationReportWriters {
             entries,
             consumers,
             loggerRoots,
-            loggerConsumers
+            loggerConsumers,
+            generatedInstallers = snapshot.GeneratedInstallers,
+            graphEvidence = snapshot.GraphEvidence
         }, new JsonSerializerOptions {
             WriteIndented = true
         });

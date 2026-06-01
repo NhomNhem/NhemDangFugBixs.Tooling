@@ -8,6 +8,9 @@ slug: docs/reference/diagnostics
 
 | Code | Meaning |
 | --- | --- |
+| `ND005` | Manual registration duplicates an auto/generated registration (Error) |
+| `ND006` | Service in one proven scope depends on a service in an unreachable proven scope (Warning) |
+| `NHEM_DI_011` | Proven composition root is missing its generated registration call (Warning) |
 | `NDFG010` | Missing marker-to-scope mapping |
 | `NDFG011` | Duplicate marker mapping |
 | `NDFG012` | Missing scope alias for preset/alias usage |
@@ -16,6 +19,8 @@ slug: docs/reference/diagnostics
 | `NDFG006` | Same service discovered from multiple referenced assemblies (Warning) |
 | `NDFG007` | Missing VContainer reference in composition assembly (Error) |
 | `NDFG013` | Marker declared in Composition assembly (warning) |
+
+In 8.0, analyzers report only facts proven inside the current compilation. Project-wide mapping gaps, assembly-reference gaps, and `NDFG014`-class orphan checks should be enforced with `di-smoke` in CI.
 
 ## Injection
 

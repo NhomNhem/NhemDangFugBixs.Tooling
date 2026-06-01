@@ -91,6 +91,8 @@ public sealed class PhaseStateMachine : IPhaseStateMachine
 Composition maps that marker to a real VContainer `LifetimeScope`:
 
 ```csharp
+using NhemDangFugBixs.VContainer;
+
 [LifetimeScopeFor<IGameplayScope>]
 public sealed class GameplayLifetimeScope : LifetimeScope
 {
@@ -234,6 +236,8 @@ public sealed class PhaseStateMachine : IPhaseStateMachine
 Map the marker to a real VContainer scope:
 
 ```csharp
+using NhemDangFugBixs.VContainer;
+
 [LifetimeScopeFor<IGameplayScope>]
 public sealed class GameplayLifetimeScope : LifetimeScope
 {
@@ -249,6 +253,26 @@ Generated registration intent:
 ```csharp
 builder.Register<PhaseStateMachine>(Lifetime.Scoped)
     .As<IPhaseStateMachine>();
+```
+
+---
+
+## 8.0 DI Contract Graph
+
+Version 8.0 uses one shared DI contract graph across source generation, analyzer diagnostics, smoke validation, and Markdown/CSV/JSON reports.
+
+What this means in practice:
+
+- Every `[LifetimeScopeFor<TScope>]` mapping gets a generated `RegisterGeneratedFor<TScope>()` route.
+- Mapped scopes with no discovered services still get a no-op generated installer, so composition code remains deterministic.
+- Composition assemblies can emit registrations for services discovered from referenced assemblies, matching common Unity asmdef layouts.
+- Per-compilation analyzers only report facts they can prove locally; project-wide gaps are validated by `di-smoke`.
+- Reports and smoke output include graph evidence so CI and AI review can explain which scope, service, composition root, assembly, and reference path produced a result.
+
+`RegisterGeneratedFor<TScope>()` is an extension method. Composition files that call it should include:
+
+```csharp
+using NhemDangFugBixs.VContainer;
 ```
 
 ---
@@ -395,6 +419,7 @@ If your project currently generates installers in every assembly (per-assembly m
 3. **Verify scope markers**
    - Service asmdefs should reference scope markers (e.g., `IGameplayScope`) from a Shared/Contracts assembly.
    - Composition asmdefs map those markers to real `LifetimeScope` types.
+   - Composition files that call generated routes include `using NhemDangFugBixs.VContainer;`.
 
 4. **Clean stale generated files**
    - Delete `**/Generated/*.g.cs` in Service-only asmdefs.
@@ -412,10 +437,20 @@ If your project currently generates installers in every assembly (per-assembly m
    - Run `di-smoke` across all assemblies before Play Mode or build.
    - Treat orphan-service warnings as errors in CI.
 
+### 8.0 migration notes
+
+- Remove manual bridge classes that hand-write `RegisterGeneratedFor<TScope>()`; generated routes now come from the composition assembly.
+- Keep `[LifetimeScopeFor<TScope>]` on each composition root even when the scope currently has no services. 8.0 emits no-op installers for those mappings.
+- Regenerate Unity `.csproj` files after package updates or PackageCache hash changes so Roslyn analyzers point at the current package folder.
+- Use analyzer warnings for local evidence and `di-smoke` as the release gate for project-wide missing mapping or asmdef reference problems.
+
 ### Diagnostics reference
 
 | Code | Level | Trigger | Where caught |
 |------|-------|---------|--------------|
+| ND005 | Error | Manual registration duplicates an auto/generated registration | Analyzer (compile-time) |
+| ND006 | Warning | Service in one proven scope depends on a service in an unreachable proven scope | Analyzer (compile-time) |
+| NHEM_DI_011 | Warning | Proven `[LifetimeScopeFor]` composition root does not call its generated route | Analyzer (compile-time) |
 | NDFG005 | Error | Multiple `[LifetimeScopeFor]` for same scope in one assembly | Source generator (compile-time) |
 | NDFG006 | Warning | Same service discovered from multiple referenced assemblies | Source generator (compile-time) |
 | NDFG007 | Error | Composition target cannot resolve VContainer symbols | Source generator (compile-time) |

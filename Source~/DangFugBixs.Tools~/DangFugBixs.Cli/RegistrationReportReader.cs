@@ -34,6 +34,12 @@ public static class RegistrationReportReader {
         var loggerConsumers = (ReadStringArrayField(reportType, "LoggerConsumers") ?? Array.Empty<string>())
             .Select(ParseLoggerConsumer)
             .ToArray();
+        var generatedInstallers = (ReadStringArrayField(reportType, "GeneratedInstallers") ?? Array.Empty<string>())
+            .Select(ParseGeneratedInstaller)
+            .ToArray();
+        var graphEvidence = (ReadStringArrayField(reportType, "GraphEvidence") ?? Array.Empty<string>())
+            .Select(ParseGraphEvidence)
+            .ToArray();
         var markdown = ReadStringField(reportType, "Markdown") ?? string.Empty;
 
         return new RegistrationReportSnapshot(
@@ -43,6 +49,8 @@ public static class RegistrationReportReader {
             consumers,
             loggerRoots,
             loggerConsumers,
+            generatedInstallers,
+            graphEvidence,
             markdown);
     }
 
@@ -87,5 +95,23 @@ public static class RegistrationReportReader {
             parts.ElementAtOrDefault(0) ?? string.Empty,
             parts.ElementAtOrDefault(1) ?? string.Empty,
             parts.ElementAtOrDefault(2) ?? string.Empty);
+    }
+
+    private static RegistrationGeneratedInstaller ParseGeneratedInstaller(string value) {
+        var parts = value.Split('|');
+        return new RegistrationGeneratedInstaller(
+            parts.ElementAtOrDefault(0) ?? string.Empty,
+            parts.ElementAtOrDefault(1) ?? string.Empty,
+            bool.TryParse(parts.ElementAtOrDefault(2), out var isNoOp) && isNoOp);
+    }
+
+    private static RegistrationGraphEvidence ParseGraphEvidence(string value) {
+        var parts = value.Split('|');
+        return new RegistrationGraphEvidence(
+            parts.ElementAtOrDefault(0) ?? string.Empty,
+            parts.ElementAtOrDefault(1) ?? string.Empty,
+            parts.ElementAtOrDefault(2) ?? string.Empty,
+            parts.ElementAtOrDefault(3) ?? string.Empty,
+            parts.ElementAtOrDefault(4) ?? string.Empty);
     }
 }

@@ -1,5 +1,27 @@
 # Changelog
 
+## 8.0.0 - 2026-06-02
+
+### Added
+- Shared DI contract graph for generator, analyzers, smoke validation, and report output.
+- Deterministic generated registration routes for every `[LifetimeScopeFor<TScope>]`, including no-op mapped scopes.
+- Referenced-assembly registration emission for Unity asmdef layouts where markers live in shared assemblies, services live in feature assemblies, and composition roots live in bootstrap assemblies.
+- `ND006` warning for cross-scope dependencies when the current compilation proves both sides and the target scope is unreachable.
+- Machine-readable graph evidence in smoke validation and report output, including scope marker, service, composition root, source assembly, composition assembly, and reference path facts.
+
+### Changed
+- Analyzer checks now use graph-backed evidence and avoid reporting project-wide missing mapping conditions from incomplete per-compilation data.
+- `ND005` duplicate manual registration detection now ignores generated installer routes and no-op generated registration calls.
+- Project-wide missing mapping and assembly-reference gaps are owned by `di-smoke` validation instead of speculative per-compilation analyzer warnings.
+
+### Migration
+- Add `using NhemDangFugBixs.VContainer;` in composition files that call `builder.RegisterGeneratedFor<TScope>()`.
+- Remove manual generated-registration bridge workarounds; 8.0 emits the generated route from the composition assembly.
+- Refresh Unity generated `.csproj` files or reopen Unity after package cache/hash changes so analyzer paths point at the current PackageCache folder.
+
+### Validation
+- Generator, analyzer, common graph, CLI/smoke validation tests, solution build, and an `afterimage`-style bootstrap compile were used as release gates.
+
 ## 7.4.0 - 2026-05-28
 
 ### Added

@@ -21,6 +21,13 @@ public class CliReportCommandTests {
         new[] {
             new RegistrationLoggerConsumer("GameplayLifetimeScope", "Game.PlayerService", "Game.PlayerService")
         },
+        new[] {
+            new RegistrationGeneratedInstaller("GameplayLifetimeScope", "NhemGeneratedGameplayScopeInstaller", false),
+            new RegistrationGeneratedInstaller("ProjectLifetimeScope", "NhemGeneratedProjectScopeInstaller", true)
+        },
+        new[] {
+            new RegistrationGraphEvidence("GameplayLifetimeScope", "Game.PlayerService", "Game.Services", "Game.Composition", "Game.Composition>Game.Services")
+        },
         "# Test Markdown");
 
     [Fact]
@@ -47,6 +54,9 @@ public class CliReportCommandTests {
 
         Assert.Contains("\"scopeFilter\": \"GameplayLifetimeScope\"", output, StringComparison.Ordinal);
         Assert.Contains("\"Service\": \"Game.PlayerService\"", output, StringComparison.Ordinal);
+        Assert.Contains("generatedInstallers", output, StringComparison.Ordinal);
+        Assert.Contains("graphEvidence", output, StringComparison.Ordinal);
+        Assert.Contains("NhemGeneratedProjectScopeInstaller", output, StringComparison.Ordinal);
     }
 
     [Fact]

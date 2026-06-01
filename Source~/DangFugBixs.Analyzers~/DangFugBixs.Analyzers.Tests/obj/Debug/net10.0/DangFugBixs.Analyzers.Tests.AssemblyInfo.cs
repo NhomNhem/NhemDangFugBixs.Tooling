@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DangFugBixs.Analyzers.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8c0be92f14444a35fafd6ec809f6e60871cc1266")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6db0aab13658ff3e84c7483e5f0cf1eb3b614570")]
 [assembly: System.Reflection.AssemblyProductAttribute("DangFugBixs.Analyzers.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DangFugBixs.Analyzers.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

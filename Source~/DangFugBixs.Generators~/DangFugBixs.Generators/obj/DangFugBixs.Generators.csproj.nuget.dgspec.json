@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators/DangFugBixs.Generators.csproj": {}
+    "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj": {}
   },
   "projects": {
-    "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators/DangFugBixs.Generators.csproj": {
-      "version": "7.3.1",
+    "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj": {
+      "version": "8.0.0",
       "restore": {
-        "projectUniqueName": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators/DangFugBixs.Generators.csproj",
+        "projectUniqueName": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj",
         "projectName": "NhemDangFugBixs.Generators",
-        "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators/DangFugBixs.Generators.csproj",
-        "packagesPath": "/Users/myte/.nuget/packages/",
-        "outputPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Generators~/DangFugBixs.Generators/obj/",
+        "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Generators\\DangFugBixs.Generators.csproj",
+        "packagesPath": "C:\\Users\\truon\\.nuget\\packages\\",
+        "outputPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Generators~\\DangFugBixs.Generators\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/myte/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\truon\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
@@ -24,7 +24,6 @@
         },
         "frameworks": {
           "netstandard2.0": {
-            "framework": "netstandard2.0",
             "targetAlias": "netstandard2.0",
             "projectReferences": {}
           }
@@ -39,11 +38,10 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "netstandard2.0": {
-          "framework": "netstandard2.0",
           "targetAlias": "netstandard2.0",
           "dependencies": {
             "Microsoft.CodeAnalysis.Analyzers": {
@@ -74,7 +72,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -59,6 +59,14 @@ internal static class DiagnosticCatalog {
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor CrossScopeDependency = new(
+        DiagnosticIds.CrossScopeDependency,
+        "Unreachable cross-scope dependency",
+        "Service '{0}' in scope '{1}' depends on '{2}' in unreachable scope '{3}'.",
+        "Architecture",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
     public static readonly DiagnosticDescriptor InvalidEntryPoint = new(
         DiagnosticIds.InvalidEntryPoint,
         "Invalid entry point type",

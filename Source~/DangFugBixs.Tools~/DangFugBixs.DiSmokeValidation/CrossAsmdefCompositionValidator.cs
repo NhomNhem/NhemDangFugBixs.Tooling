@@ -1,4 +1,5 @@
 using System.Reflection;
+using NhemDangFugBixs.Common.Models.DiContractGraph;
 
 namespace NhemDangFugBixs.DiSmokeValidation;
 
@@ -13,6 +14,7 @@ internal sealed class CrossAsmdefCompositionValidator {
         var assemblies = new List<Assembly>();
         var assemblyScopeMappings = new Dictionary<string, List<CompositionTarget>>();
         var assemblyServiceRegistrations = new Dictionary<string, List<ServiceRegistration>>();
+        var assemblyReferences = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
 
         foreach (var path in assemblyPaths) {
             if (!File.Exists(path)) {
@@ -26,6 +28,10 @@ internal sealed class CrossAsmdefCompositionValidator {
                 var name = assembly.GetName().Name ?? Path.GetFileNameWithoutExtension(path);
                 assemblyScopeMappings[name] = ScanCompositionTargets(assembly);
                 assemblyServiceRegistrations[name] = ScanServiceRegistrations(assembly);
+                assemblyReferences[name] = assembly.GetReferencedAssemblies()
+                    .Select(reference => reference.Name ?? string.Empty)
+                    .Where(reference => !string.IsNullOrWhiteSpace(reference))
+                    .ToHashSet(StringComparer.Ordinal);
             } catch (Exception ex) {
                 result.AddWarning($"Failed to load assembly {path}: {ex.Message}");
             }
@@ -35,6 +41,8 @@ internal sealed class CrossAsmdefCompositionValidator {
             result.AddError("No assemblies could be loaded for cross-asmdef validation.");
             return result;
         }
+
+        var graph = BuildGraph(assemblyScopeMappings, assemblyServiceRegistrations);
 
         // Task 6.2: Detect duplicate composition targets across separate Unity asmdefs
         var allScopeMappings = assemblyScopeMappings
@@ -54,25 +62,63 @@ internal sealed class CrossAsmdefCompositionValidator {
             result.AddError(
                 $"Duplicate composition target for scope '{dup.Scope}' found across assemblies: {string.Join(", ", dup.Assemblies)}. " +
                 "Only one LifetimeScope should map to a given scope marker.");
+            result.AddEvidence(new SmokeDiagnosticEvidence {
+                Kind = "duplicate-composition-target",
+                ScopeMarker = dup.Scope,
+                CompositionAssembly = string.Join(",", dup.Assemblies)
+            });
         }
 
         // Task 6.3: Detect project-level discovery drift
         // Find services whose scope marker has no composition target in any assembly
-        var allScopeMarkers = allScopeMappings.Select(x => x.Mapping.ScopeMarkerFullName).ToHashSet(StringComparer.Ordinal);
-        var allServiceRegistrations = assemblyServiceRegistrations
-            .SelectMany(kvp => kvp.Value.Select(r => new { Assembly = kvp.Key, Registration = r }))
+        var allScopeMarkers = graph.CompositionRoots.Select(root => root.ScopeMarkerType.MetadataName).ToHashSet(StringComparer.Ordinal);
+        var allServiceRegistrations = graph.Services
             .ToList();
 
         var servicesWithoutComposition = allServiceRegistrations
-            .Where(r => r.Registration.UsesTypeSafeScope && !string.IsNullOrEmpty(r.Registration.ScopeMarkerFullName))
-            .Where(r => !allScopeMarkers.Contains(r.Registration.ScopeMarkerFullName))
+            .Where(r => r.ScopeMarkerType.HasValue)
+            .Where(r => !allScopeMarkers.Contains(r.ScopeMarkerType!.Value.MetadataName))
             .ToList();
 
         foreach (var orphan in servicesWithoutComposition) {
             result.AddError(
-                $"Service '{orphan.Registration.ServiceFullName}' in assembly '{orphan.Assembly}' " +
-                $"references scope marker '{orphan.Registration.ScopeMarkerFullName}', but no composition target (LifetimeScopeFor) " +
+                $"Service '{orphan.ImplementationType.FullName}' in assembly '{orphan.Provenance.DeclaringAssembly}' " +
+                $"references scope marker '{orphan.ScopeMarkerType!.Value.FullName}', but no composition target (LifetimeScopeFor) " +
                 "was found for that scope in any scanned assembly. The service will never be registered.");
+            result.AddEvidence(new SmokeDiagnosticEvidence {
+                Kind = "missing-composition-target",
+                ScopeMarker = orphan.ScopeMarkerType.Value.FullName,
+                Service = orphan.ImplementationType.FullName,
+                SourceAssembly = orphan.Provenance.DeclaringAssembly,
+                ReferencePath = orphan.Provenance.ReferencePath
+            });
+        }
+
+        foreach (var composition in graph.CompositionRoots) {
+            var compositionAssembly = composition.Provenance.DeclaringAssembly;
+            var references = assemblyReferences.TryGetValue(compositionAssembly, out var foundReferences)
+                ? foundReferences
+                : new HashSet<string>(StringComparer.Ordinal);
+            foreach (var registration in graph.ServicesForScope(composition.ScopeMarkerType)) {
+                var serviceAssembly = registration.Provenance.DeclaringAssembly;
+                if (string.Equals(compositionAssembly, serviceAssembly, StringComparison.Ordinal) ||
+                    references.Contains(serviceAssembly)) {
+                    continue;
+                }
+
+                result.AddError(
+                    $"Composition assembly '{compositionAssembly}' maps scope '{composition.ScopeMarkerType.FullName}' " +
+                    $"but does not reference service assembly '{serviceAssembly}' containing '{registration.ImplementationType.FullName}'.");
+                result.AddEvidence(new SmokeDiagnosticEvidence {
+                    Kind = "composition-reference-gap",
+                    ScopeMarker = composition.ScopeMarkerType.FullName,
+                    Service = registration.ImplementationType.FullName,
+                    CompositionRoot = composition.LifetimeScopeType.FullName,
+                    SourceAssembly = serviceAssembly,
+                    CompositionAssembly = compositionAssembly,
+                    ReferencePath = new[] { compositionAssembly, serviceAssembly }
+                });
+            }
         }
 
         // Task 6.1: Verify composition-only generation invariants
@@ -87,14 +133,43 @@ internal sealed class CrossAsmdefCompositionValidator {
         }
 
         // Summary
-        var totalCompositionTargets = allScopeMappings.Count;
-        var totalServiceRegistrations = allServiceRegistrations.Count;
+        var totalCompositionTargets = graph.CompositionRoots.Count;
+        var totalServiceRegistrations = graph.Services.Count;
         var compositionAsmdefs = assemblyScopeMappings.Count(kvp => kvp.Value.Count > 0);
         var serviceAsmdefs = assemblyServiceRegistrations.Count(kvp => kvp.Value.Count > 0);
 
         result.AddWarning($"Cross-asmdef scan: {compositionAsmdefs} composition asmdef(s), {serviceAsmdefs} service asmdef(s), {totalCompositionTargets} scope mapping(s), {totalServiceRegistrations} service registration(s).");
 
         return result;
+    }
+
+    private static DiContractGraph BuildGraph(
+        IReadOnlyDictionary<string, List<CompositionTarget>> scopeMappings,
+        IReadOnlyDictionary<string, List<ServiceRegistration>> serviceRegistrations) {
+        var compositionRoots = scopeMappings.SelectMany(kvp =>
+            kvp.Value.Select(mapping =>
+                new DiCompositionRoot(
+                    DiTypeIdentity.FromFullName(mapping.LifetimeScopeFullName, kvp.Key),
+                    DiTypeIdentity.FromFullName(mapping.ScopeMarkerFullName),
+                    new DiAssemblyProvenance(kvp.Key, kvp.Key, DiEvidenceSource.ProjectWideSmokeValidation, new[] { kvp.Key }))));
+
+        var scopes = scopeMappings.SelectMany(kvp =>
+            kvp.Value.Select(mapping =>
+                new DiScopeIdentity(
+                    DiTypeIdentity.FromFullName(mapping.ScopeMarkerFullName),
+                    new DiAssemblyProvenance(kvp.Key, kvp.Key, DiEvidenceSource.ProjectWideSmokeValidation, new[] { kvp.Key }),
+                    compositionRootType: DiTypeIdentity.FromFullName(mapping.LifetimeScopeFullName, kvp.Key))));
+
+        var services = serviceRegistrations.SelectMany(kvp =>
+            kvp.Value.Select(registration =>
+                new DiServiceRegistration(
+                    DiTypeIdentity.FromFullName(registration.ServiceFullName, kvp.Key),
+                    Array.Empty<DiTypeIdentity>(),
+                    string.Empty,
+                    new DiAssemblyProvenance(kvp.Key, string.Empty, DiEvidenceSource.ProjectWideSmokeValidation, new[] { kvp.Key }),
+                    DiTypeIdentity.FromFullName(registration.ScopeMarkerFullName))));
+
+        return new DiContractGraph(scopes, services, compositionRoots);
     }
 
     private static List<CompositionTarget> ScanCompositionTargets(Assembly assembly) {

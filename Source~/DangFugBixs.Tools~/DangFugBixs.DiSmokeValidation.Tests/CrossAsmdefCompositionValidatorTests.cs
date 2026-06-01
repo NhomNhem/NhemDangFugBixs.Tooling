@@ -59,37 +59,84 @@ public sealed class UILifetimeScope { }
         Assert.True(errors.Count >= 1, "Expected at least one error for orphan service");
         Assert.Contains(errors, e => e.Contains("DayService"));
         Assert.Contains(errors, e => e.Contains("IGameplayScope"));
+        Assert.Contains(result.Evidence, e =>
+            e.Kind == "missing-composition-target" &&
+            e.Service.Contains("DayService", StringComparison.Ordinal) &&
+            e.ScopeMarker.Contains("IGameplayScope", StringComparison.Ordinal));
+
+        var json = result.ToJson();
+        Assert.Contains("missing-composition-target", json);
+        Assert.Contains("IGameplayScope", json);
 
         Cleanup(serviceAsm, compositionAsm);
     }
 
     [Fact]
     public void ValidComposition_NoErrors() {
-        var serviceAsm = CompileToFile("""
-using NhemDangFugBixs.Attributes;
+        var sharedAsm = CompileToFile("""
+namespace Game.Shared;
 public interface IScopeMarker { }
 public interface IGameplayScope : IScopeMarker { }
+""", "Game.Shared.Valid");
+
+        var serviceAsm = CompileToFile("""
+using NhemDangFugBixs.Attributes;
+using Game.Shared;
 [AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemLifetime.Scoped)]
 public sealed class DayService { }
-""", "Game.Services");
+""", "Game.Services.Valid", sharedAsm);
 
         var compositionAsm = CompileToFile("""
 using NhemDangFugBixs.Attributes;
-public interface IScopeMarker { }
-public interface IGameplayScope : IScopeMarker { }
+using Game.Shared;
 [LifetimeScopeFor(typeof(IGameplayScope))]
 public sealed class GameplayLifetimeScope { }
-""", "Game.Composition");
+public sealed class CompositionReferencesServiceAssembly { private DayService? _service; }
+""", "Game.Composition.Valid", sharedAsm, serviceAsm);
 
         var validator = new CrossAsmdefCompositionValidator();
-        var result = validator.Validate(new[] { serviceAsm, compositionAsm });
+        var result = validator.Validate(new[] { sharedAsm, serviceAsm, compositionAsm });
 
         Assert.Empty(result.Errors);
 
-        Cleanup(serviceAsm, compositionAsm);
+        Cleanup(sharedAsm, serviceAsm, compositionAsm);
     }
 
-    private static string CompileToFile(string source, string assemblyName) {
+    [Fact]
+    public void CompositionAssemblyCannotReferenceServiceAssembly_ReportsEvidence() {
+        var sharedAsm = CompileToFile("""
+namespace Game.Shared;
+public interface IScopeMarker { }
+public interface IGameplayScope : IScopeMarker { }
+""", "Game.Shared.ReferenceGap");
+
+        var serviceAsm = CompileToFile("""
+using NhemDangFugBixs.Attributes;
+using Game.Shared;
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemLifetime.Scoped)]
+public sealed class DayService { }
+""", "Game.Services.ReferenceGap", sharedAsm);
+
+        var compositionAsm = CompileToFile("""
+using NhemDangFugBixs.Attributes;
+using Game.Shared;
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public sealed class GameplayLifetimeScope { }
+""", "Game.Composition.ReferenceGap", sharedAsm);
+
+        var validator = new CrossAsmdefCompositionValidator();
+        var result = validator.Validate(new[] { sharedAsm, serviceAsm, compositionAsm });
+
+        Assert.Contains(result.Errors, e => e.Contains("does not reference service assembly", StringComparison.Ordinal));
+        Assert.Contains(result.Evidence, e =>
+            e.Kind == "composition-reference-gap" &&
+            e.SourceAssembly == "Game.Services.ReferenceGap" &&
+            e.CompositionAssembly == "Game.Composition.ReferenceGap");
+
+        Cleanup(sharedAsm, serviceAsm, compositionAsm);
+    }
+
+    private static string CompileToFile(string source, string assemblyName, params string[] additionalAssemblyPaths) {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
         var references = new List<MetadataReference> {
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
@@ -107,6 +154,10 @@ public sealed class GameplayLifetimeScope { }
             if (fileName is "netstandard.dll" or "System.Runtime.dll") {
                 references.Add(MetadataReference.CreateFromFile(assemblyPath));
             }
+        }
+
+        foreach (var assemblyPath in additionalAssemblyPaths) {
+            references.Add(MetadataReference.CreateFromFile(assemblyPath));
         }
 
         var compilation = CSharpCompilation.Create(

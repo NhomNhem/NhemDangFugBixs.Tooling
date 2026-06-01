@@ -79,6 +79,19 @@ internal static class RegistrationEmitter {
             .Select(kvp => CreateInstallerModel(kvp.Key, kvp.Value, scopeMappings, generatedNamespace))
             .OrderBy(model => model.ScopeKey, System.StringComparer.Ordinal)
             .ToList();
+        if (scopeMappings != null) {
+            foreach (var mapping in scopeMappings.OrderBy(mapping => mapping.IdentityTypeName, System.StringComparer.Ordinal)) {
+                if (installerModels.Any(model => string.Equals(model.MarkerTypeName, mapping.IdentityTypeName, System.StringComparison.Ordinal))) {
+                    continue;
+                }
+
+                installerModels.Add(CreateInstallerModel(mapping.IdentityTypeName, new List<ServiceInfo>(), scopeMappings, generatedNamespace));
+            }
+
+            installerModels = installerModels
+                .OrderBy(model => model.ScopeKey, System.StringComparer.Ordinal)
+                .ToList();
+        }
 
         return filteredGroups;
     }

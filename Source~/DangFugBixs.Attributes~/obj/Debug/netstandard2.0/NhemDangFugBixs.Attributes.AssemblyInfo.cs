@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NhemDangFugBixs.Attributes")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+652c56305ed69b8a6f278a07e3ee6882d413b97c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6db0aab13658ff3e84c7483e5f0cf1eb3b614570")]
 [assembly: System.Reflection.AssemblyProductAttribute("NhemDangFugBixs.Attributes")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NhemDangFugBixs.Attributes")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

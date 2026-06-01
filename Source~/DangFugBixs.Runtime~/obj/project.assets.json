@@ -1,7 +1,7 @@
 {
-  "version": 4,
+  "version": 3,
   "targets": {
-    "netstandard2.0": {
+    ".NETStandard,Version=v2.0": {
       "Microsoft.NETCore.Platforms/1.1.0": {
         "type": "package",
         "compile": {
@@ -37,7 +37,7 @@
         }
       }
     },
-    "netstandard2.1": {
+    ".NETStandard,Version=v2.1": {
       "NhemDangFugBixs.Attributes/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -202,29 +202,29 @@
     }
   },
   "projectFileDependencyGroups": {
-    "netstandard2.0": [
+    ".NETStandard,Version=v2.0": [
       "NETStandard.Library >= 2.0.3",
       "NhemDangFugBixs.Attributes >= 1.0.0"
     ],
-    "netstandard2.1": [
+    ".NETStandard,Version=v2.1": [
       "NhemDangFugBixs.Attributes >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "/Users/myte/.nuget/packages/": {}
+    "C:\\Users\\truon\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj",
+      "projectUniqueName": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Runtime~\\DangFugBixs.Runtime.csproj",
       "projectName": "NhemDangFugBixs.Runtime",
-      "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj",
-      "packagesPath": "/Users/myte/.nuget/packages/",
-      "outputPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/obj/",
+      "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Runtime~\\DangFugBixs.Runtime.csproj",
+      "packagesPath": "C:\\Users\\truon\\.nuget\\packages\\",
+      "outputPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Runtime~\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "configFilePaths": [
-        "/Users/myte/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\truon\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0",
@@ -235,20 +235,18 @@
       },
       "frameworks": {
         "netstandard2.0": {
-          "framework": "netstandard2.0",
           "targetAlias": "netstandard2.0",
           "projectReferences": {
-            "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj": {
-              "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj"
+            "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Attributes~\\NhemDangFugBixs.Attributes.csproj": {
+              "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Attributes~\\NhemDangFugBixs.Attributes.csproj"
             }
           }
         },
         "netstandard2.1": {
-          "framework": "netstandard2.1",
           "targetAlias": "netstandard2.1",
           "projectReferences": {
-            "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj": {
-              "projectPath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Attributes~/NhemDangFugBixs.Attributes.csproj"
+            "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Attributes~\\NhemDangFugBixs.Attributes.csproj": {
+              "projectPath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Attributes~\\NhemDangFugBixs.Attributes.csproj"
             }
           }
         }
@@ -263,11 +261,10 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.300"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "netstandard2.0": {
-        "framework": "netstandard2.0",
         "targetAlias": "netstandard2.0",
         "dependencies": {
           "NETStandard.Library": {
@@ -288,10 +285,9 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203\\RuntimeIdentifierGraph.json"
       },
       "netstandard2.1": {
-        "framework": "netstandard2.1",
         "targetAlias": "netstandard2.1",
         "imports": [
           "net461",
@@ -315,7 +311,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "bTN6kzNGs9o=",
+  "dgSpecHash": "jUZIPJs0Mr8=",
   "success": true,
-  "projectFilePath": "/Users/myte/RiderProjects/NhemDangFugBixs.Tooling/Source~/DangFugBixs.Runtime~/DangFugBixs.Runtime.csproj",
+  "projectFilePath": "I:\\unityVers\\NhemDangFugBixs.Tooling\\Source~\\DangFugBixs.Runtime~\\DangFugBixs.Runtime.csproj",
   "expectedPackageFiles": [
-    "/Users/myte/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "/Users/myte/.nuget/packages/netstandard.library/2.0.3/netstandard.library.2.0.3.nupkg.sha512",
-    "/Users/myte/.nuget/packages/netstandard.library.ref/2.1.0/netstandard.library.ref.2.1.0.nupkg.sha512"
+    "C:\\Users\\truon\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\truon\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\truon\\.nuget\\packages\\netstandard.library.ref\\2.1.0\\netstandard.library.ref.2.1.0.nupkg.sha512"
   ],
   "logs": []
 }
