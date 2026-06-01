@@ -30,10 +30,10 @@ namespace NhemDangFugBixs.Attributes {
         var test = """
 using NhemDangFugBixs.Attributes;
 public interface IGameplayScope { }
-[LifetimeScopeFor<IGameplayScope>] public class {|#0:A|} { }
-[LifetimeScopeFor<IGameplayScope>] public class {|#1:B|} { }
+[LifetimeScopeFor(typeof(IGameplayScope))] public class {|#0:A|} { }
+[LifetimeScopeFor(typeof(IGameplayScope))] public class {|#1:B|} { }
 namespace NhemDangFugBixs.Attributes {
-  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute() {} }
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 """;
         var e0 = Verifier.Diagnostic("NDFG011").WithLocation(0).WithArguments("IGameplayScope");
