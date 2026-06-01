@@ -1,0 +1,13 @@
+{
+    "name": "NhemDangFugBixs.Attributes",
+    "rootNamespace": "NhemDangFugBixs.Attributes",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}
