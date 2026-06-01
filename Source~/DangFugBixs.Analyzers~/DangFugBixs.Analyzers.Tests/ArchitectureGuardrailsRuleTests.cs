@@ -182,7 +182,7 @@ namespace NhemDangFugBixs.Attributes {
 }
 namespace UnityEngine { public class ScriptableObject {} }
 """;
-        var expected = Verifier.Diagnostic("NDF026").WithArguments("BackendClient", "BackendConfig", "config");
+        var expected = Verifier.Diagnostic("NDF026").WithSpan(4, 40, 4, 46).WithArguments("BackendClient", "BackendConfig", "config");
         await Verifier.VerifyAnalyzerAsync(test, expected);
     }
 
