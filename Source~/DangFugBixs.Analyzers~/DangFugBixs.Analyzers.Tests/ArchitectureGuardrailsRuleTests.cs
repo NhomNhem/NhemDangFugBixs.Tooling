@@ -215,7 +215,7 @@ using VContainer;
 using UnityEngine;
 using R3;
 
-[ManualFactory]
+[NhemDangFugBixs.Attributes.ManualFactory]
 [NhemDangFugBixs.Attributes.AutoRegisterIn(typeof(GameScope))]
 public class {|#0:PlayerView|} : MonoBehaviour {
   public {|#4:PlayerView|}(int v) { }
