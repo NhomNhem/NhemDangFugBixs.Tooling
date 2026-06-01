@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -16,6 +17,11 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
     public static readonly DiagnosticDescriptor NDFG011 = new(
         "NDFG011", "Duplicate Scope Mapping",
         "Scope marker '{0}' is mapped by multiple LifetimeScope types.",
+        "Architecture", DiagnosticSeverity.Error, true);
+
+    public static readonly DiagnosticDescriptor NDFG014 = new(
+        "NDFG014", "Orphan service — no composition target",
+        "{0} is registered for scope {1} but no [LifetimeScopeFor<{1}>] was found. This service will never be registered at runtime.",
         "Architecture", DiagnosticSeverity.Error, true);
 
     public static readonly DiagnosticDescriptor NDF020 = new(
@@ -42,6 +48,16 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         "NDF024", "Non-standard construct method name",
         "Method '{0}' uses [Inject]. Consider using 'Construct'.",
         "Injection", DiagnosticSeverity.Warning, true);
+
+    public static readonly DiagnosticDescriptor NDF025 = new(
+        "NDF025", "Primitive constructor parameter",
+        "{0} has primitive constructor parameter '{1} {2}' that cannot be resolved from the container. Add [ManualFactory] or use WithParameter.",
+        "Registration", DiagnosticSeverity.Warning, true);
+
+    public static readonly DiagnosticDescriptor NDF026 = new(
+        "NDF026", "ScriptableObject constructor parameter",
+        "{0} constructor receives ScriptableObject-derived parameter '{1} {2}'. Ensure it is registered with RegisterInstance before calling RegisterGeneratedFor.",
+        "Registration", DiagnosticSeverity.Info, true);
 
     public static readonly DiagnosticDescriptor NDF030 = new(
         "NDF030", "Singleton depends on Scoped",
@@ -79,13 +95,13 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         "R3", DiagnosticSeverity.Warning, true);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(
-        NDFG010, NDFG011, NDF020, NDF021, NDF022, NDF023, NDF024, NDF030, NDF031, NDF032, NDF033, NDF052, NDF070, NDF071);
+        NDFG010, NDFG011, NDFG014, NDF020, NDF021, NDF022, NDF023, NDF024, NDF025, NDF026, NDF030, NDF031, NDF032, NDF033, NDF052, NDF070, NDF071);
 
     public override void Initialize(AnalysisContext context) {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
         context.RegisterCompilationStartAction(static startContext => {
-            var autoRegistered = new List<INamedTypeSymbol>();
+            var autoRegistered = new ConcurrentBag<(INamedTypeSymbol Type, string ScopeFQN)>();
             var gate = new object();
 
             startContext.RegisterSymbolAction(symbolContext => {
@@ -93,10 +109,32 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
                 if (type.TypeKind != TypeKind.Class) return;
 
                 var attrs = type.GetAttributes();
+                var hasAutoRegister = false;
+                string? scopeFQN = null;
                 foreach (var attr in attrs) {
-                    if (attr.AttributeClass?.Name == "AutoRegisterInAttribute") {
+                    var attrName = attr.AttributeClass?.Name;
+                    if (attrName == "AutoRegisterInAttribute") {
+                        hasAutoRegister = true;
+                        scopeFQN = TryGetScopeName(attr);
                         lock (gate) {
-                            autoRegistered.Add(type);
+                            autoRegistered.Add((type, scopeFQN ?? ""));
+                        }
+                    }
+                }
+
+                if (hasAutoRegister && !HasManualFactory(type)) {
+                    var ctor = type.InstanceConstructors
+                        .Where(c => c.DeclaredAccessibility is Accessibility.Public or Accessibility.Internal)
+                        .OrderByDescending(c => c.Parameters.Length)
+                        .FirstOrDefault();
+                    if (ctor != null) {
+                        foreach (var p in ctor.Parameters) {
+                            if (IsPrimitiveType(p.Type)) {
+                                symbolContext.ReportDiagnostic(Diagnostic.Create(NDF025, type.Locations.FirstOrDefault(), type.Name, p.Type.Name, p.Name));
+                            }
+                            if (IsScriptableObject(p.Type)) {
+                                symbolContext.ReportDiagnostic(Diagnostic.Create(NDF026, p.Locations.FirstOrDefault(), type.Name, p.Type.Name, p.Name));
+                            }
                         }
                     }
                 }
@@ -106,9 +144,11 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
             }, SymbolKind.NamedType);
 
             startContext.RegisterCompilationEndAction(endContext => {
+                if (autoRegistered.IsEmpty) return;
                 var scopeMappings = CollectScopeMappings(endContext.Compilation);
                 AnalyzeScopeMapping(endContext, autoRegistered, scopeMappings);
                 AnalyzeLifetimeArchitecture(endContext, autoRegistered);
+                AnalyzeOrphanServices(endContext, autoRegistered, scopeMappings);
             });
         });
     }
@@ -155,7 +195,7 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         }
     }
 
-    private static void AnalyzeScopeMapping(CompilationAnalysisContext context, List<INamedTypeSymbol> services, Dictionary<string, List<INamedTypeSymbol>> mappings) {
+    private static void AnalyzeScopeMapping(CompilationAnalysisContext context, ConcurrentBag<(INamedTypeSymbol Type, string ScopeFQN)> services, Dictionary<string, List<INamedTypeSymbol>> mappings) {
         foreach (var pair in mappings.Where(p => p.Value.Count > 1)) {
             foreach (var type in pair.Value) {
                 context.ReportDiagnostic(Diagnostic.Create(NDFG011, type.Locations.FirstOrDefault(), pair.Key));
@@ -163,24 +203,21 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         }
 
         var markerNames = new HashSet<string>(mappings.Keys);
-        foreach (var svc in services) {
-            var attr = svc.GetAttributes().FirstOrDefault(a => a.AttributeClass?.Name == "AutoRegisterInAttribute");
-            if (attr == null) continue;
-            var scopeName = TryGetScopeName(attr);
-            if (string.IsNullOrWhiteSpace(scopeName)) continue;
-            if (scopeName!.EndsWith("LifetimeScope")) continue;
-            if (!markerNames.Contains(scopeName!)) {
-                context.ReportDiagnostic(Diagnostic.Create(NDFG010, svc.Locations.FirstOrDefault(), svc.Name, scopeName));
+        foreach (var (svc, scopeFQN) in services) {
+            if (string.IsNullOrWhiteSpace(scopeFQN)) continue;
+            if (scopeFQN.EndsWith("LifetimeScope")) continue;
+            if (!markerNames.Contains(scopeFQN)) {
+                context.ReportDiagnostic(Diagnostic.Create(NDFG010, svc.Locations.FirstOrDefault(), svc.Name, scopeFQN));
             }
         }
     }
 
-    private static void AnalyzeLifetimeArchitecture(CompilationAnalysisContext context, List<INamedTypeSymbol> services) {
+    private static void AnalyzeLifetimeArchitecture(CompilationAnalysisContext context, ConcurrentBag<(INamedTypeSymbol Type, string ScopeFQN)> services) {
         var lifetimes = new Dictionary<INamedTypeSymbol, string>(SymbolEqualityComparer.Default);
         var explicitLifetime = new Dictionary<INamedTypeSymbol, bool>(SymbolEqualityComparer.Default);
         var scopes = new Dictionary<INamedTypeSymbol, string>(SymbolEqualityComparer.Default);
 
-        foreach (var svc in services) {
+        foreach (var (svc, _) in services) {
             var attr = svc.GetAttributes().FirstOrDefault(a => a.AttributeClass?.Name == "AutoRegisterInAttribute");
             if (attr == null) continue;
             lifetimes[svc] = GetLifetime(attr, out var isExplicit);
@@ -188,7 +225,7 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
             scopes[svc] = TryGetScopeName(attr) ?? "";
         }
 
-        foreach (var svc in services) {
+        foreach (var (svc, _) in services) {
             if (!lifetimes.TryGetValue(svc, out var life)) continue;
             var ns = svc.ContainingNamespace.ToDisplayString();
             if (life == "Singleton" && IsRuntimeNamespace(ns)) {
@@ -338,6 +375,38 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
             var an = a.AttributeClass?.Name ?? "";
             return an == "FactoryAttribute" || an == "SpawnerAttribute" || an == "BootstrapperAttribute";
         });
+    }
+
+    private static void AnalyzeOrphanServices(CompilationAnalysisContext context, ConcurrentBag<(INamedTypeSymbol Type, string ScopeFQN)> services, Dictionary<string, List<INamedTypeSymbol>> mappings) {
+        var markerNames = new HashSet<string>(mappings.Keys);
+        foreach (var (svc, scopeFQN) in services) {
+            if (string.IsNullOrWhiteSpace(scopeFQN)) continue;
+            if (!markerNames.Contains(scopeFQN)) {
+                context.ReportDiagnostic(Diagnostic.Create(NDFG014, svc.Locations.FirstOrDefault(), svc.Name, scopeFQN));
+            }
+        }
+    }
+
+    private static bool HasManualFactory(INamedTypeSymbol type)
+        => type.GetAttributes().Any(a => a.AttributeClass?.Name == "ManualFactoryAttribute");
+
+    private static bool IsPrimitiveType(ITypeSymbol type) {
+        return type.SpecialType is
+            SpecialType.System_String or
+            SpecialType.System_Int32 or
+            SpecialType.System_Single or
+            SpecialType.System_Double or
+            SpecialType.System_Boolean or
+            SpecialType.System_Int64;
+    }
+
+    private static bool IsScriptableObject(ITypeSymbol type) {
+        var current = type;
+        while (current != null) {
+            if (current.Name == "ScriptableObject" || current.ToDisplayString() == "UnityEngine.ScriptableObject") return true;
+            current = current.BaseType;
+        }
+        return false;
     }
 
     private static bool IsRuntimeNamespace(string ns) {

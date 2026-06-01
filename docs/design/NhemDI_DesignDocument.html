@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nhem DI — Design Document</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --ink-2: #3a3a3a;
+    --ink-3: #6b6b6b;
+    --surface: #fafaf8;
+    --surface-2: #f2f1ee;
+    --surface-3: #e8e6e0;
+    --accent: #c84b2f;
+    --accent-2: #e8633d;
+    --ok: #1a7a4a;
+    --warn: #9c6b00;
+    --err: #b83030;
+    --info: #1a5a9c;
+    --rule: #e2dfd8;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Geist', sans-serif; background: var(--surface); color: var(--ink); line-height: 1.6; }
+  .serif { font-family: 'Instrument Serif', serif; }
+  .mono { font-family: 'DM Mono', monospace; }
+
+  /* Nav */
+  nav { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; overflow-y: auto; background: var(--surface-2); border-right: 1px solid var(--rule); padding: 2rem 0; z-index: 100; }
+  nav .nav-section { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); padding: .5rem 1.5rem .25rem; margin-top: .75rem; }
+  nav a { display: block; font-size: 13px; color: var(--ink-2); padding: .3rem 1.5rem; text-decoration: none; border-left: 2px solid transparent; transition: all .15s; }
+  nav a:hover { color: var(--ink); background: var(--surface-3); }
+  nav a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(200,75,47,.06); }
+
+  /* Main */
+  main { margin-left: 260px; padding: 3rem 4rem 6rem; max-width: 900px; }
+
+  /* Headings */
+  h1 { font-family: 'Instrument Serif', serif; font-size: 2.8rem; line-height: 1.15; font-weight: 400; letter-spacing: -.02em; margin-bottom: .5rem; }
+  h2 { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; margin: 3rem 0 1rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+  h2:first-of-type { margin-top: 2rem; }
+  h3 { font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 2rem 0 .75rem; }
+  h4 { font-size: 1rem; font-weight: 500; margin: 1.25rem 0 .5rem; }
+
+  /* Prose */
+  p { font-size: 14.5px; color: var(--ink-2); margin-bottom: .75rem; line-height: 1.75; }
+  strong { color: var(--ink); font-weight: 500; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Code */
+  code { font-family: 'DM Mono', monospace; font-size: .82em; background: var(--surface-2); border: 1px solid var(--rule); padding: .1em .35em; border-radius: 3px; color: var(--ink); }
+  pre { font-family: 'DM Mono', monospace; font-size: 12.5px; background: #0f0f0f; color: #d4d0c8; border-radius: 8px; padding: 1.25rem 1.5rem; overflow-x: auto; line-height: 1.65; margin: 1rem 0; }
+  pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+  .tok-kw { color: #79c0ff; }
+  .tok-ty { color: #ffa657; }
+  .tok-str { color: #a5d6ff; }
+  .tok-cm { color: #6e7681; }
+  .tok-attr { color: #d2a8ff; }
+  .tok-ok { color: #3fb950; }
+  .tok-err { color: #f85149; }
+  .tok-num { color: #79c0ff; }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: .03em; }
+  .b-err { background: rgba(184,48,48,.1); color: var(--err); border: 1px solid rgba(184,48,48,.25); }
+  .b-warn { background: rgba(156,107,0,.1); color: var(--warn); border: 1px solid rgba(156,107,0,.25); }
+  .b-ok { background: rgba(26,122,74,.1); color: var(--ok); border: 1px solid rgba(26,122,74,.25); }
+  .b-info { background: rgba(26,90,156,.1); color: var(--info); border: 1px solid rgba(26,90,156,.25); }
+  .b-new { background: rgba(200,75,47,.1); color: var(--accent); border: 1px solid rgba(200,75,47,.25); }
+
+  /* Diag blocks */
+  .diag { border-radius: 6px; padding: .75rem 1rem; margin: .5rem 0; font-size: 12.5px; line-height: 1.55; border-left: 3px solid; }
+  .diag-err { background: rgba(184,48,48,.06); border-color: var(--err); }
+  .diag-warn { background: rgba(156,107,0,.06); border-color: var(--warn); }
+  .diag-ok { background: rgba(26,122,74,.06); border-color: var(--ok); }
+  .diag-info { background: rgba(26,90,156,.06); border-color: var(--info); }
+  .diag-title { font-family: 'DM Mono', monospace; font-weight: 500; font-size: 12px; margin-bottom: 4px; }
+
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: .75rem 0 1.25rem; }
+  .data-table th { text-align: left; padding: 6px 10px; font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); border-bottom: 2px solid var(--rule); }
+  .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; font-size: 13px; color: var(--ink-2); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--surface-2); }
+
+  /* Cards */
+  .card { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 8px; padding: 1.25rem 1.5rem; margin: .75rem 0; }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: .75rem 0; }
+
+  /* Callout */
+  .callout { border: 1px solid var(--rule); border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 6px 6px 0; padding: .75rem 1rem; margin: 1rem 0; font-size: 13.5px; color: var(--ink-2); }
+  .callout strong { color: var(--accent); }
+
+  /* Step list */
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps li { counter-increment: step; display: grid; grid-template-columns: 28px 1fr; gap: 12px; margin-bottom: 1rem; align-items: start; }
+  .steps li::before { content: counter(step); display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: white; font-size: 11px; font-weight: 600; margin-top: 2px; }
+
+  /* Term */
+  .term { background: #0f0f0f; border-radius: 8px; padding: 1rem 1.25rem; font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.7; color: #c9d1d9; margin: .75rem 0; }
+  .t-ok { color: #3fb950; }
+  .t-err { color: #f85149; }
+  .t-warn { color: #d29922; }
+  .t-muted { color: #8b949e; }
+  .t-blue { color: #58a6ff; }
+  .t-purple { color: #bc8cff; }
+
+  /* Rule */
+  hr { border: none; border-top: 1px solid var(--rule); margin: 2rem 0; }
+  .section-anchor { scroll-margin-top: 2rem; }
+
+  /* Header */
+  .doc-header { padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--rule); margin-bottom: 0; }
+  .doc-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: .75rem; }
+  .meta-pill { font-size: 11px; font-family: 'DM Mono', monospace; background: var(--surface-3); border: 1px solid var(--rule); border-radius: 3px; padding: 2px 8px; color: var(--ink-3); }
+
+  /* Two-col layout */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1rem 0; }
+
+  /* Checklist */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li { display: flex; gap: 8px; align-items: flex-start; font-size: 13.5px; color: var(--ink-2); margin-bottom: .4rem; padding: 4px 0; }
+  .checklist li::before { content: '□'; font-size: 14px; color: var(--ink-3); flex-shrink: 0; margin-top: 1px; }
+  .checklist li.done::before { content: '✓'; color: var(--ok); }
+
+  /* Scrollspy highlight */
+  .highlight-section { background: rgba(200,75,47,.04); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div style="padding: 0 1.5rem 1.5rem; border-bottom: 1px solid var(--rule); margin-bottom:.5rem;">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Design Document</div>
+    <div style="font-size:15px;font-weight:500;color:var(--ink);margin-top:4px;">Nhem DI</div>
+    <div style="font-size:11px;color:var(--ink-3);margin-top:2px;font-family:'DM Mono',monospace;">v2.0 · 2026-05-29</div>
+  </div>
+
+  <div class="nav-section">Overview</div>
+  <a href="#overview">What is Nhem DI</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#coexistence">SG coexistence</a>
+
+  <div class="nav-section">Features</div>
+  <a href="#attributes">Attribute API</a>
+  <a href="#sg-output">Generator output</a>
+  <a href="#diagnostics">Diagnostics</a>
+  <a href="#dismith">di-smoke CLI</a>
+
+  <div class="nav-section">Implementation</div>
+  <a href="#impl-ndf025">NDF025 — primitive param</a>
+  <a href="#impl-ndfg014">NDFG014 — orphan service</a>
+  <a href="#impl-sg">RegisterGeneratedFor&lt;T&gt;</a>
+
+  <div class="nav-section">Testing</div>
+  <a href="#test-unit">Unit tests</a>
+  <a href="#test-snapshot">Snapshot tests</a>
+  <a href="#test-integration">Integration tests</a>
+
+  <div class="nav-section">Cases</div>
+  <a href="#case-tr">Tiny Rift</a>
+  <a href="#case-gr">Glass Refrain</a>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+<!-- HEADER -->
+<div class="doc-header section-anchor" id="overview">
+  <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;">NhemDangFugBixs.Tooling</div>
+  <h1>Nhem DI<br><span style="font-style:italic;color:var(--ink-3)">Design Document</span></h1>
+  <div class="doc-meta">
+    <span class="meta-pill">v2.0.0</span>
+    <span class="meta-pill">2026-05-29</span>
+    <span class="meta-pill">Unity 2021.3+</span>
+    <span class="meta-pill">VContainer 1.13+</span>
+    <span class="meta-pill">C# 10 / Roslyn</span>
+  </div>
+  <p style="margin-top:1.25rem;font-size:15px;color:var(--ink-2);max-width:620px;line-height:1.8;">
+    Compile-time convention and reporting layer for VContainer in Unity. Attribute-driven registration, source-generated installers, scope marker architecture, and CLI preflight validation.
+  </p>
+  <div class="callout">
+    <strong>Core principle:</strong> Your architecture stays yours. Nhem DI makes it compile-time checked.
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<h2 class="section-anchor" id="architecture">Architecture</h2>
+<h3>Assembly layers</h3>
+<p>Nhem DI enforces a strict dependency direction across assembly boundaries.</p>
+<pre><code><span class="tok-ok">Allowed:</span>
+  Application    → Shared
+  Infrastructure → Shared
+  Composition    → Shared
+  Composition    → Application
+  Composition    → Infrastructure
+
+<span class="tok-err">Forbidden:</span>
+  Application    → Composition   (NDF053)
+  Infrastructure → Composition</code></pre>
+
+<h3>Scope marker pattern</h3>
+<p>Services reference a <em>conceptual scope marker</em> — an interface in the Shared assembly. Composition maps that marker to a real VContainer <code>LifetimeScope</code>. This keeps Application/Domain layers independent from Unity composition.</p>
+
+<div class="two-col">
+<div>
+<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);margin-bottom:6px;">Shared assembly</div>
+<pre><code><span class="tok-kw">public interface</span> <span class="tok-ty">IScopeMarker</span> { }
+
+<span class="tok-kw">public interface</span> <span class="tok-ty">IGameplayScope</span>
+    : <span class="tok-ty">IScopeMarker</span> { }
+
+<span class="tok-kw">public interface</span> <span class="tok-ty">IGameScope</span>
+    : <span class="tok-ty">IScopeMarker</span> { }</code></pre>
+</div>
+<div>
+<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);margin-bottom:6px;">Composition assembly</div>
+<pre><code>[<span class="tok-attr">LifetimeScopeFor</span>&lt;<span class="tok-ty">IGameplayScope</span>&gt;]
+<span class="tok-kw">public sealed class</span>
+    <span class="tok-ty">GameplayLifetimeScope</span>
+    : <span class="tok-ty">LifetimeScope</span>
+{
+  <span class="tok-kw">protected override void</span> Configure(
+      IContainerBuilder builder)
+  {
+    builder.RegisterGeneratedFor
+        &lt;<span class="tok-ty">IGameplayScope</span>&gt;();
+  }
+}</code></pre>
+</div>
+</div>
+
+<!-- SG COEXISTENCE -->
+<h2 class="section-anchor" id="coexistence">SG Coexistence</h2>
+<p>Nhem DI SG and VContainer SG run in parallel within the same compilation — no conflict since scan targets and output paths are completely different.</p>
+
+<table class="data-table">
+  <thead><tr><th></th><th>VContainer SG</th><th>Nhem DI SG</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Scan target</strong></td><td><code>[Inject]</code>, constructor, Register* params</td><td><code>[AutoRegisterIn]</code>, <code>[LifetimeScopeFor]</code></td></tr>
+    <tr><td><strong>Output</strong></td><td><code>__GeneratedInjector</code> per type</td><td><code>ScopeInstaller.g.cs</code> per scope</td></tr>
+    <tr><td><strong>Purpose</strong></td><td>Avoid reflection when resolving</td><td>Avoid manual boilerplate registration</td></tr>
+    <tr><td><strong>Output path</strong></td><td><code>VContainer/Generated/…</code></td><td><code>Generated/NhemDI/…</code></td></tr>
+    <tr><td><strong>Conflict</strong></td><td colspan="2" style="color:var(--ok);">None — file path and attribute are completely different</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  When Nhem DI SG emits <code>builder.Register&lt;CombatCore&gt;()</code>, VContainer SG automatically picks up <code>CombatCore</code> and generates <code>__GeneratedInjector</code> for it. This is the desired behavior — the two SGs complement each other.
+</div>
+
+<!-- ATTRIBUTES -->
+<h2 class="section-anchor" id="attributes">Attribute API</h2>
+
+<table class="data-table">
+  <thead><tr><th>Attribute</th><th>Target</th><th>VContainer emit</th><th>Phase</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>[AutoRegisterIn&lt;TScope&gt;]</code></td>
+      <td>Class</td>
+      <td><code>builder.Register&lt;T&gt;(lifetime)</code></td>
+      <td><span class="badge b-ok">Done</span></td>
+    </tr>
+    <tr>
+      <td><code>[AutoRegister]</code></td>
+      <td>Class</td>
+      <td>Register into default scope</td>
+      <td><span class="badge b-ok">Done</span></td>
+    </tr>
+    <tr>
+      <td><code>[As&lt;TInterface&gt;]</code></td>
+      <td>Class</td>
+      <td><code>.As&lt;TInterface&gt;()</code> chain</td>
+      <td><span class="badge b-ok">Done</span></td>
+    </tr>
+    <tr>
+      <td><code>[EntryPoint]</code></td>
+      <td>Class</td>
+      <td><code>builder.RegisterEntryPoint&lt;T&gt;()</code></td>
+      <td><span class="badge b-ok">Done</span></td>
+    </tr>
+    <tr>
+      <td><code>[LifetimeScopeFor&lt;TScope&gt;]</code></td>
+      <td>LifetimeScope subclass</td>
+      <td>Scope mapping — no code emit</td>
+      <td><span class="badge b-ok">Done</span></td>
+    </tr>
+    <tr>
+      <td><code>[NhemManualFactory]</code></td>
+      <td>Class</td>
+      <td>Does not emit — only writes to report</td>
+      <td><span class="badge b-new">Phase 1</span></td>
+    </tr>
+    <tr>
+      <td><code>[NhemComponent(source)]</code></td>
+      <td>MonoBehaviour</td>
+      <td><code>builder.RegisterComponentInHierarchy&lt;T&gt;()</code> etc.</td>
+      <td><span class="badge b-new">Phase 2</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>NhemLifetime enum</h3>
+<pre><code><span class="tok-kw">public enum</span> <span class="tok-ty">NhemLifetime</span>
+{
+    Singleton,
+    Scoped,
+    Transient
+}</code></pre>
+
+<h3>ComponentSource enum (Phase 2)</h3>
+<pre><code><span class="tok-kw">public enum</span> <span class="tok-ty">ComponentSource</span>
+{
+    InHierarchy,   <span class="tok-cm">// RegisterComponentInHierarchy — always Scoped</span>
+    NewGameObject, <span class="tok-cm">// RegisterComponentOnNewGameObject</span>
+    Instance,      <span class="tok-cm">// RegisterComponent (existing instance)</span>
+    <span class="tok-cm">// NewPrefab: does not generate — needs SerializeField ref (NDF-P001)</span>
+}</code></pre>
+
+<!-- SG OUTPUT -->
+<h2 class="section-anchor" id="sg-output">Generator Output</h2>
+<h3>File layout</h3>
+<pre><code>Generated/NhemDI/
+  {Namespace}.{Scope}Installer.g.cs   ← installer per scope
+  {Namespace}.Report.g.cs             ← C# report class
+  docs/di-map.md                      ← agent-readable map (Phase 3)
+  docs/violations.md                  ← violations summary (Phase 3)</code></pre>
+
+<h3>Installer — happy path</h3>
+<pre><code><span class="tok-cm">// &lt;auto-generated /&gt;</span>
+<span class="tok-cm">// Nhem DI v2.0 — do not edit manually</span>
+<span class="tok-cm">// Scope:    IGameplayScope → GameplayLifetimeScope</span>
+<span class="tok-cm">// Services: 2  Components: 0  EntryPoints: 0  Manual: 1</span>
+
+<span class="tok-kw">using</span> VContainer;
+<span class="tok-kw">using</span> GlassRefrain.Gameplay;
+
+<span class="tok-kw">namespace</span> GlassRefrain.Composition.Generated;
+
+<span class="tok-kw">public static class</span> <span class="tok-ty">GameplayScopeInstaller</span>
+{
+    <span class="tok-kw">public static void</span> RegisterGeneratedFor&lt;<span class="tok-ty">IGameplayScope</span>&gt;(
+        <span class="tok-kw">this</span> IContainerBuilder builder)
+    {
+        <span class="tok-cm">// Ordered by dependency graph — not file order</span>
+        builder.Register&lt;<span class="tok-ty">TargetContext</span>&gt;(Lifetime.Scoped)
+               .As&lt;<span class="tok-ty">ITargetContext</span>&gt;();
+
+        builder.Register&lt;<span class="tok-ty">CombatCore</span>&gt;(Lifetime.Scoped)
+               .As&lt;<span class="tok-ty">ICombatCore</span>&gt;();
+
+        <span class="tok-cm">// M0MemoryState — SKIPPED: NDF025 primitive constructor</span>
+        <span class="tok-cm">// Register manually: builder.Register(_ =&gt; new M0MemoryState("id"), ...)</span>
+    }
+}</code></pre>
+
+<div class="callout">
+  <strong>Ordering rule:</strong> Generator sorts by dependency graph (topological sort), not by file scan order. <code>TargetContext</code> must emit before <code>CombatCore</code> because CombatCore depends on <code>ITargetContext</code>. This is why output must be snapshot tested.
+</div>
+
+<h3>Report class</h3>
+<pre><code><span class="tok-cm">// &lt;auto-generated /&gt; — NhemDI.Report.g.cs</span>
+<span class="tok-kw">public static class</span> <span class="tok-ty">NhemDIReport</span>
+{
+    <span class="tok-kw">public const int</span> TotalServiceCount = <span class="tok-num">12</span>;
+    <span class="tok-kw">public const int</span> TotalComponentCount = <span class="tok-num">3</span>;
+    <span class="tok-kw">public const int</span> TotalEntryPointCount = <span class="tok-num">2</span>;
+    <span class="tok-kw">public const int</span> ManualFactoryCount = <span class="tok-num">1</span>;
+    <span class="tok-kw">public const int</span> DiagnosticWarningCount = <span class="tok-num">0</span>;
+}</code></pre>
+
+<!-- DIAGNOSTICS -->
+<h2 class="section-anchor" id="diagnostics">Diagnostics Reference</h2>
+<p>All diagnostics run at compile time within <code>RegisterCompilationEndAction</code>. di-smoke adds cross-assembly validation after build.</p>
+
+<h3>Scope mapping — NDFG series</h3>
+<table class="data-table">
+  <thead><tr><th>Code</th><th>Severity</th><th>Trigger</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td><code>NDFG005</code></td><td><span class="badge b-err">Error</span></td><td>Duplicate <code>[LifetimeScopeFor]</code> for same scope in one assembly</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDFG006</code></td><td><span class="badge b-warn">Warning</span></td><td>Service with same name from multiple referenced assemblies</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDFG007</code></td><td><span class="badge b-err">Error</span></td><td>Composition assembly missing VContainer reference</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDFG010</code></td><td><span class="badge b-err">Error</span></td><td>Missing <code>[LifetimeScopeFor]</code> mapping — <em>fixed false positive</em></td><td><span class="badge b-ok">Fixed</span></td></tr>
+    <tr><td><code>NDFG011</code></td><td><span class="badge b-err">Error</span></td><td>Duplicate markers in same assembly</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDFG012</code></td><td><span class="badge b-err">Error</span></td><td>Missing scope alias</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDFG013</code></td><td><span class="badge b-warn">Warning</span></td><td>Marker defined in Composition assembly (should be in Shared)</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDFG014</code></td><td><span class="badge b-err">Error</span></td><td>Orphan service — no composition target for scope marker</td><td><span class="badge b-new">TODO</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Injection style — NDF02x series</h3>
+<table class="data-table">
+  <thead><tr><th>Code</th><th>Severity</th><th>Trigger</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td><code>NDF020</code></td><td><span class="badge b-err">Error</span></td><td>MonoBehaviour constructor injection</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDF021</code></td><td><span class="badge b-err">Error</span></td><td><code>[Inject]</code> public field</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDF022</code></td><td><span class="badge b-err">Error</span></td><td><code>[Inject]</code> private method — <em>fixed false positive</em></td><td><span class="badge b-ok">Fixed</span></td></tr>
+    <tr><td><code>NDF023</code></td><td><span class="badge b-err">Error</span></td><td><code>[Inject]</code> async method</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDF024</code></td><td><span class="badge b-warn">Warning</span></td><td>Non-standard construct method name</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDF025</code></td><td><span class="badge b-warn">Warning</span></td><td>Primitive constructor param (string/int/float/bool) without <code>[NhemManualFactory]</code></td><td><span class="badge b-new">TODO</span></td></tr>
+    <tr><td><code>NDF026</code></td><td><span class="badge b-info">Info</span></td><td>Constructor receives ScriptableObject-derived type — needs <code>RegisterInstance</code></td><td><span class="badge b-new">TODO</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Lifetime architecture — NDF03x/04x series</h3>
+<table class="data-table">
+  <thead><tr><th>Code</th><th>Severity</th><th>Trigger</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td><code>NDF030</code></td><td><span class="badge b-err">Error</span></td><td>Singleton depends on Scoped (captive dependency)</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDF031</code></td><td><span class="badge b-warn">Warning</span></td><td>Runtime namespace likely wrong singleton</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDF032</code></td><td><span class="badge b-warn">Warning</span></td><td><code>RegisterComponentInHierarchy</code> with lifetime != Scoped</td><td><span class="badge b-new">TODO</span></td></tr>
+    <tr><td><code>NDF040</code></td><td><span class="badge b-err">Error</span></td><td>ITickable/IDisposable implementer without <code>[EntryPoint]</code></td><td><span class="badge b-ok">Done</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Architecture guardrails — NDF05x series</h3>
+<table class="data-table">
+  <thead><tr><th>Code</th><th>Severity</th><th>Trigger</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td><code>NDF052</code></td><td><span class="badge b-warn">Warning</span></td><td>IObjectResolver injected into service (service locator anti-pattern)</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDF053</code></td><td><span class="badge b-err">Error</span></td><td>Application assembly references Composition assembly</td><td><span class="badge b-new">TODO</span></td></tr>
+  </tbody>
+</table>
+
+<h3>R3 / Reactive — NDF07x series</h3>
+<table class="data-table">
+  <thead><tr><th>Code</th><th>Severity</th><th>Trigger</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td><code>NDF070</code></td><td><span class="badge b-err">Error</span></td><td>Public <code>Subject&lt;T&gt;</code> — expose Observable instead of Subject</td><td><span class="badge b-ok">Done</span></td></tr>
+    <tr><td><code>NDF071</code></td><td><span class="badge b-warn">Warning</span></td><td>Subject owner does not implement IDisposable</td><td><span class="badge b-ok">Done</span></td></tr>
+  </tbody>
+</table>
+
+<!-- DI-SMOKE -->
+<h2 class="section-anchor" id="dismith">di-smoke CLI</h2>
+<h3>Commands</h3>
+<table class="data-table">
+  <thead><tr><th>Command</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>di-smoke preflight &lt;proj&gt;</code></td><td>Validate entire DI setup before Play Mode / CI build</td></tr>
+    <tr><td><code>di-smoke validate &lt;dll&gt;</code></td><td>Validate emitted assembly after build</td></tr>
+    <tr><td><code>di-smoke graph &lt;proj&gt; --scope &lt;S&gt; --format mermaid</code></td><td>Generate dependency graph for a scope</td></tr>
+    <tr><td><code>di-smoke report &lt;proj&gt; --format markdown --out &lt;path&gt;</code></td><td>Generate DI report for agent/code review</td></tr>
+  </tbody>
+</table>
+
+<h3>Exit codes</h3>
+<pre><code>0  — all checks passed
+1  — warnings only (does not block CI if config warn-as-warning)
+2  — errors found (blocks CI)
+3  — tool error (bad args, file not found)</code></pre>
+
+<!-- IMPL NDF025 -->
+<h2 class="section-anchor" id="impl-ndf025">Implement NDF025 — Primitive Constructor</h2>
+<div class="callout">
+  <strong>File:</strong> <code>Source~/DangFugBixs.Analyzers~/Rules/RegistrationGuardrailsRule.cs</code>
+</div>
+
+<h3>Trigger condition</h3>
+<p>Class with <code>[AutoRegisterIn]</code> or <code>[AutoRegister]</code>, constructor has at least one parameter of type <code>string</code>, <code>int</code>, <code>float</code>, <code>double</code>, <code>bool</code>, <code>long</code>, and class does not have <code>[NhemManualFactory]</code>.</p>
+
+<h3>Implementation steps</h3>
+<ol class="steps">
+  <li>
+    <div>
+      <strong>Define DiagnosticDescriptor in Diagnostics.cs</strong>
+      <pre><code><span class="tok-kw">public static readonly</span> DiagnosticDescriptor NDF025 =
+    <span class="tok-kw">new</span>(
+        id: <span class="tok-str">"NDF025"</span>,
+        title: <span class="tok-str">"Primitive constructor parameter"</span>,
+        messageFormat: <span class="tok-str">"{0} has primitive constructor parameter '{1} {2}' "</span>
+                     + <span class="tok-str">"that cannot be resolved from the container. "</span>
+                     + <span class="tok-str">"Add [NhemManualFactory] or use WithParameter."</span>,
+        category: <span class="tok-str">"NhemDI.Registration"</span>,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: <span class="tok-kw">true</span>,
+        helpLinkUri: <span class="tok-str">"https://github.com/NhomNhem/NhemDangFugBixs.Tooling/wiki/NDF025"</span>
+    );</code></pre>
+    </div>
+  </li>
+  <li>
+    <div>
+      <strong>Detect in RegisterSymbolAction — scan NamedType</strong>
+      <pre><code>context.RegisterSymbolAction(ctx =>
+{
+    <span class="tok-kw">var</span> type = (INamedTypeSymbol)ctx.Symbol;
+
+    <span class="tok-cm">// Skip if no AutoRegister*</span>
+    <span class="tok-kw">if</span> (!HasAutoRegisterAttribute(type)) <span class="tok-kw">return</span>;
+
+    <span class="tok-cm">// Skip if already marked NhemManualFactory</span>
+    <span class="tok-kw">if</span> (HasManualFactoryAttribute(type)) <span class="tok-kw">return</span>;
+
+    <span class="tok-cm">// Find public/internal constructor</span>
+    <span class="tok-kw">var</span> ctor = type.Constructors
+        .Where(c => c.DeclaredAccessibility
+            is Accessibility.Public
+            or Accessibility.Internal)
+        .OrderByDescending(c => c.Parameters.Length)
+        .FirstOrDefault();
+
+    <span class="tok-kw">if</span> (ctor == <span class="tok-kw">null</span>) <span class="tok-kw">return</span>;
+
+    <span class="tok-kw">foreach</span> (<span class="tok-kw">var</span> param <span class="tok-kw">in</span> ctor.Parameters)
+    {
+        <span class="tok-kw">if</span> (IsPrimitiveType(param.Type))
+        {
+            ctx.ReportDiagnostic(Diagnostic.Create(
+                NDF025,
+                type.Locations[0],
+                type.Name,
+                param.Type.Name,
+                param.Name));
+        }
+    }
+}, SymbolKind.NamedType);
+
+<span class="tok-cm">// Helper</span>
+<span class="tok-kw">private static bool</span> IsPrimitiveType(ITypeSymbol type) =>
+    type.SpecialType <span class="tok-kw">is</span>
+        SpecialType.System_String <span class="tok-kw">or</span>
+        SpecialType.System_Int32  <span class="tok-kw">or</span>
+        SpecialType.System_Single <span class="tok-kw">or</span>
+        SpecialType.System_Double <span class="tok-kw">or</span>
+        SpecialType.System_Boolean <span class="tok-kw">or</span>
+        SpecialType.System_Int64;</code></pre>
+    </div>
+  </li>
+  <li>
+    <div>
+      <strong>Skip in generator — do not emit types with NDF025</strong>
+      <pre><code><span class="tok-cm">// In RegistrationEmitter.cs</span>
+<span class="tok-kw">private bool</span> ShouldSkipRegistration(INamedTypeSymbol type)
+{
+    <span class="tok-kw">if</span> (HasManualFactoryAttribute(type)) <span class="tok-kw">return true</span>;
+
+    <span class="tok-kw">var</span> ctor = GetPrimaryConstructor(type);
+    <span class="tok-kw">if</span> (ctor != <span class="tok-kw">null</span> && ctor.Parameters.Any(p => IsPrimitiveType(p.Type)))
+        <span class="tok-kw">return true</span>;
+
+    <span class="tok-kw">return false</span>;
+}
+
+<span class="tok-cm">// In emit loop — add comment to generated file</span>
+<span class="tok-kw">if</span> (ShouldSkipRegistration(service))
+{
+    writer.WriteLine(
+        $<span class="tok-str">"// {service.Name} — SKIPPED: NDF025 primitive constructor"</span>);
+    writer.WriteLine(
+        $<span class="tok-str">"// Register manually in Configure()"</span>);
+    <span class="tok-kw">continue</span>;
+}</code></pre>
+    </div>
+  </li>
+  <li>
+    <div>
+      <strong>Emit into Report section "Manual factories required"</strong>
+      <pre><code><span class="tok-cm">// In ReportEmitter.cs</span>
+writer.WriteLine(<span class="tok-str">"## Manual Factories Required"</span>);
+<span class="tok-kw">foreach</span> (<span class="tok-kw">var</span> skipped <span class="tok-kw">in</span> skippedServices)
+{
+    writer.WriteLine($<span class="tok-str">"### {skipped.TypeName}"</span>);
+    writer.WriteLine($<span class="tok-str">"Reason: {skipped.SkipReason}"</span>);
+    writer.WriteLine();
+    writer.WriteLine(<span class="tok-str">"Recommended registration:"</span>);
+    writer.WriteLine(<span class="tok-str">"```csharp"</span>);
+    writer.WriteLine(skipped.GenerateSnippet());
+    writer.WriteLine(<span class="tok-str">"```"</span>);
+}</code></pre>
+    </div>
+  </li>
+</ol>
+
+<!-- IMPL NDFG014 -->
+<h2 class="section-anchor" id="impl-ndfg014">Implement NDFG014 — Orphan Service</h2>
+<div class="callout">
+  <strong>File:</strong> <code>Source~/DangFugBixs.Analyzers~/Rules/ArchitectureGuardrailsRule.cs</code><br>
+  <strong>Context:</strong> <code>RegisterCompilationEndAction</code> — after all symbols have been scanned
+</div>
+
+<h3>Problem</h3>
+<p>Service has <code>[AutoRegisterIn&lt;IGameplayScope&gt;]</code> but no <code>[LifetimeScopeFor&lt;IGameplayScope&gt;]</code> exists in the entire compilation. Service compiles fine, no runtime error — it simply never gets registered. This is the most dangerous silent failure.</p>
+
+<h3>Implementation steps</h3>
+<ol class="steps">
+  <li>
+    <div>
+      <strong>Define DiagnosticDescriptor</strong>
+      <pre><code><span class="tok-kw">public static readonly</span> DiagnosticDescriptor NDFG014 =
+    <span class="tok-kw">new</span>(
+        id: <span class="tok-str">"NDFG014"</span>,
+        title: <span class="tok-str">"Orphan service — no composition target"</span>,
+        messageFormat: <span class="tok-str">"{0} is registered for scope {1} but no "</span>
+                     + <span class="tok-str">"[LifetimeScopeFor&lt;{1}&gt;] was found. "</span>
+                     + <span class="tok-str">"This service will never be registered at runtime."</span>,
+        category: <span class="tok-str">"NhemDI.ScopeMapping"</span>,
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: <span class="tok-kw">true</span>
+    );</code></pre>
+    </div>
+  </li>
+  <li>
+    <div>
+      <strong>Collect in CompilationEndAction</strong>
+      <pre><code>compilationEnd.RegisterCompilationEndAction(endCtx =>
+{
+    <span class="tok-cm">// Already have: CollectScopeMappings() returns</span>
+    <span class="tok-cm">// Dictionary&lt;scopeMarkerFQN, List&lt;LifetimeScopeSymbol&gt;&gt;</span>
+    <span class="tok-kw">var</span> scopeMappings = CollectScopeMappings(endCtx.Compilation);
+
+    <span class="tok-cm">// NDFG014: cross-check autoRegistered list</span>
+    <span class="tok-kw">foreach</span> (<span class="tok-kw">var</span> (serviceType, scopeMarkerFQN)
+        <span class="tok-kw">in</span> autoRegisteredTypes)
+    {
+        <span class="tok-kw">if</span> (!scopeMappings.ContainsKey(scopeMarkerFQN))
+        {
+            endCtx.ReportDiagnostic(Diagnostic.Create(
+                NDFG014,
+                serviceType.Locations[0],
+                serviceType.Name,
+                scopeMarkerFQN));
+        }
+    }
+});</code></pre>
+    </div>
+  </li>
+  <li>
+    <div>
+      <strong>autoRegisteredTypes must store scope FQN</strong>
+      <pre><code><span class="tok-cm">// In RegisterSymbolAction — collect scope FQN as well</span>
+<span class="tok-kw">var</span> autoRegAttr = type.GetAttributes()
+    .FirstOrDefault(a => IsAutoRegisterInAttribute(a));
+
+<span class="tok-kw">if</span> (autoRegAttr != <span class="tok-kw">null</span>)
+{
+    <span class="tok-kw">var</span> scopeTypeArg = autoRegAttr.AttributeClass?
+        .TypeArguments.FirstOrDefault();
+
+    <span class="tok-kw">if</span> (scopeTypeArg != <span class="tok-kw">null</span>)
+    {
+        <span class="tok-cm">// ConcurrentBag&lt;(INamedTypeSymbol type, string scopeFQN)&gt;</span>
+        autoRegisteredTypes.Add(
+            (type, scopeTypeArg.ToDisplayString()));
+    }
+}</code></pre>
+    </div>
+  </li>
+  <li>
+    <div>
+      <strong>Performance: early exit if no autoRegistered types</strong>
+      <pre><code><span class="tok-cm">// Top of CompilationEndAction</span>
+<span class="tok-kw">if</span> (autoRegisteredTypes.IsEmpty) <span class="tok-kw">return</span>;
+
+<span class="tok-cm">// Collect scope mappings ONLY when needed</span>
+<span class="tok-kw">var</span> scopeMappings = CollectScopeMappings(endCtx.Compilation);</code></pre>
+    </div>
+  </li>
+</ol>
+
+<!-- IMPL SG -->
+<h2 class="section-anchor" id="impl-sg">Implement RegisterGeneratedFor&lt;T&gt;</h2>
+<div class="callout">
+  <strong>File:</strong> <code>Source~/DangFugBixs.Generators~/VContainerAutoRegisterGenerator.cs</code>
+</div>
+
+<h3>Extension method pattern</h3>
+<p>Generator produces an extension method instead of a partial class. User calls <code>builder.RegisterGeneratedFor&lt;IGameplayScope&gt;()</code> in their <code>Configure()</code> — full control over ordering and manual registration.</p>
+
+<h3>Incremental pipeline</h3>
+<ol class="steps">
+  <li>
+    <div>
+      <strong>Step 1: Collect scope markers — cached, rarely changes</strong>
+      <pre><code><span class="tok-kw">var</span> scopeMarkers = context.SyntaxProvider
+    .ForAttributeWithMetadataName(
+        <span class="tok-str">"NhemDangFugBixs.Attributes.LifetimeScopeForAttribute`1"</span>,
+        predicate: (node, _) => node <span class="tok-kw">is</span> ClassDeclarationSyntax,
+        transform: (ctx, _) => ExtractScopeMarkerInfo(ctx))
+    .Where(x => x != <span class="tok-kw">null</span>)
+    .Collect();</code></pre>
+    </div>
+  </li>
+  <li>
+    <div>
+      <strong>Step 2: Collect services — incremental per file</strong>
+      <pre><code><span class="tok-kw">var</span> services = context.SyntaxProvider
+    .ForAttributeWithMetadataName(
+        <span class="tok-str">"NhemDangFugBixs.Attributes.AutoRegisterInAttribute`1"</span>,
+        predicate: (node, _) => node <span class="tok-kw">is</span> ClassDeclarationSyntax,
+        transform: (ctx, _) => ExtractServiceInfo(ctx))
+    .Where(x => x != <span class="tok-kw">null</span> && !x.ShouldSkip)
+    .Collect();</code></pre>
+    </div>
+  </li>
+  <li>
+    <div>
+      <strong>Step 3: Combine and emit per scope</strong>
+      <pre><code>context.RegisterSourceOutput(
+    scopeMarkers.Combine(services),
+    (spc, combined) =>
+    {
+        <span class="tok-kw">var</span> (markers, allServices) = combined;
+
+        <span class="tok-kw">foreach</span> (<span class="tok-kw">var</span> marker <span class="tok-kw">in</span> markers)
+        {
+            <span class="tok-kw">var</span> scopeServices = allServices
+                .Where(s => s.ScopeFQN == marker.ScopeFQN)
+                .OrderByDependencyGraph()  <span class="tok-cm">// topological sort</span>
+                .ToList();
+
+            <span class="tok-kw">var</span> source = EmitInstaller(marker, scopeServices);
+            spc.AddSource(
+                $<span class="tok-str">"{marker.Namespace}.{marker.ScopeName}Installer.g.cs"</span>,
+                source);
+        }
+    });</code></pre>
+    </div>
+  </li>
+</ol>
+
+<!-- TESTS -->
+<h2 class="section-anchor" id="test-unit">Unit Tests</h2>
+<div class="callout">
+  <strong>File:</strong> <code>DangFugBixs.Analyzers.Tests/Rules/RegistrationGuardrailsRuleTests.cs</code>
+</div>
+
+<h3>NDF025 — test cases</h3>
+<pre><code>[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> PrimitiveStringParam_WithAutoRegister_ReportsNDF025()
+{
+    <span class="tok-kw">var</span> source = <span class="tok-str">"""
+        using NhemDangFugBixs.Attributes;
+        [AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Singleton)]
+        public class MemoryState : IMemoryState
+        {
+            public MemoryState(string memoryId) { }  // ← NDF025
+        }
+        public interface IGameplayScope : IScopeMarker { }
+        public interface IMemoryState { }
+        """</span>;
+
+    <span class="tok-kw">await</span> VerifyAnalyzerAsync(source,
+        DiagnosticResult
+            .CompilerWarning(<span class="tok-str">"NDF025"</span>)
+            .WithSpan(<span class="tok-num">3</span>, <span class="tok-num">1</span>, <span class="tok-num">3</span>, <span class="tok-num">1</span>)
+            .WithArguments(<span class="tok-str">"MemoryState"</span>, <span class="tok-str">"String"</span>, <span class="tok-str">"memoryId"</span>));
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> PrimitiveParam_WithManualFactory_DoesNotWarn()
+{
+    <span class="tok-kw">var</span> source = <span class="tok-str">"""
+        using NhemDangFugBixs.Attributes;
+        [NhemManualFactory(Reason = "Requires authored id")]
+        [AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Singleton)]
+        public class MemoryState : IMemoryState
+        {
+            public MemoryState(string memoryId) { }  // ← OK, manual factory
+        }
+        public interface IGameplayScope : IScopeMarker { }
+        public interface IMemoryState { }
+        """</span>;
+
+    <span class="tok-kw">await</span> VerifyAnalyzerAsync(source); <span class="tok-cm">// no diagnostics expected</span>
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> MultipleIntParams_ReportsNDF025_ForEach()
+{
+    <span class="tok-cm">// Service with int + string → 2 warnings</span>
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> DependencyParam_NotPrimitive_DoesNotWarn()
+{
+    <span class="tok-cm">// Constructor receives ITargetContext → no warning</span>
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> ScriptableObjectParam_ReportsNDF026()
+{
+    <span class="tok-cm">// Constructor receives GameSettings : ScriptableObject → NDF026 Info</span>
+}</code></pre>
+
+<h3>NDFG014 — test cases</h3>
+<pre><code>[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> ServiceWithNoCompositionTarget_ReportsNDFG014()
+{
+    <span class="tok-kw">var</span> source = <span class="tok-str">"""
+        using NhemDangFugBixs.Attributes;
+
+        // IGameplayScope exists but no LifetimeScopeFor
+        public interface IGameplayScope : IScopeMarker { }
+
+        [AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Scoped)]
+        public class PlayerService : IPlayerService { }
+        public interface IPlayerService { }
+        """</span>;
+
+    <span class="tok-kw">await</span> VerifyAnalyzerAsync(source,
+        DiagnosticResult
+            .CompilerError(<span class="tok-str">"NDFG014"</span>)
+            .WithArguments(<span class="tok-str">"PlayerService"</span>, <span class="tok-str">"IGameplayScope"</span>));
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> ServiceWithCompositionTarget_DoesNotWarn()
+{
+    <span class="tok-cm">// IGameplayScope + [LifetimeScopeFor&lt;IGameplayScope&gt;] → OK</span>
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> CompositionTargetInReferencedAssembly_DoesNotWarn()
+{
+    <span class="tok-cm">// [LifetimeScopeFor] in package assembly → no false positive</span>
+    <span class="tok-cm">// This is a regression test for NDFG010 fix</span>
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> NoAutoRegisteredTypes_EarlyExit_NoScan()
+{
+    <span class="tok-cm">// Project without [AutoRegisterIn] → should not trigger CollectScopeMappings</span>
+    <span class="tok-cm">// Verify via performance smoke test (&lt; 5ms)</span>
+}</code></pre>
+
+<h2 class="section-anchor" id="test-snapshot">Snapshot Tests</h2>
+<div class="callout">
+  <strong>File:</strong> <code>DangFugBixs.Tests/GeneratedOutputSnapshotTests.cs</code>
+</div>
+<p>Snapshot test ensures generated output is deterministic — does not change between compile runs when input is unchanged.</p>
+
+<pre><code>[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> Snapshot_HappyPath_GameplayScope()
+{
+    <span class="tok-kw">var</span> result = <span class="tok-kw">await</span> GeneratorTestHost.RunAsync(<span class="tok-str">"""
+        [AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Scoped)]
+        [As&lt;ITargetContext&gt;]
+        public class TargetContext : ITargetContext { }
+
+        [AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Scoped)]
+        [As&lt;ICombatCore&gt;]
+        public class CombatCore : ICombatCore
+        {
+            public CombatCore(ITargetContext target) { }
+        }
+
+        [LifetimeScopeFor&lt;IGameplayScope&gt;]
+        public class GameplayLifetimeScope : LifetimeScope { }
+        public interface IGameplayScope : IScopeMarker { }
+        """</span>);
+
+    <span class="tok-cm">// Verify ordering: TargetContext before CombatCore</span>
+    Assert.That(result.GeneratedSource,
+        Does.Contain(<span class="tok-str">"Register&lt;TargetContext&gt;"</span>));
+
+    <span class="tok-kw">var</span> targetIdx = result.GeneratedSource.IndexOf(<span class="tok-str">"Register&lt;TargetContext&gt;"</span>);
+    <span class="tok-kw">var</span> combatIdx = result.GeneratedSource.IndexOf(<span class="tok-str">"Register&lt;CombatCore&gt;"</span>);
+    Assert.That(targetIdx, Is.LessThan(combatIdx));
+
+    <span class="tok-cm">// Snapshot compare full output</span>
+    <span class="tok-kw">await</span> Verify(result.GeneratedSource)
+        .UseFileName(<span class="tok-str">"GameplayScope_HappyPath"</span>);
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> Snapshot_SkippedService_HasComment()
+{
+    <span class="tok-cm">// NDF025 service → generated file has SKIPPED comment</span>
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> Snapshot_IsStable_AcrossMultipleRuns()
+{
+    <span class="tok-cm">// Run generator 3 times with same input → output byte-identical</span>
+    <span class="tok-kw">var</span> run1 = <span class="tok-kw">await</span> GeneratorTestHost.RunAsync(source);
+    <span class="tok-kw">var</span> run2 = <span class="tok-kw">await</span> GeneratorTestHost.RunAsync(source);
+    Assert.That(run1.GeneratedSource, Is.EqualTo(run2.GeneratedSource));
+}</code></pre>
+
+<h2 class="section-anchor" id="test-integration">Integration Tests</h2>
+<div class="callout">
+  <strong>File:</strong> <code>DangFugBixs.Tests/CrossAssemblyGenerationTests.cs</code>
+</div>
+
+<pre><code>[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> CrossAssembly_LifetimeScopeForInPackage_NoFalsePositive()
+{
+    <span class="tok-cm">// Simulate: [LifetimeScopeFor] in NhemDangFugBixs.Attributes package</span>
+    <span class="tok-cm">// Service assembly references package → NDFG010 should not fire</span>
+    <span class="tok-cm">// Regression test for CollectScopeMappings() full scan fix</span>
+
+    <span class="tok-kw">var</span> packageAssembly = CompileAssembly(<span class="tok-str">"""
+        [LifetimeScopeFor&lt;IGameplayScope&gt;]
+        public class GameplayLifetimeScope : LifetimeScope { }
+        public interface IGameplayScope : IScopeMarker { }
+        """</span>);
+
+    <span class="tok-kw">var</span> result = <span class="tok-kw">await</span> VerifyAnalyzerWithReferences(
+        serviceSource,
+        additionalReferences: [packageAssembly]);
+
+    Assert.That(result.Diagnostics, Is.Empty);
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> CrossAssembly_OrphanService_ReportsNDFG014()
+{
+    <span class="tok-cm">// Composition assembly has no [LifetimeScopeFor&lt;IGameplayScope&gt;]</span>
+    <span class="tok-cm">// Service assembly has [AutoRegisterIn&lt;IGameplayScope&gt;]</span>
+    <span class="tok-cm">// → NDFG014 must fire</span>
+}
+
+[<span class="tok-attr">Test</span>]
+<span class="tok-kw">public async Task</span> PerformanceSmoke_EarlyExit_NoAutoRegistered()
+{
+    <span class="tok-cm">// Project with 500 types, 0 [AutoRegisterIn]</span>
+    <span class="tok-cm">// CompilationEndAction should early exit &lt; 10ms</span>
+    <span class="tok-kw">var</span> sw = Stopwatch.StartNew();
+    <span class="tok-kw">await</span> VerifyAnalyzerAsync(largeProjectSource);
+    Assert.That(sw.ElapsedMilliseconds, Is.LessThan(<span class="tok-num">100</span>));
+}</code></pre>
+
+<!-- CASES -->
+<h2 class="section-anchor" id="case-tr">Case Study — Tiny Rift</h2>
+<p>Tiny Rift uses Nhem DI for <em>fast setup</em> — low ceremony, backend config, easy to copy to new projects.</p>
+
+<div class="two-col">
+<div>
+<h4>Service registration</h4>
+<pre><code>[<span class="tok-attr">AutoRegisterIn</span>&lt;<span class="tok-ty">IGameScope</span>&gt;(
+    Lifetime = NhemLifetime.Singleton)]
+[<span class="tok-attr">As</span>&lt;<span class="tok-ty">IBackendClient</span>&gt;]
+<span class="tok-kw">public sealed class</span>
+    <span class="tok-ty">TinyRiftBackendClient</span>
+    : <span class="tok-ty">IBackendClient</span>
+{
+    <span class="tok-kw">public</span> TinyRiftBackendClient(
+        <span class="tok-ty">BackendConfig</span> config) { }
+}</code></pre>
+</div>
+<div>
+<h4>Manual config registration</h4>
+<pre><code>[<span class="tok-attr">LifetimeScopeFor</span>&lt;<span class="tok-ty">IGameScope</span>&gt;]
+<span class="tok-kw">public sealed class</span>
+    <span class="tok-ty">GameLifetimeScope</span>
+    : <span class="tok-ty">LifetimeScope</span>
+{
+  [<span class="tok-attr">SerializeField</span>]
+  <span class="tok-kw">private</span> BackendConfig _config;
+
+  <span class="tok-kw">protected override void</span> Configure(
+    IContainerBuilder b)
+  {
+    b.RegisterInstance(_config);
+    b.RegisterGeneratedFor
+        &lt;<span class="tok-ty">IGameScope</span>&gt;();
+  }
+}</code></pre>
+</div>
+</div>
+
+<div class="diag diag-info">
+  <div class="diag-title">NDF026 · Info — BackendConfig constructor param</div>
+  TinyRiftBackendClient has a ScriptableObject-derived constructor parameter <code>BackendConfig config</code>. Ensure it is registered with <code>builder.RegisterInstance(config).AsSelf()</code> before calling <code>RegisterGeneratedFor</code>.
+</div>
+
+<h2 class="section-anchor" id="case-gr">Case Study — Glass Refrain</h2>
+<p>Glass Refrain uses Nhem DI for <em>architecture stress testing</em> — strict scope boundaries, manual factory, agent-coding guardrails.</p>
+
+<h4>Manual factory with primitive constructor</h4>
+<pre><code>[<span class="tok-attr">NhemManualFactory</span>(
+    Reason = <span class="tok-str">"Requires authored memoryId. Do not resolve string."</span>)]
+[<span class="tok-attr">AutoRegisterIn</span>&lt;<span class="tok-ty">IGameplayScope</span>&gt;(Lifetime = NhemLifetime.Singleton)]
+<span class="tok-kw">public sealed class</span> <span class="tok-ty">M0MemoryState</span> : <span class="tok-ty">IM0MemoryState</span>
+{
+    <span class="tok-kw">public</span> M0MemoryState(<span class="tok-kw">string</span> memoryId) { _id = memoryId; }
+    <span class="tok-kw">private readonly string</span> _id;
+}
+
+<span class="tok-cm">// In GameplayLifetimeScope.Configure():</span>
+builder.Register(_ => <span class="tok-kw">new</span> M0MemoryState(<span class="tok-str">"M0RevealCandidate"</span>),
+    Lifetime.Singleton).As&lt;<span class="tok-ty">IM0MemoryState</span>&gt;();</code></pre>
+
+<div class="term">
+<span class="t-blue">$</span> dotnet di-smoke report GlassRefrain.csproj --format markdown<br>
+<br>
+<span class="t-muted">## Manual Factories Required</span><br>
+<br>
+<span class="t-muted">### M0MemoryState</span><br>
+<span class="t-muted">Reason: Requires authored memoryId. Do not resolve string.</span><br>
+<span class="t-muted">Scope: IGameplayScope</span><br>
+<br>
+<span class="t-muted">```csharp</span><br>
+<span class="t-muted">builder.Register(_ => new M0MemoryState("M0RevealCandidate"),</span><br>
+<span class="t-muted">    Lifetime.Singleton).As&lt;IM0MemoryState&gt;();</span><br>
+<span class="t-muted">```</span><br>
+<br>
+<span class="t-ok">Report written to docs/di-map.md</span>
+</div>
+
+<hr>
+<div style="font-size:12px;color:var(--ink-3);font-family:'DM Mono',monospace;padding-top:1rem;">
+  NhemDangFugBixs.Tooling Design Document · v2.0 · 2026-05-29 · NHEM Studio
+</div>
+
+</main>
+
+<script>
+const sections = document.querySelectorAll('.section-anchor');
+const links = document.querySelectorAll('nav a');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -75% 0px' });
+
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

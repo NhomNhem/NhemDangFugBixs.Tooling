@@ -11,6 +11,7 @@ slug: docs/reference/diagnostics
 | `NDFG010` | Missing marker-to-scope mapping |
 | `NDFG011` | Duplicate marker mapping |
 | `NDFG012` | Missing scope alias for preset/alias usage |
+| `NDFG014` | Orphan service — no `[LifetimeScopeFor]` composition target for scope |
 | `NDFG005` | Duplicate composition target for same scope (Error) |
 | `NDFG006` | Same service discovered from multiple referenced assemblies (Warning) |
 | `NDFG007` | Missing VContainer reference in composition assembly (Error) |
@@ -24,6 +25,9 @@ slug: docs/reference/diagnostics
 | `NDF021` | `[Inject]` public field |
 | `NDF022` | `[Inject]` private method not compatible with VContainer Source Generator |
 | `NDF023` | `[Inject]` async method |
+| `NDF024` | Non-standard construct method name |
+| `NDF025` | Primitive constructor parameter (cannot auto-resolve) |
+| `NDF026` | `ScriptableObject` constructor parameter hint |
 
 ## Lifetime and Architecture
 

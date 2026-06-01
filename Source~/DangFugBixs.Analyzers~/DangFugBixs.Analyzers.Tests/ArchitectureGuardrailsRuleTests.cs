@@ -75,6 +75,162 @@ namespace VContainer { public class InjectAttribute : System.Attribute {} }
     }
 
     [Fact]
+    public async Task PrimitiveStringParam_WithAutoRegister_ReportsNDF025() {
+        var test = """
+using NhemDangFugBixs.Attributes;
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Singleton)]
+public class {|#0:MemoryState|} {
+    public MemoryState(string memoryId) { }
+}
+public interface IGameplayScope { }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute {
+    public AutoRegisterInAttribute(System.Type t) {}
+    public NhemLifetime Lifetime { get; set; }
+  }
+  public enum NhemLifetime { Singleton, Transient, Scoped }
+}
+""";
+        var expected = Verifier.Diagnostic("NDF025").WithLocation(0).WithArguments("MemoryState", "String", "memoryId");
+        await Verifier.VerifyAnalyzerAsync(test, expected);
+    }
+
+    [Fact]
+    public async Task PrimitiveParam_WithManualFactory_DoesNotWarn() {
+        var test = """
+using NhemDangFugBixs.Attributes;
+[ManualFactory(Reason = "Requires authored id")]
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Singleton)]
+public class MemoryState {
+    public MemoryState(string memoryId) { }
+}
+public interface IGameplayScope { }
+namespace NhemDangFugBixs.Attributes {
+  public class ManualFactoryAttribute : System.Attribute {
+    public string? Reason { get; init; }
+  }
+  public class AutoRegisterInAttribute : System.Attribute {
+    public AutoRegisterInAttribute(System.Type t) {}
+    public NhemLifetime Lifetime { get; set; }
+  }
+  public enum NhemLifetime { Singleton, Transient, Scoped }
+}
+""";
+        await Verifier.VerifyAnalyzerAsync(test);
+    }
+
+    [Fact]
+    public async Task DependencyParam_NotPrimitive_DoesNotWarn() {
+        var test = """
+using NhemDangFugBixs.Attributes;
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Singleton)]
+public class CombatCore {
+    public CombatCore(ITargetContext target) { }
+}
+public interface IGameplayScope { }
+public interface ITargetContext { }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute {
+    public AutoRegisterInAttribute(System.Type t) {}
+    public NhemLifetime Lifetime { get; set; }
+  }
+  public enum NhemLifetime { Singleton, Transient, Scoped }
+}
+""";
+        await Verifier.VerifyAnalyzerAsync(test);
+    }
+
+    [Fact]
+    public async Task ServiceWithNoCompositionTarget_ReportsNDFG014() {
+        var test = """
+using NhemDangFugBixs.Attributes;
+public interface IGameplayScope { }
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Scoped)]
+public class {|#0:PlayerService|} { }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute {
+    public AutoRegisterInAttribute(System.Type t) {}
+    public NhemLifetime Lifetime { get; set; }
+  }
+  public enum NhemLifetime { Singleton, Transient, Scoped }
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
+}
+""";
+        var expected = Verifier.Diagnostic("NDFG014").WithLocation(0).WithArguments("PlayerService", "IGameplayScope");
+        await Verifier.VerifyAnalyzerAsync(test, expected);
+    }
+
+    [Fact]
+    public async Task ScriptableObjectParam_ReportsNDF026Info() {
+        var test = """
+using NhemDangFugBixs.Attributes;
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Singleton)]
+public class BackendClient {
+    public BackendClient(BackendConfig config) { }
+}
+public class BackendConfig : UnityEngine.ScriptableObject { }
+public interface IGameplayScope { }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute {
+    public AutoRegisterInAttribute(System.Type t) {}
+    public NhemLifetime Lifetime { get; set; }
+  }
+  public enum NhemLifetime { Singleton, Transient, Scoped }
+}
+namespace UnityEngine { public class ScriptableObject {} }
+""";
+        var expected = Verifier.Diagnostic("NDF026").WithArguments("BackendClient", "BackendConfig", "config");
+        await Verifier.VerifyAnalyzerAsync(test, expected);
+    }
+
+    [Fact]
+    public async Task ScriptableObjectParam_WithManualFactory_NoNDF026() {
+        var test = """
+using NhemDangFugBixs.Attributes;
+[ManualFactory(Reason = "Config is authored asset")]
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Singleton)]
+public class BackendClient {
+    public BackendClient(BackendConfig config) { }
+}
+public class BackendConfig : UnityEngine.ScriptableObject { }
+public interface IGameplayScope { }
+namespace NhemDangFugBixs.Attributes {
+  public class ManualFactoryAttribute : System.Attribute {
+    public string? Reason { get; init; }
+  }
+  public class AutoRegisterInAttribute : System.Attribute {
+    public AutoRegisterInAttribute(System.Type t) {}
+    public NhemLifetime Lifetime { get; set; }
+  }
+  public enum NhemLifetime { Singleton, Transient, Scoped }
+}
+namespace UnityEngine { public class ScriptableObject {} }
+""";
+        await Verifier.VerifyAnalyzerAsync(test);
+    }
+
+    [Fact]
+    public async Task ServiceWithCompositionTarget_DoesNotWarn() {
+        var test = """
+using NhemDangFugBixs.Attributes;
+public interface IGameplayScope { }
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Scoped)]
+public class PlayerService { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope { }
+namespace NhemDangFugBixs.Attributes {
+  public class AutoRegisterInAttribute : System.Attribute {
+    public AutoRegisterInAttribute(System.Type t) {}
+    public NhemLifetime Lifetime { get; set; }
+  }
+  public enum NhemLifetime { Singleton, Transient, Scoped }
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
+}
+""";
+        await Verifier.VerifyAnalyzerAsync(test);
+    }
+
+    [Fact]
     public async Task InjectionAndSubjectRules_ReportDiagnostics() {
         var test = """
 using VContainer;

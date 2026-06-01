@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NhemDangFugBixs.Tooling — Status Report</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --card: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --ok: #3fb950;
+      --warn: #d29922;
+      --err: #f85149;
+      --info: #a371f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 1.5rem 1.5rem;
+      max-width: 960px; margin: 0 auto;
+    }
+    header h1 { margin: 0 0 .25rem; font-size: 1.75rem; }
+    header .subtitle { color: var(--muted); }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    section { margin-bottom: 2rem; }
+    h2 { font-size: 1.25rem; margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: .5rem; }
+    h3 { font-size: 1rem; color: var(--accent); margin: 1.25rem 0 .5rem; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: .15rem .45rem;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+    .badge-ok { background: rgba(63,185,80,.15); color: var(--ok); border: 1px solid rgba(63,185,80,.25); }
+    .badge-warn { background: rgba(210,153,34,.15); color: var(--warn); border: 1px solid rgba(210,153,34,.25); }
+    .badge-err { background: rgba(248,81,73,.15); color: var(--err); border: 1px solid rgba(248,81,73,.25); }
+    .badge-info { background: rgba(163,113,247,.15); color: var(--info); border: 1px solid rgba(163,113,247,.25); }
+    table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+    th, td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 500; font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
+    tr:last-child td { border-bottom: none; }
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      background: rgba(175,184,193,.12);
+      padding: .1rem .3rem;
+      border-radius: 4px;
+      font-size: .88em;
+    }
+    pre {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: .75rem 1rem;
+      overflow-x: auto;
+      font-size: .85rem;
+      line-height: 1.5;
+    }
+    ul { padding-left: 1.25rem; }
+    li { margin-bottom: .35rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .metric { text-align: center; padding: 1rem; }
+    .metric .value { font-size: 2rem; font-weight: 700; }
+    .metric .label { color: var(--muted); font-size: .85rem; }
+    .timeline { border-left: 2px solid var(--border); padding-left: 1.25rem; margin-left: .5rem; }
+    .timeline .item { position: relative; margin-bottom: 1.25rem; }
+    .timeline .item::before {
+      content: ""; position: absolute; left: -1.45rem; top: .35rem;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--bg);
+    }
+    .timeline .done::before { background: var(--ok); }
+    .timeline .pending::before { background: var(--muted); }
+    .small { font-size: .8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NhemDangFugBixs.Tooling</h1>
+    <div class="subtitle">Status Report &middot; May 2026</div>
+  </header>
+
+  <main>
+    <!-- Metrics -->
+    <section>
+      <div class="grid">
+        <div class="card metric">
+          <div class="value" style="color:var(--ok)">36/36</div>
+          <div class="label">Analyzer Tests Passed</div>
+        </div>
+        <div class="card metric">
+          <div class="value" style="color:var(--accent)">14</div>
+          <div class="label">Diagnostic Rules</div>
+        </div>
+        <div class="card metric">
+          <div class="value" style="color:var(--warn)">3</div>
+          <div class="label">Known Issues Fixed</div>
+        </div>
+        <div class="card metric">
+          <div class="value" style="color:var(--info)">2</div>
+          <div class="label">Commits This Session</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Issues Found -->
+    <section>
+      <h2>Issues Found</h2>
+
+      <div class="card">
+        <span class="badge badge-err">NDF022</span>
+        <strong> False Positive on Public [Inject] Methods</strong>
+        <p>Analyzer warned for <code>public void Construct([Inject])</code> even though this pattern is fully compatible with the VContainer Source Generator. Only <code>private</code> [Inject] methods are incompatible.</p>
+        <ul>
+          <li><strong>Impact:</strong> Spam warnings in every GR project using public injection.</li>
+          <li><strong>Root Cause:</strong> Condition checked <code>Accessibility.Public</code> instead of <code>Accessibility.Private</code>.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-err">NDFG010</span>
+        <strong> False Positive on Referenced Assembly Markers</strong>
+        <p>When <code>[LifetimeScopeFor]</code> was defined in a referenced assembly (e.g. <code>NhemDangFugBixs.Attributes</code> package), NDFG010 reported "missing mapping" because the analyzer only scanned source types.</p>
+        <ul>
+          <li><strong>Impact:</strong> Error on every <code>[AutoRegisterIn(typeof(IGameplayScope))]</code> registration even though the marker existed in the Attributes package.</li>
+          <li><strong>Root Cause:</strong> <code>RegisterSymbolAction(SymbolKind.NamedType)</code> only fires for types in the current compilation's source files, not referenced assemblies.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-warn">UPM Packaging</span>
+        <strong> DLL/Asmdef Filename Collision</strong>
+        <p>Unity warned when both <code>.asmdef</code> and <code>.dll</code> shared the same assembly name. Runtime and Attributes were shipped as precompiled DLLs with matching asmdef names.</p>
+        <ul>
+          <li><strong>Impact:</strong> Unity console warnings on package import.</li>
+          <li><strong>Root Cause:</strong> Package included both precompiled DLLs and asmdef files for the same assembly names.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Fixes Applied -->
+    <section>
+      <h2>Fixes Applied</h2>
+
+      <div class="card">
+        <h3>Fix 1 — NDF022: Private [Inject] Only</h3>
+        <table>
+          <tr><th>Field</th><th>Before</th><th>After</th></tr>
+          <tr><td>Condition</td><td><code>== Accessibility.Public</code></td><td><code>== Accessibility.Private</code></td></tr>
+          <tr><td>Title</td><td>Public [Inject] method</td><td>Private [Inject] method</td></tr>
+          <tr><td>Message</td><td>"should be non-public"</td><td>"not compatible with VContainer Source Generator. Use public."</td></tr>
+          <tr><td>Severity</td><td>Warning</td><td>Error</td></tr>
+        </table>
+        <p class="small">File: <code>Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/Rules/ArchitectureGuardrailsRule.cs</code></p>
+      </div>
+
+      <div class="card">
+        <h3>Fix 2 — NDFG010: Full Compilation Scan</h3>
+        <p>Replaced inline <code>LifetimeScopeFor</code> collection inside <code>RegisterSymbolAction</code> with a dedicated <code>CollectScopeMappings()</code> method that walks the entire <code>Compilation.GlobalNamespace</code>, including types from referenced assemblies.</p>
+        <pre>private static Dictionary&lt;string, List&lt;INamedTypeSymbol>> CollectScopeMappings(Compilation compilation) {
+    var result = new Dictionary&lt;string, List&lt;INamedTypeSymbol>>();
+    foreach (var type in GetAllNamedTypes(compilation.GlobalNamespace)) {
+        // scans ALL assemblies, not just source
+    }
+    return result;
+}</pre>
+        <p class="small">File: <code>Source~/DangFugBixs.Analyzers~/DangFugBixs.Analyzers/Rules/ArchitectureGuardrailsRule.cs</code></p>
+      </div>
+
+      <div class="card">
+        <h3>Fix 3 — Hybrid UPM Packaging</h3>
+        <table>
+          <tr><th>Assembly</th><th>Before</th><th>After</th></tr>
+          <tr><td>Runtime</td><td>Precompiled DLL + asmdef</td><td>Source <code>.cs</code> + asmdef only</td></tr>
+          <tr><td>Attributes</td><td>Precompiled DLL + asmdef</td><td>Source <code>.cs</code> + asmdef only</td></tr>
+          <tr><td>Analyzers</td><td>Precompiled DLL + asmdef</td><td>Precompiled DLL only (no asmdef)</td></tr>
+          <tr><td>Source Generators</td><td>Precompiled DLL + asmdef</td><td>Precompiled DLL only (no asmdef)</td></tr>
+        </table>
+        <p class="small">Files: <code>.github/workflows/deploy-upm.yml</code>, <code>Runtime/*.asmdef</code>, <code>.gitignore</code></p>
+      </div>
+    </section>
+
+    <!-- Test Results -->
+    <section>
+      <h2>Test Results</h2>
+
+      <div class="card">
+        <h3>ArchitectureGuardrailsRuleTests <span class="badge badge-ok">5/5 Passed</span></h3>
+        <table>
+          <tr><th>Test</th><th>Assertion</th><th>Status</th></tr>
+          <tr><td><code>MissingScopeMapping_ReportsNDFG010</code></td><td>Missing <code>[LifetimeScopeFor]</code> triggers NDFG010</td><td><span class="badge badge-ok">Pass</span></td></tr>
+          <tr><td><code>DuplicateScopeMapping_ReportsNDFG011</code></td><td>Duplicate markers trigger NDFG011</td><td><span class="badge badge-ok">Pass</span></td></tr>
+          <tr><td><code>PrivateInjectMethod_ReportsNDF022</code></td><td>Private <code>[Inject]</code> triggers NDF022 Error</td><td><span class="badge badge-ok">Pass</span></td></tr>
+          <tr><td><code>PublicInjectMethod_DoesNotWarn</code></td><td>Public <code>[Inject]</code> produces NO diagnostic</td><td><span class="badge badge-ok">Pass</span></td></tr>
+          <tr><td><code>InjectionAndSubjectRules_ReportDiagnostics</code></td><td>Combo test: NDF020, NDF021, NDF023, NDF024, NDF070, NDF071</td><td><span class="badge badge-ok">Pass</span></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Full Analyzer Suite <span class="badge badge-ok">36/36 Passed</span></h3>
+        <p>All analyzer tests pass with 0 failures across the entire test suite (6s total duration).</p>
+        <pre>$ dotnet test DangFugBixs.Analyzers.Tests/DangFugBixs.Analyzers.Tests.csproj
+Passed! - Failed: 0, Passed: 36, Skipped: 0, Total: 36, Duration: 6 s</pre>
+      </div>
+    </section>
+
+    <!-- How to Use -->
+    <section>
+      <h2>How to Use</h2>
+
+      <div class="card">
+        <h3>1. Install via UPM (Git URL)</h3>
+        <pre>https://github.com/&lt;user&gt;/NhemDangFugBixs.Tooling.git</pre>
+        <p>Runtime and Attributes compile as source; Analyzers attach automatically via <code>NhemDangFugBixs.Analyzers.dll</code> in the <code>Analyzers/</code> folder.</p>
+      </div>
+
+      <div class="card">
+        <h3>2. Register a Service</h3>
+        <pre>using NhemDangFugBixs.Attributes;
+
+[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemLifetime.Scoped)]
+public class PlayerService { }</pre>
+      </div>
+
+      <div class="card">
+        <h3>3. Define a Scope Marker</h3>
+        <pre>[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope : LifetimeScope { }
+
+public interface IGameplayScope { }</pre>
+        <p>Place <code>[LifetimeScopeFor]</code> in any assembly — the analyzer will find it even if it lives in a referenced package.</p>
+      </div>
+
+      <div class="card">
+        <h3>4. Injection Guidelines</h3>
+        <table>
+          <tr><th>Pattern</th><th>Result</th></tr>
+          <tr><td><code>[Inject] public void Construct(...)</code></td><td><span class="badge badge-ok">OK</span> Fully compatible</td></tr>
+          <tr><td><code>[Inject] internal void Construct(...)</code></td><td><span class="badge badge-ok">OK</span> Fully compatible</td></tr>
+          <tr><td><code>[Inject] private void Construct(...)</code></td><td><span class="badge badge-err">Error NDF022</span> Not compatible with Source Generator</td></tr>
+          <tr><td><code>[Inject] public int field;</code></td><td><span class="badge badge-err">Error NDF021</span> Fields should not be public</td></tr>
+          <tr><td><code>[Inject] async Task Construct()</code></td><td><span class="badge badge-err">Error NDF023</span> Async injection not supported</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section>
+      <h2>Roadmap</h2>
+
+      <div class="timeline">
+        <div class="item done">
+          <strong>Q2 2026 — Completed</strong>
+          <ul>
+            <li>Fix NDF022 false positive (public <code>[Inject]</code>)</li>
+            <li>Fix NDFG010 false positive (referenced assembly markers)</li>
+            <li>Hybrid UPM packaging (source for Runtime/Attributes, DLL for Analyzers)</li>
+            <li>Editor asmdef references Attributes asmdef</li>
+          </ul>
+        </div>
+        <div class="item">
+          <strong>Q3 2026 — Next</strong>
+          <ul>
+            <li>CI auto-build analyzer DLL on merge to <code>main</code></li>
+            <li>Auto-sync <code>Source~/</code> to <code>Runtime/</code> via MSBuild target</li>
+            <li>Integration tests with multi-compilation references</li>
+            <li><code>.editorconfig</code> configurability for NDF022 minimum accessibility</li>
+          </ul>
+        </div>
+        <div class="item pending">
+          <strong>Q4 2026 — Future</strong>
+          <ul>
+            <li>Visualize dependency graph in Unity Editor window</li>
+            <li>Scope mapping auto-suggestion code fix</li>
+            <li>Performance: lazy symbol resolution for large compilations</li>
+            <li>Docs site auto-deploy on release</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recommendations -->
+    <section>
+      <h2>Recommendations</h2>
+
+      <div class="card">
+        <span class="badge badge-info">CI</span>
+        <strong>Automate Analyzer DLL Build</strong>
+        <p>Current workflow requires manual <code>dotnet build -c Release</code> and copying the DLL. Add a GitHub Actions step that builds the analyzer and commits the updated DLL to the deployment branch automatically.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-info">DevEx</span>
+        <strong>Auto-Sync Source to Runtime Folder</strong>
+        <p>When editing <code>Source~/DangFugBixs.Attributes~/Attributes/*.cs</code>, developers must remember to copy changes to <code>Runtime/Attributes/</code>. An MSBuild target or a pre-commit hook can enforce this automatically.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-info">Testing</span>
+        <strong>Cross-Compilation Integration Tests</strong>
+        <p>Current unit tests run in a single compilation. Add a test that simulates two compilations (Project GR + Package Attributes) where <code>[LifetimeScopeFor]</code> lives in the package assembly to prevent regression of NDFG010.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-info">Config</span>
+        <strong>.editorconfig Support for NDF022</strong>
+        <p>Some teams may prefer <code>internal</code> as the minimum accessibility. Expose an <code>editorconfig</code> option so users can configure the threshold without forking the analyzer.</p>
+        <pre>dotnet_diagnostic.NDF022.minimum_accessibility = public   # or internal, private</pre>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-info">Performance</span>
+        <strong>Reduce Compilation Scan Overhead</strong>
+        <p><code>CollectScopeMappings()</code> iterates every type in every referenced assembly. For large projects this is acceptable today, but for teams with 500+ source files it may become noticeable. Consider caching or using <code>Compilation.GetSymbolsWithName()</code> in the future.</p>
+      </div>
+    </section>
+
+    <!-- Diagnostics Reference -->
+    <section>
+      <h2>Diagnostics Reference</h2>
+      <div class="card">
+        <table>
+          <tr><th>Code</th><th>Category</th><th>Meaning</th><th>Severity</th></tr>
+          <tr><td><code>NDFG010</code></td><td>Scope Mapping</td><td>Missing marker-to-scope mapping</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDFG011</code></td><td>Scope Mapping</td><td>Duplicate marker mapping</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDFG012</code></td><td>Scope Mapping</td><td>Missing scope alias for preset/alias usage</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDFG005</code></td><td>Scope Mapping</td><td>Duplicate composition target for same scope</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDFG006</code></td><td>Scope Mapping</td><td>Same service discovered from multiple referenced assemblies</td><td><span class="badge badge-warn">Warning</span></td></tr>
+          <tr><td><code>NDFG007</code></td><td>Scope Mapping</td><td>Missing VContainer reference in composition assembly</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDFG013</code></td><td>Scope Mapping</td><td>Marker declared in Composition assembly</td><td><span class="badge badge-warn">Warning</span></td></tr>
+          <tr><td><code>NDF020</code></td><td>Injection</td><td>MonoBehaviour constructor injection</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDF021</code></td><td>Injection</td><td>[Inject] public field</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDF022</code></td><td>Injection</td><td>[Inject] private method not compatible with VContainer Source Generator</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDF023</code></td><td>Injection</td><td>[Inject] async method</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDF024</code></td><td>Injection</td><td>Non-standard construct method name</td><td><span class="badge badge-warn">Warning</span></td></tr>
+          <tr><td><code>NDF030</code></td><td>Lifetime</td><td>Singleton depends on scoped</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDF031</code></td><td>Lifetime</td><td>Runtime namespace likely wrong singleton</td><td><span class="badge badge-warn">Warning</span></td></tr>
+          <tr><td><code>NDF040</code></td><td>Lifetime</td><td>Lifecycle interface without [EntryPoint]</td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDF052</code></td><td>Architecture</td><td>IObjectResolver misuse (service locator risk)</td><td><span class="badge badge-warn">Warning</span></td></tr>
+          <tr><td><code>NDF070</code></td><td>R3</td><td>Public Subject&lt;T></td><td><span class="badge badge-err">Error</span></td></tr>
+          <tr><td><code>NDF071</code></td><td>R3</td><td>Subject owner not disposable</td><td><span class="badge badge-warn">Warning</span></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <footer style="text-align:center; color:var(--muted); font-size:.8rem; padding:2rem 0;">
+      Generated on May 29, 2026 &middot; NhemDangFugBixs.Tooling
+    </footer>
+  </main>
+</body>
+</html>

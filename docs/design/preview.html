@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nhem DI — Normalized Design Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+            mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased">
+  <div class="min-h-screen">
+    <aside class="fixed left-0 top-0 hidden h-screen w-72 overflow-y-auto border-r border-slate-800 bg-slate-950/95 px-5 py-6 xl:block">
+      <div class="mb-6">
+        <div class="text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">Nhem DI</div>
+        <h1 class="mt-2 text-xl font-black leading-tight text-white">Normalized Design Document</h1>
+        <p class="mt-2 text-xs text-slate-400">Agent-readable implementation spec · 2026-05-29</p>
+      </div>
+      <nav class="space-y-5 text-sm">
+        <div>
+          <div class="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Overview</div>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#decision">Decision</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#current-api">Current API</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#status-map">Status Map</a>
+        </div>
+        <div>
+          <div class="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Architecture</div>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#scope-marker">Scope Marker</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#register-generated">RegisterGeneratedFor</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#package-layout">Unity Package Layout</a>
+        </div>
+        <div>
+          <div class="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Implementation Slices</div>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#slice-0">Slice 0</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#slice-1">ManualFactory</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#slice-2">NDF025</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#slice-3">NDF026</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#slice-4">NDFG014</a>
+        </div>
+        <div>
+          <div class="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Agent Guardrails</div>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#tests">Test Matrix</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#must-not">Must Not Do</a>
+          <a class="block rounded px-2 py-1 text-slate-300 hover:bg-slate-900 hover:text-white" href="#prompts">Agent Prompts</a>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="mx-auto max-w-6xl px-5 py-8 xl:ml-72 xl:px-10 xl:py-12">
+      <header class="rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-6 shadow-2xl shadow-black/30 md:p-9">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-cyan-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-300 ring-1 ring-cyan-400/30">Normalized Spec</span>
+          <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300 ring-1 ring-emerald-400/30">Agent-readable</span>
+          <span class="rounded-full bg-amber-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300 ring-1 ring-amber-400/30">Implementation sliced</span>
+        </div>
+        <h1 class="mt-5 text-4xl font-black tracking-tight text-white md:text-6xl">Nhem DI Design Document</h1>
+        <p class="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
+          Compile-time convention, source generation, analyzer, and validation layer for VContainer in Unity.
+          This normalized version separates implemented features from TODO and future ideas so coding agents do not implement the wrong scope.
+        </p>
+        <div class="mt-6 grid gap-3 md:grid-cols-4">
+          <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Unity target</div><div class="mt-1 font-bold text-white">2021.3+</div></div>
+          <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">VContainer</div><div class="mt-1 font-bold text-white">1.13+</div></div>
+          <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">API naming</div><div class="mt-1 font-bold text-white">Concise current API</div></div>
+          <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4"><div class="text-xs uppercase tracking-wider text-slate-500">Release mode</div><div class="mt-1 font-bold text-white">RC hardening</div></div>
+        </div>
+      </header>
+
+      <section id="decision" class="mt-8 rounded-3xl border border-emerald-500/30 bg-emerald-500/10 p-6">
+        <h2 class="text-2xl font-black text-white">Implementation Decision</h2>
+        <p class="mt-3 leading-7 text-emerald-50">Do not implement the full v2.0 design in one pass. Implement small slices in order: release blockers first, then ManualFactory, then primitive and ScriptableObject diagnostics, then cross-assembly orphan validation.</p>
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          <div class="rounded-2xl bg-slate-950/60 p-4 ring-1 ring-emerald-400/20"><div class="text-sm font-bold text-emerald-300">Go now</div><ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-200"><li>Fix package import blockers.</li><li>Fix NDF022 public Inject false positive.</li><li>Add ManualFactory contract as a small independent slice.</li><li>Implement NDF025 only after ManualFactory exists.</li></ul></div>
+          <div class="rounded-2xl bg-slate-950/60 p-4 ring-1 ring-red-400/20"><div class="text-sm font-bold text-red-300">Do not do yet</div><ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-200"><li>Do not rename public API to Nhem*.</li><li>Do not implement NewPrefab auto-registration.</li><li>Do not implement full dependency topological sort as correctness logic.</li><li>Do not implement full v2.0 at once.</li></ul></div>
+        </div>
+      </section>
+
+      <section id="current-api" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+        <h2 class="text-2xl font-black text-white">Current Public API — Source of Truth</h2>
+        <p class="mt-3 text-slate-300">This release candidate keeps the current concise API. Earlier design notes may mention Nhem* prefixes, but those names are not implemented and must not be used in RC docs or tests unless a separate breaking-change proposal is approved.</p>
+        <div class="mt-5 overflow-hidden rounded-2xl border border-slate-800"><table class="w-full text-left text-sm"><thead class="bg-slate-950 text-slate-200"><tr><th class="px-4 py-3">Purpose</th><th class="px-4 py-3">Current API</th><th class="px-4 py-3">Do not use in RC</th></tr></thead><tbody class="divide-y divide-slate-800 text-slate-300"><tr><td class="px-4 py-3">Service registration</td><td class="px-4 py-3 font-mono text-cyan-200">[AutoRegisterIn&lt;TScope&gt;]</td><td class="px-4 py-3 font-mono text-red-200">[NhemAutoRegisterIn]</td></tr><tr><td class="px-4 py-3">Binding</td><td class="px-4 py-3 font-mono text-cyan-200">[As&lt;TContract&gt;]</td><td class="px-4 py-3 font-mono text-red-200">[NhemAs]</td></tr><tr><td class="px-4 py-3">Composition target</td><td class="px-4 py-3 font-mono text-cyan-200">[LifetimeScopeFor&lt;TScope&gt;]</td><td class="px-4 py-3 font-mono text-red-200">[NhemLifetimeScopeFor]</td></tr><tr><td class="px-4 py-3">Entry point</td><td class="px-4 py-3 font-mono text-cyan-200">[EntryPoint]</td><td class="px-4 py-3 font-mono text-red-200">[NhemEntryPointIn]</td></tr><tr><td class="px-4 py-3">Generated installer call</td><td class="px-4 py-3 font-mono text-cyan-200">builder.RegisterGeneratedFor&lt;TScope&gt;()</td><td class="px-4 py-3 font-mono text-red-200">builder.RegisterNhemGeneratedFor&lt;TScope&gt;()</td></tr></tbody></table></div>
+      </section>
+
+      <section id="status-map" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Feature Status Map</h2><div class="mt-5 grid gap-4 md:grid-cols-3"><div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4"><h3 class="font-black text-emerald-300">Done / Current</h3><ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-200"><li>Scope marker architecture.</li><li>Composition-only generation.</li><li>Cross-asmdef validator baseline.</li><li>NDFG005 / NDFG006 / NDFG007.</li><li>RegisterGeneratedFor&lt;TScope&gt; current API.</li><li>Package collision / asmdef reference cleanup.</li><li>NDF022 public Inject false positive fix.</li><li>ManualFactory attribute.</li><li>NDF025 primitive constructor diagnostic.</li><li>NDF026 ScriptableObject external instance hint.</li><li>NDFG014 orphan service validation.</li></ul></div><div class="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4"><h3 class="font-black text-amber-300">Next / TODO</h3><ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-200"><li>NDFG014 analyzer tests with cross-assembly scenario.</li></ul></div><div class="rounded-2xl border border-slate-700 bg-slate-950/50 p-4"><h3 class="font-black text-slate-300">Future / Not in this slice</h3><ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-200"><li>NewPrefab auto-generation.</li><li>Unity Editor window.</li><li>Full dependency graph sort.</li><li>Nhem* API aliases.</li><li>HTML report output mode.</li><li>Component Phase 2 hardening.</li></ul></div></div></section>
+
+      <section id="scope-marker" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Scope Marker Architecture</h2><p class="mt-3 text-slate-300">Services reference conceptual scope markers in Shared/Application assemblies. Composition maps those markers to a real VContainer LifetimeScope. This prevents Domain/Application assemblies from referencing Unity composition classes.</p><div class="mt-5 grid gap-5 lg:grid-cols-2"><div><h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-slate-400">Shared assembly</h3><pre class="overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code>public interface IScopeMarker
+{
+}
+
+public interface IGameplayScope : IScopeMarker
+{
+}</code></pre></div><div><h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-slate-400">Application assembly</h3><pre class="overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code>[AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Scoped)]
+[As&lt;ICombatCore&gt;]
+public sealed class CombatCore : ICombatCore
+{
+}</code></pre></div></div><div class="mt-5"><h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-slate-400">Composition assembly</h3><pre class="overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code>[LifetimeScopeFor&lt;IGameplayScope&gt;]
+public sealed class GameplayLifetimeScope : LifetimeScope
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        // Manual registrations first when needed.
+        builder.RegisterInstance(_settings).AsSelf();
+
+        // Generated registrations for this scope.
+        builder.RegisterGeneratedFor&lt;IGameplayScope&gt;();
+    }
+}</code></pre></div></section>
+
+      <section id="register-generated" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Correct RegisterGeneratedFor&lt;T&gt; Shape</h2><p class="mt-3 text-slate-300">The generated extension method must use a generic type parameter. Do not write invalid hardcoded generic method declarations like <code class="rounded bg-slate-950 px-1.5 py-0.5 text-red-200">RegisterGeneratedFor&lt;IGameplayScope&gt;(this IContainerBuilder builder)</code>.</p><div class="mt-5 grid gap-5 lg:grid-cols-2"><div class="rounded-2xl border border-red-500/30 bg-red-500/10 p-4"><h3 class="font-bold text-red-300">Wrong pseudo-code</h3><pre class="mt-3 overflow-x-auto rounded-xl bg-black p-4 text-sm text-slate-200"><code>public static void RegisterGeneratedFor&lt;IGameplayScope&gt;(
+    this IContainerBuilder builder)
+{
+    // invalid generic method syntax
+}</code></pre></div><div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4"><h3 class="font-bold text-emerald-300">Correct pattern</h3><pre class="mt-3 overflow-x-auto rounded-xl bg-black p-4 text-sm text-slate-200"><code>public static void RegisterGeneratedFor&lt;TScope&gt;(
+    this IContainerBuilder builder)
+    where TScope : IScopeMarker
+{
+    if (typeof(TScope) == typeof(IGameplayScope))
+    {
+        RegisterGameplayScope(builder);
+        return;
+    }
+
+    throw new InvalidOperationException(
+        $"No generated registrations for {typeof(TScope).FullName}");
+}
+
+private static void RegisterGameplayScope(IContainerBuilder builder)
+{
+    builder.Register&lt;CombatCore&gt;(Lifetime.Scoped)
+           .As&lt;ICombatCore&gt;();
+}</code></pre></div></div></section>
+
+      <section id="package-layout" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Unity Package Layout Decision</h2><p class="mt-3 text-slate-300">Use hybrid packaging. Runtime and Attributes are source + asmdef. Analyzer/source generator is DLL-only. Do not ship runtime DLLs next to runtime asmdefs.</p><div class="mt-5 grid gap-5 lg:grid-cols-2"><div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4"><h3 class="font-bold text-emerald-300">Keep</h3><pre class="mt-3 overflow-x-auto rounded-xl bg-black p-4 text-sm text-slate-200"><code>Runtime/**/*.cs
+Runtime/**/*.asmdef
+Runtime/**/*.meta
+
+Editor/**/*.cs
+Editor/**/*.asmdef
+Editor/**/*.meta
+
+Analyzers/**/*.dll
+Analyzers/**/*.dll.meta</code></pre></div><div class="rounded-2xl border border-red-500/30 bg-red-500/10 p-4"><h3 class="font-bold text-red-300">Exclude</h3><pre class="mt-3 overflow-x-auto rounded-xl bg-black p-4 text-sm text-slate-200"><code>Runtime/**/*.dll
+Runtime/**/*.dll.meta
+Runtime/Attributes/**/*.dll
+Runtime/Attributes/**/*.dll.meta
+
+Analyzers/**/*.asmdef
+Analyzers/**/*.asmdef.meta</code></pre></div></div><div class="mt-5 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-4"><h3 class="font-bold text-cyan-300">Asmdef references</h3><p class="mt-2 text-sm text-slate-200">Editor asmdef must reference the Runtime/Attributes asmdefs if Editor code uses those namespaces. GR consuming asmdefs should reference package Runtime/Attributes asmdefs, not runtime DLLs.</p></div></section>
+
+      <section id="slice-0" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Slice 0 — Release Blocker Cleanup</h2><p class="mt-3 text-slate-300">This slice must be completed before new analyzer or generator features.</p><div class="mt-5 overflow-hidden rounded-2xl border border-slate-800"><table class="w-full text-left text-sm"><thead class="bg-slate-950 text-slate-200"><tr><th class="px-4 py-3">Task</th><th class="px-4 py-3">Expected Result</th><th class="px-4 py-3">Tests</th></tr></thead><tbody class="divide-y divide-slate-800 text-slate-300"><tr><td class="px-4 py-3">Fix DLL/asmdef collision</td><td class="px-4 py-3">No Unity warning about plugin filename same as asmdef.</td><td class="px-4 py-3">Clean Unity import smoke.</td></tr><tr><td class="px-4 py-3">Fix Editor asmdef references</td><td class="px-4 py-3">Editor code can see NhemDangFugBixs.Attributes.</td><td class="px-4 py-3">No CS0234 in package Editor files.</td></tr><tr><td class="px-4 py-3">Fix NDF022</td><td class="px-4 py-3">Public [Inject] Construct does not warn; private [Inject] still warns.</td><td class="px-4 py-3">Analyzer tests + GR smoke.</td></tr></tbody></table></div></section>
+
+      <section id="slice-1" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Slice 1 — ManualFactory Contract</h2><p class="mt-3 text-slate-300">ManualFactory is a marker that says: this type is intentionally not emitted as a normal generated registration because it requires authored values, WithParameter, RegisterInstance, or a custom factory.</p><div class="mt-5 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4"><h3 class="font-bold text-amber-300">Naming decision required</h3><p class="mt-2 text-sm text-slate-200">Because the current API uses concise names, prefer <code class="rounded bg-slate-950 px-1.5 py-0.5 text-cyan-200">[ManualFactory]</code>. Use <code class="rounded bg-slate-950 px-1.5 py-0.5 text-amber-200">[NhemManualFactory]</code> only if approved as an explicit exception.</p></div><pre class="mt-5 overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code>[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+public sealed class ManualFactoryAttribute : Attribute
+{
+    public string? Reason { get; init; }
+}</code></pre><pre class="mt-5 overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code>[ManualFactory(Reason = "Requires authored memoryId.")]
+[AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Singleton)]
+[As&lt;IMemoryState&gt;]
+public sealed class MemoryState : IMemoryState
+{
+    public MemoryState(string memoryId)
+    {
+    }
+}</code></pre></section>
+
+      <section id="slice-2" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Slice 2 — NDF025 Primitive Constructor Parameters</h2><p class="mt-3 text-slate-300">Detect services that cannot be safely generated because their constructor needs primitive authored values such as string, int, float, bool, long, or double.</p><div class="mt-5 grid gap-5 lg:grid-cols-2"><div class="rounded-2xl border border-red-500/30 bg-red-500/10 p-4"><h3 class="font-bold text-red-300">Problem</h3><pre class="mt-3 overflow-x-auto rounded-xl bg-black p-4 text-sm text-slate-200"><code>[AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Singleton)]
+public sealed class MemoryState : IMemoryState
+{
+    public MemoryState(string memoryId)
+    {
+    }
+}</code></pre><p class="mt-3 text-sm text-slate-200">The container cannot know which string to inject.</p></div><div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4"><h3 class="font-bold text-emerald-300">Expected fix</h3><pre class="mt-3 overflow-x-auto rounded-xl bg-black p-4 text-sm text-slate-200"><code>[ManualFactory(Reason = "Requires authored memoryId.")]
+[AutoRegisterIn&lt;IGameplayScope&gt;(Lifetime = NhemLifetime.Singleton)]
+public sealed class MemoryState : IMemoryState
+{
+    public MemoryState(string memoryId)
+    {
+    }
+}
+
+// In LifetimeScope.Configure:
+builder.Register(_ =&gt; new MemoryState("M0RevealCandidate"),
+    Lifetime.Singleton).As&lt;IMemoryState&gt;();</code></pre></div></div><div class="mt-5 rounded-2xl border border-slate-700 bg-slate-950/50 p-4"><h3 class="font-bold text-white">Recommended behavior</h3><ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-200"><li>AutoRegister + primitive constructor + no ManualFactory: emit NDF025.</li><li>AutoRegister + primitive constructor + ManualFactory: no NDF025 warning.</li><li>ManualFactory types should not be emitted as normal Register&lt;T&gt; registrations.</li><li>Generated output/report should include a manual registration hint.</li></ul></div></section>
+
+      <section id="slice-3" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Slice 3 — NDF026 ScriptableObject External Instance Hint</h2><p class="mt-3 text-slate-300">ScriptableObject dependencies are authored Unity assets and should be registered manually using RegisterInstance.</p><div class="mt-5 grid gap-5 lg:grid-cols-2"><div><h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-slate-400">Service</h3><pre class="overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code>[AutoRegisterIn&lt;IGameScope&gt;(Lifetime = NhemLifetime.Singleton)]
+[As&lt;IBackendClient&gt;]
+public sealed class BackendClient : IBackendClient
+{
+    public BackendClient(BackendConfig config)
+    {
+    }
+}</code></pre></div><div><h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-slate-400">Composition</h3><pre class="overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code>[SerializeField] private BackendConfig _config;
+
+protected override void Configure(IContainerBuilder builder)
+{
+    builder.RegisterInstance(_config).AsSelf();
+    builder.RegisterGeneratedFor&lt;IGameScope&gt;();
+}</code></pre></div></div><div class="mt-5 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-4"><h3 class="font-bold text-cyan-300">Rule</h3><p class="mt-2 text-sm text-slate-200">NDF026 should be Info/report hint by default. It should not auto-register ScriptableObject assets and should not block if the user has already registered the instance manually.</p></div></section>
+
+      <section id="slice-4" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Slice 4 — NDFG014 Orphan Service</h2><p class="mt-3 text-slate-300">A service targeting a scope with no composition target will silently never be registered. This should be detected, but carefully to avoid cross-assembly false positives.</p><div class="mt-5 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4"><h3 class="font-bold text-amber-300">Implementation decision</h3><p class="mt-2 text-sm text-slate-200">Implement authoritative NDFG014-style validation in di-smoke first, because di-smoke sees built assemblies. Compile-time analyzer can be added later with conservative false-positive rules.</p></div><div class="mt-5"><h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-slate-400">Required data model</h3><pre class="overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code>public readonly record struct AutoRegisteredServiceInfo(
+    INamedTypeSymbol Type,
+    string ScopeFqn,
+    Location? Location);</code></pre></div><div class="mt-5 grid gap-5 lg:grid-cols-2"><div class="rounded-2xl border border-red-500/30 bg-red-500/10 p-4"><h3 class="font-bold text-red-300">Insufficient</h3><pre class="mt-3 overflow-x-auto rounded-xl bg-black p-4 text-sm text-slate-200"><code>var autoRegistered = new List&lt;INamedTypeSymbol&gt;();</code></pre><p class="mt-3 text-sm text-slate-200">This loses the target scope FQN.</p></div><div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4"><h3 class="font-bold text-emerald-300">Required</h3><pre class="mt-3 overflow-x-auto rounded-xl bg-black p-4 text-sm text-slate-200"><code>var autoRegistered =
+    new ConcurrentBag&lt;AutoRegisteredServiceInfo&gt;();</code></pre><p class="mt-3 text-sm text-slate-200">This keeps type, scope, and location for diagnostics.</p></div></div></section>
+
+      <section id="tests" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Test Matrix</h2><div class="mt-5 overflow-hidden rounded-2xl border border-slate-800"><table class="w-full text-left text-sm"><thead class="bg-slate-950 text-slate-200"><tr><th class="px-4 py-3">Area</th><th class="px-4 py-3">Test</th><th class="px-4 py-3">Expected</th><th class="px-4 py-3">Slice</th></tr></thead><tbody class="divide-y divide-slate-800 text-slate-300"><tr><td class="px-4 py-3">Packaging</td><td class="px-4 py-3">Clean Unity import</td><td class="px-4 py-3">No DLL/asmdef collision warnings.</td><td class="px-4 py-3">0</td></tr><tr><td class="px-4 py-3">Packaging</td><td class="px-4 py-3">Editor asmdef references Attributes</td><td class="px-4 py-3">No CS0234.</td><td class="px-4 py-3">0</td></tr><tr><td class="px-4 py-3">Analyzer</td><td class="px-4 py-3">PublicInjectMethod_DoesNotWarn</td><td class="px-4 py-3">No NDF022.</td><td class="px-4 py-3">0</td></tr><tr><td class="px-4 py-3">Analyzer</td><td class="px-4 py-3">PrivateInjectMethod_Warns</td><td class="px-4 py-3">NDF022 reported.</td><td class="px-4 py-3">0</td></tr><tr><td class="px-4 py-3">Attributes</td><td class="px-4 py-3">ManualFactoryAttribute_Compiles</td><td class="px-4 py-3">Attribute exists and is usable.</td><td class="px-4 py-3">1</td></tr><tr><td class="px-4 py-3">Analyzer</td><td class="px-4 py-3">PrimitiveParam_NoManualFactory_ReportsNDF025</td><td class="px-4 py-3">NDF025 warning/error.</td><td class="px-4 py-3">2</td></tr><tr><td class="px-4 py-3">Analyzer</td><td class="px-4 py-3">PrimitiveParam_WithManualFactory_NoNDF025</td><td class="px-4 py-3">No NDF025.</td><td class="px-4 py-3">2</td></tr><tr><td class="px-4 py-3">Analyzer</td><td class="px-4 py-3">ScriptableObjectParam_ReportsNDF026Info</td><td class="px-4 py-3">Info/report hint only.</td><td class="px-4 py-3">3</td></tr><tr><td class="px-4 py-3">di-smoke</td><td class="px-4 py-3">OrphanService_NoCompositionTarget_Fails</td><td class="px-4 py-3">Cross-assembly validation failure.</td><td class="px-4 py-3">4</td></tr><tr><td class="px-4 py-3">di-smoke</td><td class="px-4 py-3">ServiceWithCompositionTarget_Passes</td><td class="px-4 py-3">No orphan diagnostics.</td><td class="px-4 py-3">4</td></tr></tbody></table></div></section>
+
+      <section id="must-not" class="mt-8 rounded-3xl border border-red-500/30 bg-red-500/10 p-6"><h2 class="text-2xl font-black text-white">Agent Must Not Do</h2><div class="mt-5 grid gap-4 md:grid-cols-2"><ul class="list-disc space-y-2 pl-5 text-sm text-slate-100"><li>Do not rename current public API to Nhem*.</li><li>Do not remove runtime asmdefs.</li><li>Do not re-add runtime DLLs to fix asmdef references.</li><li>Do not change GR gameplay code to satisfy package analyzer warnings.</li><li>Do not implement NewPrefab auto-generation.</li></ul><ul class="list-disc space-y-2 pl-5 text-sm text-slate-100"><li>Do not implement NDF025 before ManualFactory exists.</li><li>Do not make NDF026 block ScriptableObject services by default.</li><li>Do not claim topological sorting is needed for VContainer correctness.</li><li>Do not implement full v2.0 in one patch.</li><li>Do not add Unity Editor UI in the analyzer/generator slice.</li></ul></div></section>
+
+      <section id="prompts" class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6"><h2 class="text-2xl font-black text-white">Copy-Paste Agent Prompt — Next Slice</h2><p class="mt-3 text-slate-300">Use this prompt for the immediate next implementation slice.</p><pre class="mt-5 overflow-x-auto rounded-2xl bg-black p-4 text-sm text-slate-200"><code># Task: Nhem DI Slice 0 Release Blocker Cleanup
+
+Do not implement the full v2.0 design document.
+
+## Scope
+
+1. Fix Unity package DLL/asmdef collision.
+2. Fix Editor asmdef references so Editor code can see NhemDangFugBixs.Attributes.
+3. Fix NDF022 so public [Inject] Construct does not warn.
+4. Keep private [Inject] warning active.
+
+## Required Packaging Strategy
+
+Runtime and Attributes:
+- Keep .cs source files.
+- Keep .asmdef files.
+- Do not ship precompiled runtime DLLs.
+
+Analyzers:
+- Keep precompiled analyzer/source-generator DLLs.
+- Do not ship analyzer asmdef.
+
+## Required NDF022 Behavior
+
+- [Inject] public Construct(...) =&gt; no NDF022.
+- [Inject] internal Construct(...) =&gt; no NDF022 if analyzer sees it.
+- [Inject] private Construct(...) =&gt; NDF022.
+
+## Must Not Do
+
+- Do not implement ManualFactory.
+- Do not implement NDF025.
+- Do not implement NDF026.
+- Do not implement NDFG014.
+- Do not rename public API.
+- Do not add Component/NewPrefab support.
+- Do not change RegisterGeneratedFor&lt;T&gt; behavior.
+
+## Validation
+
+- Unity package imports in a clean project.
+- No DLL/asmdef filename collision warnings.
+- No CS0234 for NhemDangFugBixs.Attributes.
+- Public [Inject] Construct emits no NDF022.
+- Private [Inject] emits NDF022.
+- Existing analyzer/generator tests pass.
+- Unity smoke project passes.</code></pre></section>
+
+      <footer class="mt-10 border-t border-slate-800 py-6 text-sm text-slate-500">Nhem DI Normalized Design Document · Tailwind HTML · 2026-05-29 · Prepared for agent-safe implementation.</footer>
+    </main>
+  </div>
+</body>
+</html>
