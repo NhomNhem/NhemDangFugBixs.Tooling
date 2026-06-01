@@ -6,7 +6,7 @@ namespace NhemDangFugBixs.Analyzers.Tests;
 
 public class ScopeMappingAnalyzerTests {
     [Fact]
-    public void UnmappedMarker_ReportsNDFG014() {
+    public void UnmappedMarker_DoesNotReportNDFG014() {
         const string source = """
 using NhemDangFugBixs.Attributes;
 public interface IGameplayScope {}
@@ -17,6 +17,6 @@ namespace NhemDangFugBixs.Attributes {
 }
 """;
         var diagnostics = AnalyzerTestHost.Run(source, new ArchitectureGuardrailsRule());
-        Assert.Contains(diagnostics, d => d.Id == "NDFG014");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "NDFG014");
     }
 }

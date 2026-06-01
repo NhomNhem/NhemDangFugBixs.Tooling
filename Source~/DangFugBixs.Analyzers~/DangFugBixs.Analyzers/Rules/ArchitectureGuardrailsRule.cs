@@ -95,7 +95,7 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         "R3", DiagnosticSeverity.Warning, true);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(
-        NDFG011, NDFG014, NDF020, NDF021, NDF022, NDF023, NDF024, NDF025, NDF026, NDF030, NDF031, NDF032, NDF033, NDF052, NDF070, NDF071);
+        NDFG011, NDF020, NDF021, NDF022, NDF023, NDF024, NDF025, NDF026, NDF030, NDF031, NDF032, NDF033, NDF052, NDF070, NDF071);
 
     public override void Initialize(AnalysisContext context) {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -201,23 +201,9 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
             }
         }
 
-        var markerNames = new HashSet<string>(mappings.Keys);
-        var orphanServices = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
-        
-        foreach (var (svc, scopeFQN) in services) {
-            if (string.IsNullOrWhiteSpace(scopeFQN)) continue;
-            if (scopeFQN.EndsWith("LifetimeScope")) continue;
-            if (!markerNames.Contains(scopeFQN)) {
-                orphanServices.Add(svc);
-            }
-        }
-
-        foreach (var svc in orphanServices) {
-            var scopeFQN = services.FirstOrDefault(s => SymbolEqualityComparer.Default.Equals(s.Type, svc)).ScopeFQN;
-            if (!string.IsNullOrWhiteSpace(scopeFQN)) {
-                context.ReportDiagnostic(Diagnostic.Create(NDFG014, svc.Locations.FirstOrDefault(), svc.Name, scopeFQN));
-            }
-        }
+        // NDFG014 removed from source analyzer - false positive in marker-based architecture
+        // Service assembly cannot see Composition assembly's LifetimeScopeFor mapping
+        // Validation moved to di-smoke cross-assembly validation
     }
 
     private static void AnalyzeLifetimeArchitecture(CompilationAnalysisContext context, ConcurrentBag<(INamedTypeSymbol Type, string ScopeFQN)> services) {

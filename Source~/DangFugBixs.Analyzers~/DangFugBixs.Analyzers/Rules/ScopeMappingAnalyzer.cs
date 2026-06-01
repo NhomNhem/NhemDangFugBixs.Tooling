@@ -10,7 +10,6 @@ namespace NhemDangFugBixs.Analyzers.Rules;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ScopeMappingAnalyzer : DiagnosticAnalyzer {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(
-        DiagnosticCatalog.MissingScopeMapping,
         DiagnosticCatalog.MissingGeneratedCall,
         DiagnosticCatalog.WrongGeneratedCall,
         DiagnosticCatalog.DuplicateGeneratedInvocation);
@@ -19,7 +18,6 @@ public sealed class ScopeMappingAnalyzer : DiagnosticAnalyzer {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
         context.RegisterCompilationStartAction(static startContext => {
-            var autoServices = new List<(INamedTypeSymbol Type, ITypeSymbol? Marker)>();
             var scopeMappings = new List<(INamedTypeSymbol Type, ITypeSymbol Marker)>();
             var gate = new object();
 
@@ -27,13 +25,6 @@ public sealed class ScopeMappingAnalyzer : DiagnosticAnalyzer {
                 var type = (INamedTypeSymbol)symbolContext.Symbol;
                 if (type.TypeKind != TypeKind.Class) {
                     return;
-                }
-
-                var autoRegister = type.GetAttributes().FirstOrDefault(attr => IsAttribute(attr, "AutoRegisterInAttribute"));
-                if (autoRegister != null) {
-                    lock (gate) {
-                        autoServices.Add((type, TryGetMarkerType(autoRegister)));
-                    }
                 }
 
                 var scopeMapping = type.GetAttributes().FirstOrDefault(attr => IsAttribute(attr, "LifetimeScopeForAttribute"));
@@ -46,26 +37,9 @@ public sealed class ScopeMappingAnalyzer : DiagnosticAnalyzer {
             }, SymbolKind.NamedType);
 
             startContext.RegisterCompilationEndAction(endContext => {
-                AnalyzeMappings(endContext, autoServices, scopeMappings);
                 AnalyzeConfigureCalls(endContext, scopeMappings);
             });
         });
-    }
-
-    private static void AnalyzeMappings(
-        CompilationAnalysisContext context,
-        List<(INamedTypeSymbol Type, ITypeSymbol? Marker)> autoServices,
-        List<(INamedTypeSymbol Type, ITypeSymbol Marker)> scopeMappings) {
-        var markers = new HashSet<ITypeSymbol>(scopeMappings.Select(m => m.Marker), SymbolEqualityComparer.Default);
-
-        foreach (var service in autoServices.Where(s => s.Marker != null)) {
-            if (!markers.Contains(service.Marker!)) {
-                context.ReportDiagnostic(Diagnostic.Create(
-                    DiagnosticCatalog.MissingScopeMapping,
-                    service.Type.Locations.FirstOrDefault(),
-                    service.Marker!.ToDisplayString()));
-            }
-        }
     }
 
     private static void AnalyzeConfigureCalls(

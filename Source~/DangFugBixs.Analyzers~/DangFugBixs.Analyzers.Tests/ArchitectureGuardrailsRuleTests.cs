@@ -12,7 +12,7 @@ public class ArchitectureGuardrailsRuleTests {
         var test = """
 using NhemDangFugBixs.Attributes;
 [AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Scoped)]
-public class {|#0:MyService|} { }
+public class MyService { }
 public interface IGameplayScope { }
 namespace NhemDangFugBixs.Attributes {
   public class AutoRegisterInAttribute : System.Attribute {
@@ -22,8 +22,7 @@ namespace NhemDangFugBixs.Attributes {
   public enum NhemLifetime { Singleton, Transient, Scoped }
 }
 """;
-        var expected = Verifier.Diagnostic("NDFG014").WithLocation(0).WithArguments("MyService", "IGameplayScope");
-        await Verifier.VerifyAnalyzerAsync(test, expected);
+        await Verifier.VerifyAnalyzerAsync(test);
     }
 
     [Fact]
@@ -151,25 +150,6 @@ namespace NhemDangFugBixs.Attributes {
     }
 
     [Fact]
-    public async Task ServiceWithNoCompositionTarget_ReportsNDFG014() {
-        var test = """
-using NhemDangFugBixs.Attributes;
-public interface IGameplayScope { }
-[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Scoped)]
-public class {|#0:PlayerService|} { }
-namespace NhemDangFugBixs.Attributes {
-  public class AutoRegisterInAttribute : System.Attribute {
-    public AutoRegisterInAttribute(System.Type t) {}
-    public NhemLifetime Lifetime { get; set; }
-  }
-  public enum NhemLifetime { Singleton, Transient, Scoped }
-}
-""";
-        var expected = Verifier.Diagnostic("NDFG014").WithLocation(0).WithArguments("PlayerService", "IGameplayScope");
-        await Verifier.VerifyAnalyzerAsync(test, expected);
-    }
-
-    [Fact]
     public async Task ScriptableObjectParam_ReportsNDF026Info() {
         var test = """
 using NhemDangFugBixs.Attributes;
@@ -222,27 +202,6 @@ namespace NhemDangFugBixs.Attributes {
   public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 namespace UnityEngine { public class ScriptableObject {} }
-""";
-        await Verifier.VerifyAnalyzerAsync(test);
-    }
-
-    [Fact]
-    public async Task ServiceWithCompositionTarget_DoesNotWarn() {
-        var test = """
-using NhemDangFugBixs.Attributes;
-public interface IGameplayScope { }
-[AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Scoped)]
-public class PlayerService { }
-[LifetimeScopeFor(typeof(IGameplayScope))]
-public class GameplayLifetimeScope { }
-namespace NhemDangFugBixs.Attributes {
-  public class AutoRegisterInAttribute : System.Attribute {
-    public AutoRegisterInAttribute(System.Type t) {}
-    public NhemLifetime Lifetime { get; set; }
-  }
-  public enum NhemLifetime { Singleton, Transient, Scoped }
-  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
-}
 """;
         await Verifier.VerifyAnalyzerAsync(test);
     }
