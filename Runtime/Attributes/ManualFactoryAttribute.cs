@@ -16,8 +16,12 @@ namespace NhemDangFugBixs.Attributes {
         /// <summary>
         /// Optional explanation for why this service requires manual registration.
         /// </summary>
-        public string? Reason { get; init; }
+        public string Reason { get; set; } = string.Empty;
 
         public ManualFactoryAttribute() { }
+
+        public ManualFactoryAttribute(string reason) {
+            Reason = reason ?? string.Empty;
+        }
     }
 }

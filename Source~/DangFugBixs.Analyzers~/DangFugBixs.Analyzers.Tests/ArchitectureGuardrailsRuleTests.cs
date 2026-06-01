@@ -101,7 +101,7 @@ namespace NhemDangFugBixs.Attributes {
     public async Task PrimitiveParam_WithManualFactory_DoesNotWarn() {
         var test = """
 using NhemDangFugBixs.Attributes;
-[ManualFactory(Reason = "Requires authored id")]
+[ManualFactory("Requires authored id")]
 [AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Singleton)]
 public class MemoryState {
     public MemoryState(string memoryId) { }
@@ -111,7 +111,9 @@ public interface IGameplayScope { }
 public class GameplayLifetimeScope { }
 namespace NhemDangFugBixs.Attributes {
   public class ManualFactoryAttribute : System.Attribute {
-    public string? Reason { get; init; }
+    public ManualFactoryAttribute() {}
+    public ManualFactoryAttribute(string reason) { Reason = reason; }
+    public string Reason { get; set; }
   }
   public class AutoRegisterInAttribute : System.Attribute {
     public AutoRegisterInAttribute(System.Type t) {}
@@ -197,7 +199,7 @@ namespace UnityEngine { public class ScriptableObject {} }
     public async Task ScriptableObjectParam_WithManualFactory_NoNDF026() {
         var test = """
 using NhemDangFugBixs.Attributes;
-[ManualFactory(Reason = "Config is authored asset")]
+[ManualFactory("Config is authored asset")]
 [AutoRegisterIn(typeof(IGameplayScope), Lifetime = NhemDangFugBixs.Attributes.NhemLifetime.Singleton)]
 public class BackendClient {
     public BackendClient(BackendConfig config) { }
@@ -208,7 +210,9 @@ public interface IGameplayScope { }
 public class GameplayLifetimeScope { }
 namespace NhemDangFugBixs.Attributes {
   public class ManualFactoryAttribute : System.Attribute {
-    public string? Reason { get; init; }
+    public ManualFactoryAttribute() {}
+    public ManualFactoryAttribute(string reason) { Reason = reason; }
+    public string Reason { get; set; }
   }
   public class AutoRegisterInAttribute : System.Attribute {
     public AutoRegisterInAttribute(System.Type t) {}
