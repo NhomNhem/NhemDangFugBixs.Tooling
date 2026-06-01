@@ -20,7 +20,6 @@ namespace NhemDangFugBixs.Attributes {
     public NhemLifetime Lifetime { get; set; }
   }
   public enum NhemLifetime { Singleton, Transient, Scoped }
-  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 """;
         var expected = Verifier.Diagnostic("NDFG010").WithLocation(0).WithArguments("MyService", "IGameplayScope");
@@ -162,7 +161,6 @@ namespace NhemDangFugBixs.Attributes {
     public NhemLifetime Lifetime { get; set; }
   }
   public enum NhemLifetime { Singleton, Transient, Scoped }
-  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 """;
         var expected = Verifier.Diagnostic("NDFG014").WithLocation(0).WithArguments("PlayerService", "IGameplayScope");
