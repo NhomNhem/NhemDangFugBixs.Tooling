@@ -95,7 +95,7 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         "R3", DiagnosticSeverity.Warning, true);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(
-        NDFG010, NDFG011, NDFG014, NDF020, NDF021, NDF022, NDF023, NDF024, NDF025, NDF026, NDF030, NDF031, NDF032, NDF033, NDF052, NDF070, NDF071);
+        NDFG011, NDFG014, NDF020, NDF021, NDF022, NDF023, NDF024, NDF025, NDF026, NDF030, NDF031, NDF032, NDF033, NDF052, NDF070, NDF071);
 
     public override void Initialize(AnalysisContext context) {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -148,7 +148,6 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
                 var scopeMappings = CollectScopeMappings(endContext.Compilation);
                 AnalyzeScopeMapping(endContext, autoRegistered, scopeMappings);
                 AnalyzeLifetimeArchitecture(endContext, autoRegistered);
-                AnalyzeOrphanServices(endContext, autoRegistered, scopeMappings);
             });
         });
     }
@@ -203,11 +202,20 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
         }
 
         var markerNames = new HashSet<string>(mappings.Keys);
+        var orphanServices = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+        
         foreach (var (svc, scopeFQN) in services) {
             if (string.IsNullOrWhiteSpace(scopeFQN)) continue;
             if (scopeFQN.EndsWith("LifetimeScope")) continue;
             if (!markerNames.Contains(scopeFQN)) {
-                context.ReportDiagnostic(Diagnostic.Create(NDFG010, svc.Locations.FirstOrDefault(), svc.Name, scopeFQN));
+                orphanServices.Add(svc);
+            }
+        }
+
+        foreach (var svc in orphanServices) {
+            var scopeFQN = services.FirstOrDefault(s => SymbolEqualityComparer.Default.Equals(s.Type, svc)).ScopeFQN;
+            if (!string.IsNullOrWhiteSpace(scopeFQN)) {
+                context.ReportDiagnostic(Diagnostic.Create(NDFG014, svc.Locations.FirstOrDefault(), svc.Name, scopeFQN));
             }
         }
     }
@@ -375,16 +383,6 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
             var an = a.AttributeClass?.Name ?? "";
             return an == "FactoryAttribute" || an == "SpawnerAttribute" || an == "BootstrapperAttribute";
         });
-    }
-
-    private static void AnalyzeOrphanServices(CompilationAnalysisContext context, ConcurrentBag<(INamedTypeSymbol Type, string ScopeFQN)> services, Dictionary<string, List<INamedTypeSymbol>> mappings) {
-        var markerNames = new HashSet<string>(mappings.Keys);
-        foreach (var (svc, scopeFQN) in services) {
-            if (string.IsNullOrWhiteSpace(scopeFQN)) continue;
-            if (!markerNames.Contains(scopeFQN)) {
-                context.ReportDiagnostic(Diagnostic.Create(NDFG014, svc.Locations.FirstOrDefault(), svc.Name, scopeFQN));
-            }
-        }
     }
 
     private static bool HasManualFactory(INamedTypeSymbol type)

@@ -22,7 +22,7 @@ namespace NhemDangFugBixs.Attributes {
   public enum NhemLifetime { Singleton, Transient, Scoped }
 }
 """;
-        var expected = Verifier.Diagnostic("NDFG010").WithLocation(0).WithArguments("MyService", "IGameplayScope");
+        var expected = Verifier.Diagnostic("NDFG014").WithLocation(0).WithArguments("MyService", "IGameplayScope");
         await Verifier.VerifyAnalyzerAsync(test, expected);
     }
 
