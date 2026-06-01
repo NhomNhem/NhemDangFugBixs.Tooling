@@ -33,7 +33,9 @@ public interface IGameplayScope { }
 [LifetimeScopeFor(typeof(IGameplayScope))] public class {|#0:A|} { }
 [LifetimeScopeFor(typeof(IGameplayScope))] public class {|#1:B|} { }
 namespace NhemDangFugBixs.Attributes {
-  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
+  public class LifetimeScopeForAttribute : System.Attribute { 
+    public LifetimeScopeForAttribute(System.Type t) {} 
+  }
 }
 """;
         var e0 = Verifier.Diagnostic("NDFG011").WithLocation(0).WithArguments("IGameplayScope");
@@ -221,15 +223,11 @@ public class {|#0:PlayerView|} : MonoBehaviour {
   public Subject<int> {|#3:OnValue|} = new();
 }
 public class GameScope { }
-[NhemDangFugBixs.Attributes.LifetimeScopeFor(typeof(GameScope))]
-public class GameLifetimeScope {}
-
 namespace VContainer { public class InjectAttribute : System.Attribute {} }
 namespace UnityEngine { public class Component {} public class MonoBehaviour : Component {} }
 namespace R3 { public class Subject<T> {} }
 namespace NhemDangFugBixs.Attributes {
   public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
-  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 """;
         await Verifier.VerifyAnalyzerAsync(

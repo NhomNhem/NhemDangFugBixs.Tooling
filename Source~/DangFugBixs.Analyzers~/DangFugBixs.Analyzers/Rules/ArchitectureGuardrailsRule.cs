@@ -144,10 +144,11 @@ public sealed class ArchitectureGuardrailsRule : DiagnosticAnalyzer {
             }, SymbolKind.NamedType);
 
             startContext.RegisterCompilationEndAction(endContext => {
-                if (autoRegistered.IsEmpty) return;
                 var scopeMappings = CollectScopeMappings(endContext.Compilation);
                 AnalyzeScopeMapping(endContext, autoRegistered, scopeMappings);
-                AnalyzeLifetimeArchitecture(endContext, autoRegistered);
+                if (!autoRegistered.IsEmpty) {
+                    AnalyzeLifetimeArchitecture(endContext, autoRegistered);
+                }
             });
         });
     }
