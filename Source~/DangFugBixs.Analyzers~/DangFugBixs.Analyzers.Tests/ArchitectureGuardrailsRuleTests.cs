@@ -170,12 +170,15 @@ public class BackendClient {
 }
 public class BackendConfig : UnityEngine.ScriptableObject { }
 public interface IGameplayScope { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope { }
 namespace NhemDangFugBixs.Attributes {
   public class AutoRegisterInAttribute : System.Attribute {
     public AutoRegisterInAttribute(System.Type t) {}
     public NhemLifetime Lifetime { get; set; }
   }
   public enum NhemLifetime { Singleton, Transient, Scoped }
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 namespace UnityEngine { public class ScriptableObject {} }
 """;
