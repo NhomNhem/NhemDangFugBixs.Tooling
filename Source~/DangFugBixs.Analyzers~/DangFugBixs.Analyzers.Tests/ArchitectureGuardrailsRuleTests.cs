@@ -215,6 +215,7 @@ using VContainer;
 using UnityEngine;
 using R3;
 
+[ManualFactory]
 [NhemDangFugBixs.Attributes.AutoRegisterIn(typeof(GameScope))]
 public class {|#0:PlayerView|} : MonoBehaviour {
   public {|#4:PlayerView|}(int v) { }
@@ -227,6 +228,7 @@ namespace VContainer { public class InjectAttribute : System.Attribute {} }
 namespace UnityEngine { public class Component {} public class MonoBehaviour : Component {} }
 namespace R3 { public class Subject<T> {} }
 namespace NhemDangFugBixs.Attributes {
+  public class ManualFactoryAttribute : System.Attribute { public ManualFactoryAttribute() {} }
   public class AutoRegisterInAttribute : System.Attribute { public AutoRegisterInAttribute(System.Type t) {} }
 }
 """;
