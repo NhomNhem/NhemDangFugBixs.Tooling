@@ -83,12 +83,15 @@ public class {|#0:MemoryState|} {
     public MemoryState(string memoryId) { }
 }
 public interface IGameplayScope { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope { }
 namespace NhemDangFugBixs.Attributes {
   public class AutoRegisterInAttribute : System.Attribute {
     public AutoRegisterInAttribute(System.Type t) {}
     public NhemLifetime Lifetime { get; set; }
   }
   public enum NhemLifetime { Singleton, Transient, Scoped }
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 """;
         var expected = Verifier.Diagnostic("NDF025").WithLocation(0).WithArguments("MemoryState", "String", "memoryId");
@@ -105,6 +108,8 @@ public class MemoryState {
     public MemoryState(string memoryId) { }
 }
 public interface IGameplayScope { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope { }
 namespace NhemDangFugBixs.Attributes {
   public class ManualFactoryAttribute : System.Attribute {
     public string? Reason { get; init; }
@@ -114,6 +119,7 @@ namespace NhemDangFugBixs.Attributes {
     public NhemLifetime Lifetime { get; set; }
   }
   public enum NhemLifetime { Singleton, Transient, Scoped }
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 """;
         await Verifier.VerifyAnalyzerAsync(test);
@@ -129,12 +135,15 @@ public class CombatCore {
 }
 public interface IGameplayScope { }
 public interface ITargetContext { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope { }
 namespace NhemDangFugBixs.Attributes {
   public class AutoRegisterInAttribute : System.Attribute {
     public AutoRegisterInAttribute(System.Type t) {}
     public NhemLifetime Lifetime { get; set; }
   }
   public enum NhemLifetime { Singleton, Transient, Scoped }
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 """;
         await Verifier.VerifyAnalyzerAsync(test);
@@ -197,6 +206,8 @@ public class BackendClient {
 }
 public class BackendConfig : UnityEngine.ScriptableObject { }
 public interface IGameplayScope { }
+[LifetimeScopeFor(typeof(IGameplayScope))]
+public class GameplayLifetimeScope { }
 namespace NhemDangFugBixs.Attributes {
   public class ManualFactoryAttribute : System.Attribute {
     public string? Reason { get; init; }
@@ -206,6 +217,7 @@ namespace NhemDangFugBixs.Attributes {
     public NhemLifetime Lifetime { get; set; }
   }
   public enum NhemLifetime { Singleton, Transient, Scoped }
+  public class LifetimeScopeForAttribute : System.Attribute { public LifetimeScopeForAttribute(System.Type t) {} }
 }
 namespace UnityEngine { public class ScriptableObject {} }
 """;
